@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<script src="https://flexiblelearning.auckland.ac.nz/javascript/codemirror.js"></script>
+		<link rel="stylesheet" href="https://flexiblelearning.auckland.ac.nz/files/codemirror.css">
+		<script src="https://flexiblelearning.auckland.ac.nz/javascript/javascript.js"></script>
+		<style>
+			.CodeMirror { height: auto; border: 1px solid #ddd; }
+			input{
+				background: #f5f5f5;
+				color: #2D3B45;
+				border: 1px solid;
+				border-color: #C7CDD1;
+				border-radius: 3px;
+				transition: background-color 0.2s ease-in-out;
+				position: relative;
+				padding: 8px 14px;
+				margin-bottom: 0;
+				font-size: 1rem;
+				line-height: 20px;
+				text-align: center;
+				vertical-align: middle;
+			}
+			input:hover {
+				background: #e8e8e8;
+				color: #2D3B45;
+			}
+		</style>
+	</head>
+	<body>
+		<form action="iconSelector.pyg" id="return_form" method="post" class="hide" encType="application/x-www-form-urlencoded">
+			<h1>Update Icons</h1>
+			<input type="hidden" name="updateIcons">
+			
+			<input type="submit" name=send value="Save">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<br>
+			<textarea id="template" name="template" cols="90" rows="5" onkeyup="changed=true;">%s</textarea>
+			<br>
+			<input type="hidden" name="iconsUrl" value="%s">
+			<input type="submit" name=send value="Save">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</form>
+	<script>
+	var editor = CodeMirror.fromTextArea(document.getElementById("template"), {
+		lineNumbers: true,
+		mode: "javascript",
+		lineWrapping:true,
+		matchBrackets: true
+	});
+	jQuery( window ).load( function(){ editor.refresh(); console.log( "editor refreshed" ) } );
+	</script>
+	</body>
+</html>

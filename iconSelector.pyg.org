@@ -1,0 +1,291 @@
+#!/var/www/html/coursebuilder3_/venv/bin/python3
+
+import cgi
+from time import time
+from random import random
+from hashlib import sha1
+import hmac
+import urllib
+
+import oauthlib.oauth1.rfc5849.signature as oauth
+from oauthlib.common import safe_string_equals
+from cgi import escape
+import sys
+sys.path.append( '../' )
+templateFile = "icon-selector.html"
+
+outputTemplate = open(templateFile, "r", encoding="utf-8").read()
+
+outputTemplate1 = """
+<html>
+	<head>
+		<script src="/mktg713/javascript/jquery-1.7.2.min.js"></script>
+		<script>
+		var divId="#previewIconDiv";
+		var imgSlideDown=0;
+		var returnUrl = '%(content_item_return_url)s';
+		function updateField( event ) {
+			//update the field value
+			var target = $( event.target );
+			console.log( target );
+			var tmpFieldValue = target.first().attr('src');
+			jQuery( "#content_items" ).val( tmpFieldValue );
+			jQuery( "#return_form" ).submit();
+		}
+		jQuery('document').ready( function(){
+				jQuery('.icon').on( "click", updateField );
+			}
+		);
+		</script>
+<style>
+.icon {
+display:inline;
+float:left;
+padding: 10px;
+font-size:x-small;
+text-align: center;
+cursor: pointer;
+}
+</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_activity1.png"  alt="activity"  title="activity" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_activity2.png"   alt="activity"  title="activity" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_activity3.png"   alt="activity"  title="activity" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_alert1.png" alt="alert"  title="alert"  title="alert" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_alert2.png" alt="alert"  title="alert" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_alert3.png" alt="alert"  title="alert" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_analyse1.png" alt="analyse"  title="analyse" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_analyse2.png" alt="analyse"  title="analyse" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_analyse3.png" alt="analyse"  title="analyse" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_analyse4.png" alt="analyse"  title="analyse" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_answer1.png" alt="answer" title="answer" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_article1.png" alt="article" title="article" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_assessment1.png" alt="assessment" title="assessment" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_assignment1.png" alt="assessment" title="assessment" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_assignment2.png" alt="assessment" title="assessment" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_assignment3.png" alt="assessment" title="assessment" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio1.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio2.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio3.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio4.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio5.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio6.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio7.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_audio8.png" alt="audio"  title="audio" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_case_study1.png" alt="case study"  title="case study" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_case_study2.png" alt="case study"  title="case study" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_cd_dvd1.png" alt="dvd" title="dvd" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_cd_dvd2.png" alt="dvd" title="dvd" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_discussion1.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_discussion2.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_discussion3.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_discussion4.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_discussion5.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_group1.png" alt="group" title="group" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_group2.png" alt="group" title="group" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_journal1.png" alt="journal"  title="journal" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_journal2.png" alt="journal"  title="journal" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_mobile1.png" alt="mobile"  title="mobile"  title="mobile"  /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_mobile2.png" alt="mobile"  title="mobile" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_note1.png" alt="note"  title="note" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_note2.png" alt="note"  title="note" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_note3.png" alt="note"  title="note" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_note4.png" alt="note"  title="note" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_objectives1.png" alt="objectives"  title="objectives" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_objectives2.png" alt="objectives"  title="objectives" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_partner1.png" alt="partner"  title="partner"/></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_point_to_ponder1.png" alt="point to ponder" title="point to ponder" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_portfolio1.png" alt="portfolio"   title="portfolio"/></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_practical1.png" alt="practical"  title="practical" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_practical2.png" alt="practical"  title="practical" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_practical3.png" alt="practical"  title="practical" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_preknowledge1.png" alt="preknowledge" title="preknowledge" title="preknowledge" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_preknowledge2.png" alt="preknowledge" title="preknowledge" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_preknowledge3.png" alt="preknowledge" title="preknowledge" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_preknowledge4.png" alt="preknowledge" title="preknowledge" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_preknowledge5.png" alt="preknowledge" title="preknowledge" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_print1.png" alt="print" title="print" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_question1.png" alt="question"  title="question" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_question2.png" alt="question"  title="question" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_reading1.png" alt="reading"  title="reading" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_reading2.png" alt="reading"  title="reading" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_resources1.png" alt="resources"  title="resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_resources2.png" alt="resources"  title="resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_resources3.png" alt="resources"  title="resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_resources4.png" alt="resources"  title="resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_self_test1.png" alt="self test"  title="self test" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_self_test2.png" alt="self test"  title="self test" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_self_test3.png" alt="self test"  title="self test" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_self_test4.png" alt="self test"  title="self test" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_summary1.png" alt="summary"  title="summary" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_summary2.png" alt="summary"  title="summary" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_summary3.png" alt="summary"  title="summary" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_to_share1.png" alt="to share"  title="to share" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_to_share2.png" alt="to share"  title="to share" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_to_share3.png" alt="to share"  title="to share" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_video1.png" alt="video"  alt="video" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_video2.png" alt="video"  alt="video" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_video3.png" alt="video"  alt="video" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_video4.png" alt="video"  alt="video" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_video5.png" alt="video"  alt="video" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_web_resources1.png" alt="web resources"  title="web resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_web_resources2.png" alt="web resources"  title="web resources" /></div>
+			<div class="icon"><img src="https://flexiblelearning.auckland.ac.nz/icon-set/simple_web_resources3.png" alt="web resources"  title="web resources" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/checklist.png" alt="web checklist" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/checklist1.png" alt="web checklist" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/clock.png" alt="clock" title="clock" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/discussion.png" alt="discussion"  title="discussion" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/explore.png" alt="explore" title="explore"  /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/folder.png" alt="folder" title="folder" /></div>
+			<div class="icon"><img height="48" src="https://flexiblelearning.auckland.ac.nz/icon-set/group.png" alt="group" title="group" /></div>
+		</div>
+
+		<form action="iconSelector.pyg" id="return_form" method="post" class="hide" encType="application/x-www-form-urlencoded">
+			<input type="hidden" name="returnCanvas" />
+			<input type="hidden" name="returnUrl" value="%(content_item_return_url)s" />
+			<input type="hidden" id="content_items" name="content_items" value="" />
+			<input type="hidden" name="data" value="%(data)s">
+		</form>
+	</body>
+</html>
+"""
+formPostTemplate = """
+		<form action="%(returnUrl)s" class="hide" id="return_form" method="post" encType="application/x-www-form-urlencoded">
+			<input type="hidden" name="lti_message_type" value="ContentItemSelection" />
+			<input type="hidden" name="lti_version" value="LTI-1p0" />
+			<input type="hidden" id="content_items" name="content_items" value="%(content_items)s" />
+			<input type="hidden" name="data" value="%(data)s" />
+			<input type="hidden" name="oauth_version" value="1.0" />
+			<input type="hidden" name="oauth_nonce" value="%(oauth_nonce)s" />
+			<input type="hidden" name="oauth_timestamp" value="%(oauth_timestamp)s" />
+			<input type="hidden" name="oauth_consumer_key" value="%(oauth_consumer_key)s" />
+			<input type="hidden" name="oauth_callback" value="about:blank" />
+			<input type="hidden" name="oauth_signature_method" value="HMAC-SHA1" />
+			<input type="hidden" name="oauth_signature" value="%(oauth_signature)s" />
+		</form>
+		<script>
+			document.forms[0].submit();
+		</script>
+		"""
+#content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<div class=''alert alert-success><p style='text-align:center'>some data<image src=\'%s\' style=\'padding:3px;width:48px;height:48px;\'><a class='Button Button--secondary' style='width:20% margin:10px' title='Wiki Home' href='https://www.auckland.ac.nz'>auckland</a></p></div>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}"""
+
+content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img src='%s' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}"""
+
+
+#this open link in a new tab##
+##content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","url":"https://angular.test.clear.auckland.ac.nz/public/quizzes/d0d5d0a640630f9bf9e64ef94581edb76a77b248.html","mediaType":"text/html","title":"play the quiz","placementAdvice":{"presentationDocumentTarget":"window","windowTarget":"_blank"}}]}"""
+
+#below open the link in the same window#
+#content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","url":"https://angular.test.clear.auckland.ac.nz/public/quizzes/d0d5d0a640630f9bf9e64ef94581edb76a77b248.html","mediaType":"text/html","title":"play the quiz","placementAdvice":{"presentationDocumentTarget":"frame"}}]}"""
+
+
+###############################################################
+#{
+#  "@type" : "ContentItem",
+#  "mediaType" : "text/html",
+#  "text" : "<p>IMS has a <a href=\" http://imscatalog.org/\">catalog of certified products</a> available on their website</p>",
+#  "placementAdvice" : {
+#    "presentationDocumentTarget" : "embed"
+#  }
+#}
+###############################################################
+client_key = ""
+client_secret = ""
+debug=0
+def getSignature( data ):
+	sig = ""
+
+	baseUrl = "https://flexiblelearning.auckland.ac.nz/icon-set/iconSelector.pyg"
+	params = oauth.collect_parameters(
+    		uri_query="",
+		body=data,
+    		headers="",
+    		exclude_oauth_signature=True, 
+    		with_realm=False
+	)
+
+	norm_params = oauth.normalize_parameters(params)
+	
+	base_string = oauth.construct_base_string( u"POST",  u"%s"%baseUrl, norm_params )
+
+	if debug:
+		print( " lib base_string:%s <br />\n" % base_string )
+	sig = oauth.sign_hmac_sha1(  base_string, u"%s"%( client_secret ),  u'' )
+	return sig
+if __name__=="__main__":
+	query = cgi.FieldStorage( keep_blank_values=1 )
+	
+	print( "Content-type:text/html" )
+	print()
+	if debug:
+		print( query )
+	if "content_item_return_url" in query:
+		if "data" in query:
+			tmpData = query["data"].value
+		else:
+			tmpData=""
+			
+		tmpDict = {}
+		tmpDict[ "content_item_return_url" ] = query[ "content_item_return_url" ].value
+		tmpDict[ "data" ] = tmpData
+		tmpDict[ "returnType" ] = "content-element"
+		
+		print( outputTemplate %tmpDict )
+		
+	elif "returnCanvas" in query:
+		if debug:
+			print( "in returnCanvas" )
+		
+		data = []
+		tmpDict = {}
+		for item in query:
+			tmpDict[ item ] = query[item].value
+		
+		
+		##tmpContent_items = content_itemsTemplate %tmpDict[ "content_items" ]
+		tmpContent_items = content_itemsTemplate % tmpDict[ "content_items" ]
+		tmpContent_items = u''+ tmpContent_items.replace( '"', '&quot;' ).replace( "'", "&#39;" )
+		
+		timeStamp = u'' + str( int( time() ) )
+		oauth_nonce = u''+str( random() )+str( random() )
+		oauth_nonce = oauth_nonce.replace("0.","")
+		tmpDict["data"] = "test"
+
+		data.append( ( "lti_message_type", "ContentItemSelection" ) )
+		data.append( ( "lti_version", "LTI-1p0" ) )
+		#data.append( ( "data", tmpDict[ "data" ] ) )
+		data.append( ( "data", tmpDict[ "data" ] ) )
+		data.append( ( "content_items", tmpContent_items ) )
+		
+		data.append( ( "oauth_version", "1.0" ) )
+		data.append( ( "oauth_nonce", oauth_nonce ) )
+		
+		data.append( ( "oauth_timestamp", timeStamp ) )
+		
+		data.append( ( "oauth_consumer_key", "%s"%client_key ) )
+		
+		data.append( ( "oauth_callback", "about:blank" ) )
+		data.append( ( "oauth_signature_method", "HMAC-SHA1" ) )
+		tmpSignature = getSignature( data )
+		tmpDict[ "content_items" ] = tmpContent_items
+		tmpDict[ "oauth_nonce" ] = oauth_nonce
+		tmpDict[ "oauth_timestamp" ] = timeStamp
+		tmpDict[ "oauth_consumer_key" ] = client_key
+		tmpDict[ "oauth_signature" ] = tmpSignature
+		
+		print( formPostTemplate %tmpDict )
+		
+	elif "launch_presentation_return_url" in query:
+		if "data" in query:
+			tmpData = query["data"].value
+		else:
+			tmpData=""
+			
+		tmpDict = {}
+		tmpDict[ "content_item_return_url" ] = query[ "launch_presentation_return_url" ].value
+		tmpDict[ "data" ] = tmpData
+		tmpDict[ "returnType" ] = ""
+
+		print( outputTemplate %tmpDict )

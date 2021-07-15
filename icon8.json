@@ -1,0 +1,11 @@
+{
+ "icons":[
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_brief_case_3654760.svg", "title":"briefcase", "width":48, "height":48},
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Diploma_1304117.svg", "title":"diploma", "width":48, "height":48},
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Gavel_3415146.svg", "title":"gavel", "width":48, "height":48},
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Law_740337.svg", "title":"oath", "width":48, "height":48},
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Law_3621444.svg", "title":"casebook", "width":48, "height":48},
+	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Pillar_3156646.svg", "title":"court", "width":48, "height":48},
+   	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Law/noun_Scale_503470.svg", "title":"justice", "width":48, "height":48}
+	]
+}

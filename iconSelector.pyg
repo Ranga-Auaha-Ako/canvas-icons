@@ -1,0 +1,336 @@
+#!/var/www/html/coursebuilder3_/venv/bin/python3
+
+import cgi
+from time import time
+from random import random
+from hashlib import sha1
+import hmac
+import urllib
+from os import environ
+from os.path import exists
+from shutil import copyfile
+import oauthlib.oauth1.rfc5849.signature as oauth
+from oauthlib.common import safe_string_equals
+from cgi import escape
+import json
+import sys, io, imp
+imp.reload(sys)
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
+TemplateBkupDir = "/var/www/html/flexiblelearning/icon-set/.templates/"
+templateFile = "icon-selector.html"
+
+outputTemplate = open(templateFile, "r", encoding="utf-8").read()
+
+allowedUsers = [ "whol019", "pkam669", "swan128", "chou015", "achu027" ]
+#allowedUsers = [ "whol019" ]
+
+formPostTemplate = """
+		<form action="%(returnUrl)s" class="hide" id="return_form" method="post" encType="application/x-www-form-urlencoded">
+			<input type="hidden" name="lti_message_type" value="ContentItemSelection" />
+			<input type="hidden" name="lti_version" value="LTI-1p0" />
+			<input type="hidden" id="content_items" name="content_items" value="%(content_items)s" />
+			<input type="hidden" name="data" value="%(data)s" />
+			<input type="hidden" name="oauth_version" value="1.0" />
+			<input type="hidden" name="oauth_nonce" value="%(oauth_nonce)s" />
+			<input type="hidden" name="oauth_timestamp" value="%(oauth_timestamp)s" />
+			<input type="hidden" name="oauth_consumer_key" value="%(oauth_consumer_key)s" />
+			<input type="hidden" name="oauth_callback" value="about:blank" />
+			<input type="hidden" name="oauth_signature_method" value="HMAC-SHA1" />
+			<input type="hidden" name="oauth_signature" value="%(oauth_signature)s" />
+		</form>
+		<script>
+			document.forms[0].submit();
+		</script>
+		"""
+#content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<div class=''alert alert-success><p style='text-align:center'>some data<image src=\'%s\' style=\'padding:3px;width:48px;height:48px;\'><a class='Button Button--secondary' style='width:20% margin:10px' title='Wiki Home' href='https://www.auckland.ac.nz'>auckland</a></p></div>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}"""
+
+content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='%s' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}"""
+
+
+#this open link in a new tab##
+##content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","url":"https://angular.test.clear.auckland.ac.nz/public/quizzes/d0d5d0a640630f9bf9e64ef94581edb76a77b248.html","mediaType":"text/html","title":"play the quiz","placementAdvice":{"presentationDocumentTarget":"window","windowTarget":"_blank"}}]}"""
+
+#below open the link in the same window#
+#content_itemsTemplate = """{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","url":"https://angular.test.clear.auckland.ac.nz/public/quizzes/d0d5d0a640630f9bf9e64ef94581edb76a77b248.html","mediaType":"text/html","title":"play the quiz","placementAdvice":{"presentationDocumentTarget":"frame"}}]}"""
+
+
+###############################################################
+#{
+#  "@type" : "ContentItem",
+#  "mediaType" : "text/html",
+#  "text" : "<p>IMS has a <a href=\" http://imscatalog.org/\">catalog of certified products</a> available on their website</p>",
+#  "placementAdvice" : {
+#    "presentationDocumentTarget" : "embed"
+#  }
+#}
+###############################################################
+client_key = ""
+client_secret = ""
+debug=0
+
+updateTemplateForm = u"""
+<html>
+	<head>
+		<script src="https://flexiblelearning.auckland.ac.nz/javascript/codemirror.js"></script>
+		<link rel="stylesheet" href="https://flexiblelearning.auckland.ac.nz/files/codemirror.css">
+		<script src="https://flexiblelearning.auckland.ac.nz/javascript/javascript.js"></script>
+		<style>
+			.CodeMirror { height: auto; border: 1px solid #ddd; }
+			input{
+				background: #f5f5f5;
+				color: #2D3B45;
+				border: 1px solid;
+				border-color: #C7CDD1;
+				border-radius: 3px;
+				transition: background-color 0.2s ease-in-out;
+				position: relative;
+				padding: 8px 14px;
+				margin-bottom: 0;
+				font-size: 1rem;
+				line-height: 20px;
+				text-align: center;
+				vertical-align: middle;
+			}
+			input:hover {
+				background: #e8e8e8;
+				color: #2D3B45;
+			}
+		</style>
+	</head>
+	<body>
+		<form action="iconSelector.pyg" id="return_form" method="post" class="hide" encType="application/x-www-form-urlencoded">
+			<h1>Update Canvas Icon Selector Template</h1>
+			<input type="hidden" name="updateTemplate">
+			<input type="submit" name=send value="Save">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<br>
+			<textarea id="template" name="template" cols="90" rows="5" onkeyup="changed=true;">%s</textarea>
+			<br>
+			<input type="hidden" name="updateTemplate">
+			<input type="submit" name=send value="Save">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</form>
+	<script>
+	var editor = CodeMirror.fromTextArea(document.getElementById("template"), {
+		lineNumbers: true,
+		mode: "javascript",
+		lineWrapping:true,
+		matchBrackets: true
+	});
+	jQuery( window ).load( function(){ editor.refresh(); console.log( "editor refreshed" ) } );
+	</script>
+	</body>
+</html>
+
+"""
+
+
+updateIconsForm = open("icon-editor.html", "r", encoding="utf-8").read()
+
+def showUpdateTemplate():
+	print( u''+updateTemplateForm % outputTemplate )
+
+def showUpdateIcons( iconUrl ):
+	if exists( iconUrl ):
+		f = open(iconUrl, "r", encoding="utf-8")
+		iconData = open(iconUrl, "r", encoding="utf-8").read()
+		print( updateIconsForm %(iconData, iconUrl) )
+	else:
+		print( iconUrl + " doesnt exist !")
+		return
+
+
+def updateIcons( query ):
+	# maks sure it contain variables
+	tmpTemplateStr = query["template"].value
+	iconUrl = query["iconsUrl"].value
+	if iconUrl!="" and exists( iconUrl ):
+		#backup#
+		update_time = "%d" %time()
+		bkupTemplate = TemplateBkupDir + iconUrl + "_" + upi+ "_" + update_time
+		copyfile( iconUrl, bkupTemplate )
+		#save the change#
+		f = open( iconUrl ,"w", encoding="utf-8" )
+		f.write( "%s" %tmpTemplateStr )
+		f.flush()
+		f.close
+		print( "Template saved! " )
+	else:
+		print( "Error! <br> iconUrl:%s not exist "% iconUrl )
+		return
+
+def updateTemplate( query ):
+	if "template" in query:
+		tmpTemplateStr = query["template"].value
+	else:
+		tmpTemplateStr= ""
+	if tmpTemplateStr.__contains__( '%(content_item_return_url)s' ):
+		#backup#
+		update_time = "%d" %time()
+		bkupTemplate = TemplateBkupDir + templateFile + "_" + upi+ "_" + update_time
+		copyfile( templateFile, bkupTemplate )
+		#save the change#
+		f = open( templateFile ,"w", encoding="utf-8" )
+		f.write( "%s" %tmpTemplateStr )
+		f.flush()
+		f.close
+		print( "Template saved! " )
+	else:
+		print( "Error! <br> variable: 'content_item_return_url' not included in template " )
+		return
+	
+
+#def showUpdateIcons( iconsList ):
+#	tmpOut = []
+#	for m in range( iconsList.__len__() ):
+#		tmpOut.append( """<input type="url" name="icon" value="%(url)s">""" )
+
+
+def getSignature( data ):
+	sig = ""
+
+	baseUrl = "https://flexiblelearning.auckland.ac.nz/icon-set/iconSelector.pyg"
+	params = oauth.collect_parameters(
+    		uri_query="",
+		body=data,
+    		headers="",
+    		exclude_oauth_signature=True, 
+    		with_realm=False
+	)
+
+	norm_params = oauth.normalize_parameters(params)
+	
+	base_string = oauth.construct_base_string( u"POST",  u"%s"%baseUrl, norm_params )
+
+	if debug:
+		print( " lib base_string:%s <br />\n" % base_string )
+	sig = oauth.sign_hmac_sha1(  base_string, u"%s"%( client_secret ),  u'' )
+	return sig
+if __name__=="__main__":
+	query = cgi.FieldStorage( keep_blank_values=1 )
+	
+	print( "Content-type:text/html" )
+	print()
+	if environ.get( "HTTP_X_FORWARDED_USER", '' )!="":
+		upi = environ["HTTP_X_FORWARDED_USER"]
+
+	
+		
+	if debug:
+		print( query )
+	
+	if "content_item_return_url" in query:
+		if "data" in query:
+			tmpData = query["data"].value
+		else:
+			tmpData=""
+			
+		tmpDict = {}
+		tmpDict[ "content_item_return_url" ] = query[ "content_item_return_url" ].value
+		tmpDict[ "data" ] = tmpData
+		tmpDict[ "returnType" ] = "content-element"
+		
+		print( outputTemplate %tmpDict )
+		if upi in allowedUsers:
+			print("""<br><span style="float:right;"><a href="iconSelector.pyg?editTemplate=1" target="_new">edit template</a>&nbsp;&nbsp; <a href="javascript:void(0)" onclick="editIcons()">edit icon list</a> &nbsp;&nbsp;</span>""")
+
+
+	elif "returnCanvas" in query:
+		if debug:
+			print( "in returnCanvas" )
+		
+		data = []
+		tmpDict = {}
+		for item in query:
+			tmpDict[ item ] = query[item].value
+		
+		
+		##tmpContent_items = content_itemsTemplate %tmpDict[ "content_items" ]
+		tmpContent_items = content_itemsTemplate % tmpDict[ "content_items" ]
+		tmpContent_items = u''+ tmpContent_items.replace( '"', '&quot;' ).replace( "'", "&#39;" )
+		
+		timeStamp = u'' + str( int( time() ) )
+		oauth_nonce = u''+str( random() )+str( random() )
+		oauth_nonce = oauth_nonce.replace("0.","")
+		tmpDict["data"] = "test"
+
+		data.append( ( "lti_message_type", "ContentItemSelection" ) )
+		data.append( ( "lti_version", "LTI-1p0" ) )
+		#data.append( ( "data", tmpDict[ "data" ] ) )
+		data.append( ( "data", tmpDict[ "data" ] ) )
+		data.append( ( "content_items", tmpContent_items ) )
+		
+		data.append( ( "oauth_version", "1.0" ) )
+		data.append( ( "oauth_nonce", oauth_nonce ) )
+		
+		data.append( ( "oauth_timestamp", timeStamp ) )
+		
+		data.append( ( "oauth_consumer_key", "%s"%client_key ) )
+		
+		data.append( ( "oauth_callback", "about:blank" ) )
+		data.append( ( "oauth_signature_method", "HMAC-SHA1" ) )
+		tmpSignature = getSignature( data )
+		tmpDict[ "content_items" ] = tmpContent_items
+		tmpDict[ "oauth_nonce" ] = oauth_nonce
+		tmpDict[ "oauth_timestamp" ] = timeStamp
+		tmpDict[ "oauth_consumer_key" ] = client_key
+		tmpDict[ "oauth_signature" ] = tmpSignature
+		
+		print( formPostTemplate %tmpDict )
+		
+	elif "launch_presentation_return_url" in query:
+		if "data" in query:
+			tmpData = query["data"].value
+		else:
+			tmpData=""
+			
+		tmpDict = {}
+		tmpDict[ "content_item_return_url" ] = query[ "launch_presentation_return_url" ].value
+		tmpDict[ "data" ] = tmpData
+		tmpDict[ "returnType" ] = ""
+		
+		print( outputTemplate %tmpDict )
+		
+		if upi in allowedUsers:
+			print("""<br><a href="iconSelctor.pyg?editTemplate=1" target="_new" style="float:right">edit template</a>""")
+	elif "editTemplate" in query:
+		if environ.get( "HTTP_X_FORWARDED_USER", '' )!="":
+			upi = environ["HTTP_X_FORWARDED_USER"]
+			if upi in allowedUsers:
+				showUpdateTemplate()
+			else:
+				print( "sorry you dont have permisson to access" )
+		else:
+			print( "sorry you dont have permisson to access" )
+	elif "updateTemplate" in query:
+		#saving tempalte#
+		# make sure allowedUsers
+		# contain variables
+
+		if upi in allowedUsers:
+			updateTemplate( query )
+		else:
+			print( "sorry you dont have the permisson" )
+	elif "updateIcons" in query:
+		#saving Icons#
+		# make sure allowedUsers
+		# contain variables
+
+		if upi in allowedUsers:
+			updateIcons( query )
+		else:
+			print( "sorry you dont have the permisson" )
+		
+	elif "showUpdateIcons" in query:
+		iconUrl=""
+		if "iconUrl" in query:
+			iconUrl = query["iconUrl"].value
+		if iconUrl == "":
+			iconUrl = "icon1.json"
+		if upi in allowedUsers:
+			showUpdateIcons( iconUrl )
+		else:
+			print( "sorry you dont have the permisson" )
+	else:
+		pass
