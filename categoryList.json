@@ -1,0 +1,17 @@
+[
+    {"name": "Teaching", "url": "icon15.json"},
+    {"name": "General", "url": "icon1.json"},
+    {"name": "Aotearoa", "url": "icon2.json"},
+    {"name": "Architecture", "url": "icon3.json"},
+    {"name": "Arts", "url": "icon4.json"},
+    {"name": "Business", "url": "icon5.json"},
+    {"name": "Engineering", "url": "icon6.json"},
+    {"name": "Food", "url": "icon7.json"},
+    {"name": "Law", "url": "icon8.json"},
+    {"name": "Medical", "url": "icon9.json"},
+    {"name": "People", "url": "icon10.json"},
+    {"name": "Places", "url": "icon11.json"},
+    {"name": "Science", "url": "icon12.json"},
+    {"name": "Sports", "url": "icon13.json"},
+    {"name": "Time", "url": "icon1.json"}
+]
