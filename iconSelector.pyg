@@ -18,7 +18,7 @@ imp.reload(sys)
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 TemplateBkupDir = "/var/www/html/flexiblelearning/icon-set/.templates/"
-templateFile = "icon-selector.html"
+templateFile = "icon-selector-vue.html"
 
 outputTemplate = open(templateFile, "r", encoding="utf-8").read()
 
@@ -226,12 +226,18 @@ if __name__=="__main__":
 		else:
 			tmpData=""
 			
-		tmpDict = {}
-		tmpDict[ "content_item_return_url" ] = query[ "content_item_return_url" ].value
-		tmpDict[ "data" ] = tmpData
-		tmpDict[ "returnType" ] = "content-element"
+		# tmpDict = {}
+		# tmpDict[ "content_item_return_url" ] = query[ "content_item_return_url" ].value
+		# tmpDict[ "data" ] = tmpData
+		# tmpDict[ "returnType" ] = "content-element"
 		
-		print( outputTemplate %tmpDict )
+		# print( outputTemplate %tmpDict )
+
+		tmpOutput = outputTemplate.replace("%%_content_item_return_url_%%",query[ "content_item_return_url" ].value)
+		tmpOutput = tmpOutput.replace("%%_data_%%",tmpData)
+		
+		print( tmpOutput )
+
 		if upi in allowedUsers:
 			print("""<br><span style="float:right;"><a href="iconSelector.pyg?editTemplate=1" target="_new">edit template</a>&nbsp;&nbsp; <a href="javascript:void(0)" onclick="editIcons()">edit icon list</a> &nbsp;&nbsp;</span>""")
 
@@ -285,12 +291,16 @@ if __name__=="__main__":
 		else:
 			tmpData=""
 			
-		tmpDict = {}
-		tmpDict[ "content_item_return_url" ] = query[ "launch_presentation_return_url" ].value
-		tmpDict[ "data" ] = tmpData
-		tmpDict[ "returnType" ] = ""
+		# tmpDict = {}
+		# tmpDict[ "content_item_return_url" ] = query[ "launch_presentation_return_url" ].value
+		# tmpDict[ "data" ] = tmpData
+		# tmpDict[ "returnType" ] = ""
 		
-		print( outputTemplate %tmpDict )
+		# print( outputTemplate %tmpDict )
+		tmpOutput = outputTemplate.replace("%%_content_item_return_url_%%",query[ "launch_presentation_return_url" ].value)
+		tmpOutput = tmpOutput.replace("%%_data_%%",tmpData)
+		
+		print( tmpOutput )
 		
 		if upi in allowedUsers:
 			print("""<br><a href="iconSelctor.pyg?editTemplate=1" target="_new" style="float:right">edit template</a>""")

@@ -1,19 +1,19 @@
 {
  "icons":[
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Banjo_135542.svg", "title":"banjo", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_clapboard_1942162.svg", "title":"clapboard", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Garmon_135566.svg", "title":"garmon", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Guitar_15758.svg", "title":"guitar", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_3191.svg", "title":"music", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_3022336.svg", "title":"music", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_36715.svg", "title":"music", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_600048.svg", "title":"music", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_1952166.svg", "title":"piano", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3239124.svg", "title":"painting", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3668747.svg", "title":"painting", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3356822.svg", "title":"paint", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_color_palette_117544.svg", "title":"paint", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Pan_Flute_307509.svg", "title":"flute", "width":48, "height":48},
-	{ "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Violin_135535.svg", "title":"violin", "width":48, "height":48}
+	{ "id": "icon4-1", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Banjo_135542.svg", "title":"banjo", "width":48, "height":48},
+	{ "id": "icon4-2", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_clapboard_1942162.svg", "title":"clapboard", "width":48, "height":48},
+	{ "id": "icon4-3", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Garmon_135566.svg", "title":"garmon", "width":48, "height":48},
+	{ "id": "icon4-4", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Guitar_15758.svg", "title":"guitar", "width":48, "height":48},
+	{ "id": "icon4-5", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_3191.svg", "title":"music", "width":48, "height":48},
+	{ "id": "icon4-6", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_3022336.svg", "title":"music", "width":48, "height":48},
+	{ "id": "icon4-7", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_36715.svg", "title":"music", "width":48, "height":48},
+	{ "id": "icon4-8", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_600048.svg", "title":"music", "width":48, "height":48},
+	{ "id": "icon4-9", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Music_1952166.svg", "title":"piano", "width":48, "height":48},
+	{ "id": "icon4-10", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3239124.svg", "title":"painting", "width":48, "height":48},
+	{ "id": "icon4-11", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3668747.svg", "title":"painting", "width":48, "height":48},
+	{ "id": "icon4-12", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_paint_3356822.svg", "title":"paint", "width":48, "height":48},
+	{ "id": "icon4-13", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_color_palette_117544.svg", "title":"paint", "width":48, "height":48},
+	{ "id": "icon4-14", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Pan_Flute_307509.svg", "title":"flute", "width":48, "height":48},
+	{ "id": "icon4-15", "url": "https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/Arts/noun_Violin_135535.svg", "title":"violin", "width":48, "height":48}
 	]
 }

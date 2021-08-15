@@ -1,0 +1,5 @@
+Options +FollowSymLinks -MultiViews
+# Turn mod_rewrite on
+RewriteEngine On
+
+RewriteRule ^(.*)$ item.php?id=$1 [NC,L,QSA]

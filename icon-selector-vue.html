@@ -10,26 +10,213 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+
+        .nav-tabs {
+            overflow-x: auto;
+            overflow-y:hidden;
+            flex-wrap: nowrap;
+        }
+
+        .nav-tabs .nav-link {
+            white-space: nowrap;
+        }
+        .icon-cell{
+            transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease, border-width 0.3s ease;
+            /* will-change: box-shadow, background, transform; */
+            transform: translateY(0px);
+            border-radius: 0.3rem;
+            /* background: #fff; */
+            box-shadow: 0 0 0 #00000021;
+            cursor: pointer;
+            height: 4rem; width: 4rem;
+        }
+
+        .icon-cell:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-cell img {
+            object-fit: contain
+        }
+        .icon-cell.draggable-outline {
+            background: #fff;
+            box-shadow: 0 2px 3px 0px #00000021;
+            transform: translateY(-2px);
+        }
+        .icon-cell.draggable-outline:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 9px 12px 0px #00000052;
+        }
+        .icon-cell.draggable-outline.sortable-ghost {
+            background: transparent;
+            border: 2px dotted black;
+            box-shadow: none;
+        }
+
+        .icons-container {
+            margin: auto;
+            /* justify-content: space-evenly; */
+        }
+
+        .color-options {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            display: flex;
+            column-gap: 0.4rem;
+            row-gap: 0.4rem;
+            left: -2.25rem;
+            width: calc(100% + 4.5rem);
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+        }
+
+        .color-options .color-option {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 1rem;
+            display: inline-block;
+            border: 2px solid white;
+            box-shadow: 0 1px 2px #00000078;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .color-options .color-option:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 4px 5px #00000078;
+        }
+
+        .icon-colors {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            flex-wrap: wrap; 
+        }
+
+        .icon-colors .color-option {
+            display: block;
+            /* flex-grow: 1; */
+            flex-shrink: 0;
+            height: 2rem;
+            min-width: 2rem;
+            cursor: pointer;
+            transition: 0.2s ease box-shadow;
+            will-change: box-shadow;
+            box-shadow: inset 0 0 0 0 white;
+        }
+
+        @media screen and (max-width: 30rem) {
+            .icon-colors .color-option {
+                min-width: 4rem;
+                flex-grow: 1;
+            }
+        }
+
+        .icon-colors .color-option.color-selected {
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        .float-enter-active,
+        .float-leave-active {
+        transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .float-enter-from,
+        .float-leave-to {
+        transform: translateY(10px);
+        opacity: 0;
+        }
+</style>
 </head>
 
 <body>
 
     <div id="app">
-        <ul class="nav nav-tabs" id="categorySelect" role="tablist">
+        <!-- Color Picker -->
+        <div class="icon-colors">
+            <div v-for="(color, index) in colorOptions" :key="color.name" :title="color.name"
+            class="color-option"
+            :class="{'color-selected': activeColor == index}" @click="activeColor = index"
+            :style="{background: color.code, width: `${100/colorOptions.length}%`}"></div>
+        </div>
+        <!-- Recents -->
+        <div v-if="openedIcons">
+            <p class="mb-0 small fw-bold text-center">Recent Icons</p>
+            <div class="row justify-content-center px-3 icons-container flex-nowrap overflow-auto">
+                <div
+                    class="col-2 icon-cell"
+                    v-for="icon in openedIcons"
+                    :key="icon.id"
+                    :title="icon.title"
+                    @click="postChoice(icon,colorOptions[activeColor])">
+                        <img :src="icon.url" class="w-100 h-100"/>
+                        <!-- <transition name="float">
+                        <div v-if="icon.id == currentIcon" class="color-options">
+                            <div v-for="color in colorOptions" :key="color.name" :title="color.name"
+                            class="color-option" :style="{background: color.code}"
+                            @click="postChoice(icon,color)"></div>
+                        </div>
+                        </transition> -->
+                </div>
+        </div>
+        <!-- Navigation -->
+        <ul class="nav nav-tabs sticky-top bg-white" id="categorySelect" role="tablist">
             <li class="nav-item" role="presentation" v-for="(category, index) in categoryData" :key="category.name"
                 :id="`tab-${category.name}`" >
-                <button class="btn btn-sm"
-                    :class="index == currentCategory ? 'btn-primary' : 'btn-outline-primary'" @click="currentCategory = index">
+                <button class="nav-link"
+                    :class="index == currentCategory ? 'active' : ''" @click="setCategory(index)">
                     {{category.name}}
                 </button>
             </li>
         </ul>
-        <div class="tab-content" id="myTabContent">
+        <div class="tab-content">
             <div class="tab-pane fade show active" v-for="(category, index) in categoryData" :key="category.name"
-            :id="`pane-${category.name}`" role="tabpanel" :aria-labelledby="`tab-${category.name}`" v-show="currentCategory == index">
-                {{category.icons}}
+            :id="`pane-${category.name}`" role="tabpanel" :aria-labelledby="`tab-${category.name}`"
+            v-show="currentCategory == index">
+                <div v-if="loadedTabs[index] || currentCategory == index" class="row align-content-start px-3 py-4 icons-container">
+                    <div
+                        class="col-2 m-2 icon-cell"
+                        :class="{
+                            'border border-3': icon.id == currentIcon
+                        }"
+                        v-for="icon in category.icons"
+                        :key="icon.id"
+                        :title="icon.title"
+                        @click="postChoice(icon,colorOptions[activeColor],iconUrl=`${colorIcon(icon.url)}`)">
+                            <img :src="`${colorIcon(icon.url)}`" class="w-100 h-100"/>
+                            <!-- <transition name="float">
+                            <div v-if="icon.id == currentIcon" class="color-options">
+                                <div v-for="color in colorOptions" :key="color.name" :title="color.name"
+                                class="color-option" :style="{background: color.code}"
+                                @click="postChoice(icon,color)"></div>
+                            </div>
+                            </transition> -->
+                    </div>
+                    <!-- <div v-if="!editMode" class="row">
+                        <div
+                            class="col-2 m-1 d-flex align-items-center icon-cell"
+                            :class="icon.id == currentIcon ? 'border border-3' : ''"
+                            v-for="icon in category.icons"
+                            :key="icon.id"
+                            :title="icon.title"
+                            @click="currentIcon = icon.id"
+                            style="height: 4rem; width: 4rem;">
+                                <img :src="icon.url" class="w-100 h-auto"/>
+                        </div>
+                    </div> -->
+                </div>
             </div>
         </div>
+        <form action="iconSelector.pyg" id="return_form" method="post" class="d-none" encType="application/x-www-form-urlencoded" ref="submitForm">
+			<input type="hidden" name="returnCanvas" />
+			<input type="hidden" name="returnUrl" value="%%_content_item_return_url_%%" />
+			<input type="hidden" id="content_items" name="content_items" ref="content_items" />
+			<input type="hidden" name="data" value="%%_data_%%">
+		</form>
     </div>
     <!-- Browser support polyfills -->
     <script
@@ -42,33 +229,165 @@
     <script src="https://unpkg.com/vue@3.1.5"></script>
     <!-- SuperAgent - for fetching -->
     <script src="https://cdn.jsdelivr.net/npm/superagent"></script>
+    <!-- SortableJS for Vue -->
+    <!-- CDNJS :: Sortable -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-draggable-next@2.0.1/dist/vue-draggable-next.global.min.js"></script>
     <!-- Begin setting up Vue -->
     <script>
-        const { ref } = Vue;
+        const { ref, computed, watch } = Vue;
         const IconSelector = {
+            components: {
+                draggable: VueDraggableNext.VueDraggableNext,
+            },
             setup() {
-                // These will hold the information about what icons we have
-                const currentCategory = ref(0);
+                const recents = computed({
+                    get: () => {
+                        if(localStorage) {
+                            let pastRecents = JSON.parse(localStorage.getItem('recents'))
+                            if(pastRecents && typeof pastRecents == "object") {
+                                return pastRecents
+                            } else {
+                                const recentsTemplate = {
+                                    lastCategory: 0,
+                                    openedIcons: [], // [iconData]
+                                    lastColor: 1
+                                }
+                                localStorage.setItem('recents', JSON.stringify(recentsTemplate));
+                                return recentsTemplate
+                            }
+                        } else {
+                            console.error("Failed to load recents! Perhaps this is because it wasn't created")
+                        }
+                    }
+                })
+                let currentCategory = ref(recents.value.lastCategory);
+                let openedIcons = ref(recents.value.openedIcons);
+                const loadedTabs = ref([true]);
+                let currentIcon = ref("");
                 const categoryData = ref([]);
+                let editMode = ref(false); // Don't enable drag and drop unless needed - uses a lot of energy!
+                const content_items = ref(null);
+                const submitForm = ref(null);
+                let activeColor = ref(recents.value.lastColor);
+                const colorOptions = [
+                    {code: "#00467F", name: "Dark blue"},
+                    {code: "#000", name: "Black"},
+                    {code: "#4A4A4C", name: "Body Grey"},
+                    {code: "#8D9091", name: "Silver"},
+                    {code: "#A71930", name: "Arts"},
+                    {code: "#7D0063", name: "Business School"},
+                    {code: "#D2492A", name: "Creative Arts and Industries"},
+                    {code: "#55A51C", name: "Education and Social Work"},
+                    {code: "#4F2D7F", name: "Engineering"},
+                    {code: "#005B82", name: "Auckland Law School"},
+                    {code: "#00877C", name: "Medical Health Sciences"},
+                    {code: "#0039A6", name: "Science"},
+                    {code: "#BA4482", name: "Auckland Bioengineering Institute"},
+                    {code: "#006990", name: "Liggins Institute"}
+                ];
+                const colorIcon = (iconUrl, color=colorOptions[activeColor.value]) => {
+                    return `${iconUrl}?color=${color.code.replace('#','')}`
+                }
+
+                // Watch so we can update recents
+                const submitRecents = ()=>{
+                    if(localStorage) {
+                        if(openedIcons.value.length > 5) {
+                            // Truncate to prevent massive list
+                            openedIcons.value = openedIcons.value.slice(0,5);
+                        }
+                        localStorage.setItem('recents', JSON.stringify({
+                            lastCategory: currentCategory.value,
+                            openedIcons: openedIcons.value, // [iconData]
+                            lastColor: activeColor.value
+                        }));
+                        console.log("Recents updated!")
+                    } else {console.log("Recents will not update - no local storage.")}
+                }
+                watch([activeColor, currentCategory, openedIcons], (val,_) =>{submitRecents()})
+                
+                const setCategory = (index) => {
+                    console.log(`Setting category ${index}`)
+                    currentCategory.value = index;
+                    loadedTabs.value[index] = true;
+                }
+                
+                const form = {
+                    returnUrl: "",
+                    data: ""
+                }
+
+                const postChoice = (icon, color, iconUrl=false) => {
+                    recents.value.openedIcons.unshift({
+                        id: icon.id,
+                        name: icon.name,
+                        url: iconUrl ? iconUrl: icon.url
+                    })
+                    content_items.value.value=colorIcon(icon.url,color);
+                    submitRecents();
+                    submitForm.value.submit();
+                    // superagent.post('iconSelector.pyg')
+                    // .set('Content-Type', 'application/x-www-form-urlencoded')
+                    // .send({
+                    //     returnCanvas: '',
+                    //     returnUrl: returnUrl,
+                    //     content_items: `${icon.url}?color=${color.code}`,
+                    //     data: data
+                    // }).then(resp => {
+                    //     console.log(resp);
+                    //     console.log("Success! Choice selected.");
+                    // }, err => {
+                    //     console.error(err);
+                    //     console.error("Fail! Choice failed to select.")
+                    // })
+                }
 
                 // This Async function begins the process of fetching data to fill things out
                 (async () => {
                     // Get the list of categories (and locations to fetch from)
                     const categories = await superagent.get('categoryList.json');
+                    loadedTabs.value.push(...Array(categories.body.length-1).fill(false));
                     // From each category, grab the list of icons and add it to the categoryData object
-                    for (const category of categories.body) {
-                        superagent.get(category.url).then(res => {
-                            categoryData.value.push({
-                                name: category.name,
-                                icons: res.body.icons
-                            });
+                    for (let i = 0; i < categories.body.length; i++) {
+                        const category = categories.body[i];
+                        categoryData.value.push({
+                            name: category.name,
+                            icons: []
                         })
+                        superagent.get(category.url).then(res => {
+                            // res.body.icons.forEach(i => i.selected = false)
+                            categoryData.value[i].icons = res.body.icons;
+                        })                        
                     }
+                    // for (const category of categories.body) {
+                    //     superagent.get(category.url).then(res => {
+                    //         // res.body.icons.forEach(i => i.selected = false)
+                    //         categoryData.value.push({
+                    //             name: category.name,
+                    //             icons: res.body.icons
+                    //         });
+                    //     })
+                    //     // break;
+                    // }
                 })();
 
                 return {
                     currentCategory,
-                    categoryData
+                    categoryData,
+                    loadedTabs,
+                    setCategory,
+                    currentIcon,
+                    editMode,
+                    colorOptions,
+                    activeColor,
+                    postChoice,
+                    content_items,
+                    submitForm,
+                    recents,
+                    openedIcons,
+                    colorIcon
                 }
             }
         }

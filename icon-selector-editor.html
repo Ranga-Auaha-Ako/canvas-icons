@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Page title -->
+    <title>Icon Selector</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+
+        .nav-tabs {
+            overflow-x: auto;
+            overflow-y:hidden;
+            flex-wrap: nowrap;
+        }
+
+        .nav-tabs .nav-link {
+            white-space: nowrap;
+        }
+        .icon-cell{
+            transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+            will-change: box-shadow, background, transform;
+            transform: translateY(0px);
+            border-radius: 0.3rem;
+            background: #fff;
+            box-shadow: 0 0 0 #00000021;
+            cursor: pointer;
+            height: 4rem; width: 4rem;
+        }
+
+        .icon-cell img {
+            object-fit: contain
+        }
+        .icon-cell.draggable-outline {
+            background: #fff;
+            box-shadow: 0 2px 3px 0px #00000021;
+            transform: translateY(-2px);
+        }
+        .icon-cell.draggable-outline:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 9px 12px 0px #00000052;
+        }
+        .icon-cell.draggable-outline.sortable-ghost {
+            background: transparent;
+            border: 2px dotted black;
+            box-shadow: none;
+        }
+
+        .draggable-container {
+            /* https://codepen.io/edmundojr/pen/xOYJGw */
+            background: linear-gradient(90deg, #fff 0.5rem, transparent 1%) center, linear-gradient(#fff 0.5rem, transparent 1%) center, #fff;
+            background-size: 0.6rem 0.6rem;
+            transition: background 0.6s ease;
+            min-height: calc(100vh - 7rem);
+        }
+        .draggable-container.draggable-container-active {
+            background: linear-gradient(90deg, rgb(247, 247, 247) 0.5rem, transparent 1%) center, linear-gradient(rgb(247, 247, 247) 0.5rem, transparent 1%) center, #cae2ff;
+            background-size: 0.6rem 0.6rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="text-end">
+            <button @click="editMode=!editMode" class="btn btn-link">
+                <span v-if="!editMode">Click to edit</span>
+                <span v-if="editMode">Click to save changes</span>
+            </button>
+        </div>
+        <ul class="nav nav-tabs" id="categorySelect" role="tablist">
+            <li class="nav-item" role="presentation" v-for="(category, index) in categoryData" :key="category.name"
+                :id="`tab-${category.name}`" >
+                <button class="nav-link"
+                    :class="index == currentCategory ? 'active' : ''" @click="setCategory(index)">
+                    {{category.name}}
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" v-for="(category, index) in categoryData" :key="category.name"
+            :id="`pane-${category.name}`" role="tabpanel" :aria-labelledby="`tab-${category.name}`"
+            v-show="currentCategory == index">
+                <div v-if="loadedTabs[index]" >
+                        <draggable class="row align-content-start px-3 py-4"
+                            :class="editMode ? 'draggable-container draggable-container-active' : 'draggable-container'" 
+                            :list="category.icons" :disabled="!editMode">
+                            <div
+                                class="col-2 m-2 icon-cell"
+                                :class="{
+                                    'border border-3': icon.id == currentIcon,
+                                    'draggable-outline': editMode
+                                }"
+                                v-for="icon in category.icons"
+                                :key="icon.id"
+                                :title="icon.title"
+                                @click="currentIcon = icon.id">
+                                    <img :src="icon.url" class="w-100 h-100"/>
+                            </div>
+                        </draggable>
+                    <!-- <div v-if="!editMode" class="row">
+                        <div
+                            class="col-2 m-1 d-flex align-items-center icon-cell"
+                            :class="icon.id == currentIcon ? 'border border-3' : ''"
+                            v-for="icon in category.icons"
+                            :key="icon.id"
+                            :title="icon.title"
+                            @click="currentIcon = icon.id"
+                            style="height: 4rem; width: 4rem;">
+                                <img :src="icon.url" class="w-100 h-auto"/>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Browser support polyfills -->
+    <script
+        src="https://polyfill.io/v3/polyfill.min.js?features=Array.from,Promise,Symbol,Object.setPrototypeOf,Object.getOwnPropertySymbols,Set,Math.trunc"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- Load Vue (dev version) -->
+    <script src="https://unpkg.com/vue@3.1.5"></script>
+    <!-- SuperAgent - for fetching -->
+    <script src="https://cdn.jsdelivr.net/npm/superagent"></script>
+    <!-- SortableJS for Vue -->
+    <!-- CDNJS :: Sortable -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-draggable-next@2.0.1/dist/vue-draggable-next.global.min.js"></script>
+    <!-- Begin setting up Vue -->
+    <script>
+        const { ref } = Vue;
+        const IconSelector = {
+            components: {
+                draggable: VueDraggableNext.VueDraggableNext,
+            },
+            setup() {
+                // These will hold the information about what icons we have
+                let currentCategory = ref(0);
+                const loadedTabs = ref([true]);
+                let currentIcon = ref("");
+                const categoryData = ref([]);
+                let editMode = ref(false); // Don't enable drag and drop unless needed - uses a lot of energy!
+
+                const setCategory = (index) => {
+                    console.log(`Setting category ${index}`)
+                    currentCategory.value = index;
+                    loadedTabs.value[index] = true;
+                }
+
+                // This Async function begins the process of fetching data to fill things out
+                (async () => {
+                    // Get the list of categories (and locations to fetch from)
+                    const categories = await superagent.get('categoryList.json');
+                    loadedTabs.value.push(...Array(categories.body.length-1).fill(false));
+                    // From each category, grab the list of icons and add it to the categoryData object
+                    for (let i = 0; i < categories.body.length; i++) {
+                        const category = categories.body[i];
+                        categoryData.value.push({
+                            name: category.name,
+                            icons: []
+                        })
+                        superagent.get(category.url).then(res => {
+                            // res.body.icons.forEach(i => i.selected = false)
+                            categoryData.value[i].icons = res.body.icons;
+                        })                        
+                    }
+                    // for (const category of categories.body) {
+                    //     superagent.get(category.url).then(res => {
+                    //         // res.body.icons.forEach(i => i.selected = false)
+                    //         categoryData.value.push({
+                    //             name: category.name,
+                    //             icons: res.body.icons
+                    //         });
+                    //     })
+                    //     // break;
+                    // }
+                })();
+
+                return {
+                    currentCategory,
+                    categoryData,
+                    loadedTabs,
+                    setCategory,
+                    currentIcon,
+                    editMode
+                }
+            }
+        }
+        Vue.createApp(IconSelector).mount('#app')
+    </script>
+</body>
+
+</html>
