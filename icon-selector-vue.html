@@ -130,6 +130,12 @@
         transform: translateY(10px);
         opacity: 0;
         }
+
+        .maskImage {
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
 </style>
 </head>
 
@@ -152,7 +158,7 @@
                     v-for="icon in openedIcons"
                     :key="icon.id"
                     :title="icon.title"
-                    @click="postChoice(icon,colorOptions[activeColor])">
+                    @click="postChoice(iconurl=icon)">
                         <img :src="icon.url" class="w-100 h-100"/>
                         <!-- <transition name="float">
                         <div v-if="icon.id == currentIcon" class="color-options">
@@ -186,8 +192,12 @@
                         v-for="icon in category.icons"
                         :key="icon.id"
                         :title="icon.title"
-                        @click="postChoice(icon,colorOptions[activeColor],iconUrl=`${colorIcon(icon.url)}`)">
-                            <img :src="`${colorIcon(icon.url)}`" class="w-100 h-100"/>
+                        @click="postChoice(icon,colorOptions[activeColor])">
+                            <!-- <img :src="`${colorIcon(icon.url)}`" class="w-100 h-100"/> -->
+                            <img :style="{
+                                maskImage: `url(${icon.url})`,
+                                background: colorOptions[activeColor].code
+                            }" class="w-100 h-100 maskImage"/>
                             <!-- <transition name="float">
                             <div v-if="icon.id == currentIcon" class="color-options">
                                 <div v-for="color in colorOptions" :key="color.name" :title="color.name"
@@ -319,13 +329,13 @@
                     data: ""
                 }
 
-                const postChoice = (icon, color, iconUrl=false) => {
+                const postChoice = (icon=false, color=false, iconUrl=false) => {
                     recents.value.openedIcons.unshift({
                         id: icon.id,
                         name: icon.name,
-                        url: iconUrl ? iconUrl: icon.url
+                        url: iconUrl ? iconUrl: colorIcon(icon.url,color ? color : undefined)
                     })
-                    content_items.value.value=colorIcon(icon.url,color);
+                    content_items.value.value=iconUrl ? iconUrl : colorIcon(icon.url,color ? color : undefined);
                     submitRecents();
                     submitForm.value.submit();
                     // superagent.post('iconSelector.pyg')
