@@ -10,6 +10,8 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Vue Select -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/vue-next-select/dist/index.min.css" />
     <style>
 
         .nav-tabs {
@@ -56,7 +58,7 @@
 
         .icons-container {
             margin: auto;
-            /* justify-content: space-evenly; */
+            justify-content: space-between;
         }
 
         .color-options {
@@ -132,9 +134,42 @@
         }
 
         .maskImage {
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
             -webkit-mask-size: contain;
             -webkit-mask-repeat: no-repeat;
             -webkit-mask-position: center;
+            transition: background 0.5s ease;
+        }
+        
+        .vue-dropdown {
+            text-align: left;
+        }
+
+        /* Override Vue Select */
+        .vue-dropdown {
+            background: transparent;
+        }
+        .vue-dropdown-item {
+            background-color: #fffc;
+            box-shadow: 0px 0 0px 0px #cef1f7;
+            transition: box-shadow ease 0.25s;
+            z-index: 1; position: relative;
+        }
+        .vue-dropdown-item.highlighted {
+            background-color: #ffffffcc;
+            box-shadow: 0px 0 0px 2px #cef1f7;
+            z-index: 2;
+        }
+        .vue-dropdown-item.selected {
+            background-color: #eaf0f1cc;
+            box-shadow: 0px 0 0px 2px #cef1f7;
+            z-index: 4;
+        }
+        .vue-dropdown-item.highlighted.selected {
+            background-color: #eaf0f1cc;
+            box-shadow: 0px 0 0px 1px #cef1f7;
         }
 </style>
 </head>
@@ -142,24 +177,21 @@
 <body>
 
     <div id="app">
-        <!-- Color Picker -->
-        <div class="icon-colors">
-            <div v-for="(color, index) in colorOptions" :key="color.name" :title="color.name"
-            class="color-option"
-            :class="{'color-selected': activeColor == index}" @click="activeColor = index"
-            :style="{background: color.code, width: `${100/colorOptions.length}%`}"></div>
-        </div>
         <!-- Recents -->
-        <div v-if="openedIcons">
-            <p class="mb-0 small fw-bold text-center">Recent Icons</p>
-            <div class="row justify-content-center px-3 icons-container flex-nowrap overflow-auto">
+        <div v-if="openedIcons.length > 0" class="px-3">
+            <p class="mb-0 fw-bold">Recent Icons</p>
+            <div class="row justify-content-start px-3 icons-container flex-nowrap overflow-auto">
                 <div
                     class="col-2 icon-cell"
                     v-for="icon in openedIcons"
                     :key="icon.id"
                     :title="icon.title"
-                    @click="postChoice(iconurl=icon)">
-                        <img :src="icon.url" class="w-100 h-100"/>
+                    @click="postChoice(icon,colorOptions[activeColor])">
+                        <img :style="{
+                            maskImage: `url('${icon.url}')`,
+                            background: colorOptions[activeColor].code
+                        }" class="w-100 h-100 maskImage"/>
+                        <!-- <img :src="icon.url" class="w-100 h-100"/> -->
                         <!-- <transition name="float">
                         <div v-if="icon.id == currentIcon" class="color-options">
                             <div v-for="color in colorOptions" :key="color.name" :title="color.name"
@@ -168,26 +200,49 @@
                         </div>
                         </transition> -->
                 </div>
+            </div>
         </div>
-        <!-- Navigation -->
-        <ul class="nav nav-tabs sticky-top bg-white" id="categorySelect" role="tablist">
-            <li class="nav-item" role="presentation" v-for="(category, index) in categoryData" :key="category.name"
-                :id="`tab-${category.name}`" >
-                <button class="nav-link"
-                    :class="index == currentCategory ? 'active' : ''" @click="setCategory(index)">
-                    {{category.name}}
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" v-for="(category, index) in categoryData" :key="category.name"
+        <div class="icons">
+            <div class="filter px-3 py-2">
+                <div class="row">
+                    <div class="col-md text-center">
+                        <div class="mb-3 row align-items-center">
+                            <label for="categorySelect" class="col-sm-2 col-form-label">Category:</label>
+                            <div class="col-sm-10">
+                                <vue-select
+                                    id="categorySelect" aria-label="Categories"
+                                    style="width: 100%"
+                                    :options="filteredCategories" label-by="name" value-by="id"
+                                    :visible-options="filteredCategories"
+                                    :searchable="true"
+                                    :placeholder="categoryData[currentCategory] ? categoryData[currentCategory].name : ''"
+                                    :close-on-select="true"
+                                    :empty-model-value="currentCategory"
+                                    search-placeholder="Type to search for a category or idea..."
+                                    @search:input="categorySearch = $event.target.value"
+                                    @update:model-value="setCategory($event)"> </vue-select>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="mb-3 row align-items-center">
+                            <label for="colorSelect" class="col-6 col-form-label">Colour:</label>
+                            <div class="col-4">
+                                <div class="color-picker"></div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>                  
+            </div>
+            <div v-for="(category, index) in categoryData" :key="category.name"
             :id="`pane-${category.name}`" role="tabpanel" :aria-labelledby="`tab-${category.name}`"
             v-show="currentCategory == index">
                 <div v-if="loadedTabs[index] || currentCategory == index" class="row align-content-start px-3 py-4 icons-container">
                     <div
                         class="col-2 m-2 icon-cell"
                         :class="{
-                            'border border-3': icon.id == currentIcon
+                            'border border-3': icon.id == currentIcon,
+                            'draggable-outline sortable-ghost': icon.title && debouncedCategorySearch.trim() && icon.title.toLowerCase().indexOf(debouncedCategorySearch.trim().toLowerCase()) >= 0
                         }"
                         v-for="icon in category.icons"
                         :key="icon.id"
@@ -195,7 +250,7 @@
                         @click="postChoice(icon,colorOptions[activeColor])">
                             <!-- <img :src="`${colorIcon(icon.url)}`" class="w-100 h-100"/> -->
                             <img :style="{
-                                maskImage: `url(${icon.url})`,
+                                maskImage: `url('${icon.url}')`,
                                 background: colorOptions[activeColor].code
                             }" class="w-100 h-100 maskImage"/>
                             <!-- <transition name="float">
@@ -244,12 +299,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
     <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
     <script src="https://cdn.jsdelivr.net/npm/vue-draggable-next@2.0.1/dist/vue-draggable-next.global.min.js"></script>
+    <!-- UNPKG :: Vue Select -->
+    <script src="https://unpkg.com/vue-next-select/dist/vue-next-select.iife.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+    <!-- JSDELIVR :: Pickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/monolith.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+
     <!-- Begin setting up Vue -->
     <script>
-        const { ref, computed, watch } = Vue;
+        const { ref, computed, watch, onMounted } = Vue;
         const IconSelector = {
             components: {
                 draggable: VueDraggableNext.VueDraggableNext,
+                'vue-select': VueNextSelect,
             },
             setup() {
                 const recents = computed({
@@ -283,7 +346,7 @@
                 let activeColor = ref(recents.value.lastColor);
                 const colorOptions = [
                     {code: "#00467F", name: "Dark blue"},
-                    {code: "#000", name: "Black"},
+                    {code: "#000000", name: "Black"},
                     {code: "#4A4A4C", name: "Body Grey"},
                     {code: "#8D9091", name: "Silver"},
                     {code: "#A71930", name: "Arts"},
@@ -297,9 +360,38 @@
                     {code: "#BA4482", name: "Auckland Bioengineering Institute"},
                     {code: "#006990", name: "Liggins Institute"}
                 ];
+                const setColor = (color) => {
+                    const index = colorOptions.findIndex(e => e.code==color.code)
+                    activeColor.value = index >= 0 ? index : 0;
+                }
                 const colorIcon = (iconUrl, color=colorOptions[activeColor.value]) => {
                     return `${iconUrl}?color=${color.code.replace('#','')}`
                 }
+                onMounted(() => {
+                    const pickr = Pickr.create({
+                        el: '.color-picker',
+                        theme: 'monolith',
+                        swatches: colorOptions.map(e=>e.code),
+                        default: colorOptions[activeColor.value].code,
+                        comparison: false,
+                        lockOpacity: true,
+                        // components: {
+                        //     // preview: true,
+                        //     opacity: false,
+                        //     hue: true,
+                        //     // interaction: { save: true }
+                        // }
+                    });
+                    pickr.on('change',(c, _, inst) => {
+                        const hex = c.toHEXA().toString()
+                        const index = colorOptions.findIndex(e => e.code==hex)
+                        if(index >= 0) {
+                            activeColor.value = index
+                            inst.applyColor()
+                        }
+                    })
+                    console.log('Component is mounted!')
+                })
 
                 // Watch so we can update recents
                 const submitRecents = ()=>{
@@ -329,29 +421,13 @@
                     data: ""
                 }
 
-                const postChoice = (icon=false, color=false, iconUrl=false) => {
-                    recents.value.openedIcons.unshift({
-                        id: icon.id,
-                        name: icon.name,
-                        url: iconUrl ? iconUrl: colorIcon(icon.url,color ? color : undefined)
-                    })
-                    content_items.value.value=iconUrl ? iconUrl : colorIcon(icon.url,color ? color : undefined);
+                const postChoice = (icon=false, color=false) => {
+                    const existingMatch = recents.value.openedIcons.findIndex(e=>e.url == icon.url);
+                    if(existingMatch != -1) { recents.value.openedIcons.splice(existingMatch)}
+                    recents.value.openedIcons.unshift(icon)
+                    content_items.value.value=colorIcon(icon.url,color ? color : undefined);
                     submitRecents();
                     submitForm.value.submit();
-                    // superagent.post('iconSelector.pyg')
-                    // .set('Content-Type', 'application/x-www-form-urlencoded')
-                    // .send({
-                    //     returnCanvas: '',
-                    //     returnUrl: returnUrl,
-                    //     content_items: `${icon.url}?color=${color.code}`,
-                    //     data: data
-                    // }).then(resp => {
-                    //     console.log(resp);
-                    //     console.log("Success! Choice selected.");
-                    // }, err => {
-                    //     console.error(err);
-                    //     console.error("Fail! Choice failed to select.")
-                    // })
                 }
 
                 // This Async function begins the process of fetching data to fill things out
@@ -364,6 +440,7 @@
                         const category = categories.body[i];
                         categoryData.value.push({
                             name: category.name,
+                            id: i,
                             icons: []
                         })
                         superagent.get(category.url).then(res => {
@@ -371,17 +448,44 @@
                             categoryData.value[i].icons = res.body.icons;
                         })                        
                     }
-                    // for (const category of categories.body) {
-                    //     superagent.get(category.url).then(res => {
-                    //         // res.body.icons.forEach(i => i.selected = false)
-                    //         categoryData.value.push({
-                    //             name: category.name,
-                    //             icons: res.body.icons
-                    //         });
-                    //     })
-                    //     // break;
-                    // }
                 })();
+
+                // Debounce search string as searching takes time
+                let debouncedCategorySearch = ref("")
+                let categoryTimeout = ref(null)
+                const categorySearch = computed({
+                    get() {
+                        return debouncedCategorySearch.value
+                    },
+                    set(val) {
+                        if (categoryTimeout.value) clearTimeout(categoryTimeout.value)
+                        categoryTimeout.value = setTimeout(() => {
+                            debouncedCategorySearch.value = val
+                        }, 300)
+                    }
+                });
+                const fuseSearch = computed(()=> {
+                    return fuse = new Fuse(categoryData.value, {
+                        keys: [{
+                            name: 'name',
+                            weight: 0.9
+                        }, {
+                            name: 'icons.title',
+                            weight: 0.1
+                        }],
+                        shouldSort: true,
+                    })
+                })
+                const filteredCategories = computed(()=> {
+                    const search = debouncedCategorySearch.value;
+                    return search.length
+                        ? fuseSearch.value.search(search).map(({ item }) => item)
+                        : categoryData.value
+                }, {onTrack(e) { debugger }});
+                watch(filteredCategories, (c, _) => {
+                    console.log("filter changing!");
+                    currentCategory.value = filteredCategories.value[0].id
+                })
 
                 return {
                     currentCategory,
@@ -397,7 +501,13 @@
                     submitForm,
                     recents,
                     openedIcons,
-                    colorIcon
+                    colorIcon,
+                    fuseSearch,
+                    categorySearch,
+                    filteredCategories,
+                    setColor,
+                    debouncedCategorySearch,
+                    categoryTimeout
                 }
             }
         }
