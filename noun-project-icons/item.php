@@ -1,15 +1,11 @@
 <?php
 header('Content-type: image/svg+xml');
-$color = $_GET["color"];
-$SVGPath = $_SERVER['DOCUMENT_ROOT'] . strtok($_SERVER["REQUEST_URI"], '?');
-// echo $SVGPath;
-// echo "\n";
+$SVGPath = getcwd() . '/' . $_GET["id"];
 $SVG = file_get_contents($SVGPath);
+if (isset($_GET['color']) && trim($_GET["color"], '0..9A..Fa..f') == '') {
+    $color = $_GET["color"];
+    echo str_replace(array('#000000','black','rgb(0,0,0)','rgba(0,0,0,1)'),'#' . $color, $SVG);
 
-// echo $SVG;
-// echo "\n";
-if ($color && trim($color, '0..9A..Fa..f') == '') {
-    echo str_replace('#000000','#' . $color, $SVG);
 } else {
     echo $SVG;
 }
