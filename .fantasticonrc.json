@@ -1,0 +1,17 @@
+{
+	"name": "c-ics",
+	"inputDir": "./static/svg",
+	"outputDir": "./static/font",
+	"fontTypes": ["svg"],
+	"assetTypes": ["ts", "css", "json"],
+	"fontsUrl": "",
+	"formatOptions": {
+		"json": {
+			"indent": 2
+		},
+		"ts": {
+			"types": ["constant", "literalId"],
+			"singleQuotes": true
+		}
+	}
+}

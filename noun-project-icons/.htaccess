@@ -1,8 +1,0 @@
-Options +FollowSymLinks -MultiViews
-# Turn mod_rewrite on
-RewriteEngine On
-
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteCond %{REQUEST_METHOD}  =GET
-RewriteCond %{QUERY_STRING} ^color=((?:[0-9a-fA-F]{3}){1,2})$
-RewriteRule ^([\w\-_\d/\s]+\.svg)$ item.php?id=$1&color=$2 [NC,L,QSA]
