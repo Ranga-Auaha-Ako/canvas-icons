@@ -50,6 +50,12 @@
 			offset: 200
 		});
 	});
+
+	const goToCategory = (cat, i) => {
+		searching = false;
+		// Get first child and focus!
+		document.querySelector<HTMLElement>(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus();
+	};
 </script>
 
 <div style="--iconColor: {colour}">
@@ -73,10 +79,7 @@
 				<a
 					class="cat-shortcut"
 					href="#cat-{i}-{cat.name.toLowerCase()}"
-					on:click={(_) =>
-						setTimeout(() => {
-							searching = false;
-						}, 100)}
+					on:click={(e) => goToCategory(cat, i)}
 				>
 					{cat.name}
 					{#if search}
