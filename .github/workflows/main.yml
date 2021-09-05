@@ -28,17 +28,14 @@ jobs:
     #     # A file, directory or wildcard pattern that describes what to upload
     #     path: ./build/
     #     # The desired behavior if no files are found using the provided path.
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Archive Release
+      uses: thedoctor0/zip-release@master
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-    - name: Upload Assets to Release with a wildcard
-      uses: csexton/release-asset-action@v2
+        type: 'zip'
+        path: './build/'
+        filename: 'release.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+    - uses: ncipollo/release-action@v1
       with:
-        pattern: "artifacts/*.zip"
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        release-url: ${{ steps.create_release.outputs.upload_url }}
+        artifacts: "release.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
