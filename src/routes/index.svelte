@@ -76,8 +76,13 @@
 					on:click={(_) =>
 						setTimeout(() => {
 							searching = false;
-						}, 100)}>{cat.name}</a
+						}, 100)}
 				>
+					{cat.name}
+					{#if search}
+						({filteredIndices.filter((icon) => catIconIndex[i].includes(icon)).length})
+					{/if}
+				</a>
 			{/each}
 			<!--  - Colour Selector -->
 			<!-- <ColourPicker bind:value={colour} /> -->
@@ -100,8 +105,8 @@
 					<h1 class="title">{categories[i].name}</h1>
 					{#if search}
 						<h3 class="matched">
-							{filteredIndices.filter((i) => cat.includes(i)).length} icon{filteredIndices.filter(
-								(i) => cat.includes(i)
+							{filteredIndices.filter((icon) => cat.includes(icon)).length} icon{filteredIndices.filter(
+								(icon) => cat.includes(icon)
 							).length != 1
 								? 's'
 								: ''} filtered
