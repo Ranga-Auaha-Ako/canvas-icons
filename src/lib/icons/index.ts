@@ -14,7 +14,6 @@ import * as science from './icon12.json';
 import * as sports from './icon13.json';
 import * as time from './icon1.json';
 
-
 interface Icon {
 	id: string;
 	url: string;
@@ -25,12 +24,15 @@ interface Icon {
 	tags?: string[];
 	term?: string;
 	collections?: string[];
-}
-
-interface Category {
+  }
+  
+  interface Category {
 	name: string;
 	icons: Icon[];
-}
+  }
+  
+  
+  
 
 const categories : Category[] = [
 	{ name: 'Teaching', icons: teaching.icons },
@@ -51,4 +53,4 @@ const categories : Category[] = [
 ]
 
 export default categories
-export type { Category, Icon };
+export type {Icon, Category}
