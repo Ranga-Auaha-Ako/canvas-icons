@@ -32,8 +32,8 @@ jobs:
     - name: copy file
       uses: canastro/copy-file-action@master
       with:
-        source: "package.json"
-        target: "build/package.json"
+        source: "./package.json"
+        target: "./build/package.json"
     - name: Archive Release
       uses: thedoctor0/zip-release@master
       with:
