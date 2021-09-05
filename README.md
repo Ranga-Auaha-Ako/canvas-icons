@@ -1,24 +1,12 @@
-# create-svelte
+# Canvas Icons Selector
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
-```
-
-> Note: the `@next` is temporary
+Built from [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+First, install [pnpm](https://pnpm.io/) on your operating system of choice.
+
+Once you've created a project and installed dependencies with `pnpm install`), start a development server:
 
 ```bash
 npm run dev
@@ -27,12 +15,14 @@ npm run dev
 npm run dev -- --open
 ```
 
+You can test out all of the features of the icon selector, but choosing an icon will result in a 404 page as there is nothing to return to. If you would like to test integration with Canvas, use the "Paste XML" configuration type and copy + paste the XML from ./src/static/config.dev.xml into the "XML Configuration" box. Choose a memorable name, and save it to a test course of your choosing. Hot reload is enabled, but hot-reloading while previewing in Canvas will discard the callback information required to save the icon. This means that you'll need to close and re-open the dialogue if you want to test that functionality.
+
 ## Building
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+To build the project for testing the "production" output:
 
 ```bash
 npm run build
 ```
 
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+> You can preview the built app with `npm run preview`. This should _not_ be used to serve your app in production. You can host the app to be available to other devices on the network through `npm run host-preview` (for testing the built app) and `npm run host` (for testing with dev features enabled).
