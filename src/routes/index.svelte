@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Fuse from 'fuse.js';
+	import scrollSpy from 'simple-scrollspy';
 
 	// Load Icons
 
@@ -32,33 +34,62 @@
 		minMatchCharLength: 2,
 		threshold: 0.25
 	});
-	let search = 'music';
+	let search = '';
+	let searching = false;
 	$: filteredIcons = fuse.search(search);
 	$: filteredIndices = filteredIcons.map((i) => i.refIndex);
-	$: searchResults = filteredIcons.slice(0, 10).map((i) => i.item);
+	$: searchResults = filteredIcons.slice(0, 15).map((i) => i.item);
 
 	let colour = 'black';
+
+	// Scrollspy, so that the active category is highlighted
+	onMount(async () => {
+		scrollSpy(document.getElementById('shortcuts'), {
+			sectionClass: '.category',
+			menuActiveTarget: '.cat-shortcut',
+			offset: 200
+		});
+	});
 </script>
 
 <div style="--iconColor: {colour}">
 	<div id="toolbar">
-		<!-- Toolbar with search and colour selector -->
-		<!--  - Search -->
-		<input bind:value={search} />
-		<!--  - Colour Selector -->
-		<!-- <ColourPicker bind:value={colour} /> -->
+		<div id="filter">
+			<!-- Toolbar with search and colour selector -->
+			<!--  - Search -->
+			<input bind:value={search} on:focus={(_) => (searching = true)} />
+			<div class="more" class:searching>
+				{#if search}
+					<!--  - Top matching icons -->
+					<IconList icons={searchResults} {colour} />
+				{:else}
+					<p class="no-results">[Type to see relevant icons here]</p>
+				{/if}
+			</div>
+		</div>
+		<div id="shortcuts">
+			<!--  - Category Shortcuts -->
+			{#each categories as cat, i}
+				<a
+					class="cat-shortcut"
+					href="#cat-{i}-{cat.name.toLowerCase()}"
+					on:click={(_) =>
+						setTimeout(() => {
+							searching = false;
+						}, 100)}>{cat.name}</a
+				>
+			{/each}
+			<!--  - Colour Selector -->
+			<!-- <ColourPicker bind:value={colour} /> -->
+		</div>
 	</div>
-	<div id="recents">
-		<!-- Matching Icons -->
-		<IconList icons={searchResults} {colour} />
-	</div>
-	<div id="recents">
-		<!-- Recent icons -->
-	</div>
+	<!-- We don't want to accidentally select an icon when escaping search -->
+	<div class="shadowbox" class:searching on:click={(_) => (searching = false)} />
+	<!-- Full icon list -->
 	<div id="all">
 		<!-- Icons by category (filterable) -->
 		{#each catIconIndex as cat, i}
-			<div class="category">
+			<section class="category" id="cat-{i}-{categories[i].name.toLowerCase()}">
 				<div class="cat-header">
 					<h3
 						class="total"
@@ -73,7 +104,7 @@
 								(i) => cat.includes(i)
 							).length != 1
 								? 's'
-								: ''} found
+								: ''} filtered
 						</h3>
 					{/if}
 				</div>
@@ -85,7 +116,7 @@
 						show={cat}
 					/>
 				</div>
-			</div>
+			</section>
 		{/each}
 	</div>
 </div>
@@ -93,35 +124,103 @@
 <style lang="scss">
 	#toolbar {
 		position: sticky;
+		z-index: 20;
 		top: 0;
-		width: 100vw;
 		background: white;
 		z-index: 10;
-		padding: 1.4em 1em;
+		padding: 1.5em 1em;
+		display: grid;
+		grid-template:
+			'filter		filter' auto
+			'shortcuts	colour' auto;
+		row-gap: 0.5em;
 		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-		input {
-			font-size: 1.1em;
-			line-height: 1;
-			padding: 0.6em 0.4em;
-			display: block;
-			font-weight: 400;
-			border: 1px solid #ced4da;
-			-webkit-appearance: none;
-			-moz-appearance: none;
-			appearance: none;
-			border-radius: 0.25rem;
-			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-			&:focus {
-				color: #212529;
-				background-color: #fff;
-				border-color: #86b7fe;
-				outline: 0;
-				box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+
+		#filter {
+			grid-area: filter;
+
+			.more {
+				height: 0;
+				will-change: height;
+				transition: 0.3s ease height;
+				overflow: hidden;
+				&.searching {
+					height: 5em;
+				}
+
+				.no-results {
+					text-align: center;
+					height: 5em;
+					line-height: 2em;
+					margin: 1.5em;
+					opacity: 0.5;
+					user-select: none;
+				}
+			}
+
+			input {
+				width: 100%;
+				font-size: 1.1em;
+				line-height: 1;
+				padding: 0.6em 0.4em;
+				display: block;
+				font-weight: 400;
+				border: 1px solid #ced4da;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				border-radius: 0.25rem;
+				transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+				&:focus {
+					color: #212529;
+					background-color: #fff;
+					border-color: #86b7fe;
+					outline: 0;
+					box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+				}
+			}
+		}
+
+		#shortcuts {
+			grid-area: shortcuts;
+			display: flex;
+			flex-wrap: wrap;
+			column-gap: 0.4em;
+			row-gap: 0.4em;
+			font-size: 0.8em;
+			.cat-shortcut {
+				color: black;
+				text-decoration: none;
+				display: block;
+				padding: 0.5em 0.5em;
+				line-height: 1;
+				background-color: #e7e7e7;
+				will-change: background-color;
+				transition: 0.5s ease background-color;
+				border-radius: 6px;
+				&:global(.active) {
+					background-color: rgb(139, 212, 157);
+				}
 			}
 		}
 	}
 
+	.shadowbox {
+		position: fixed;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: #00000012;
+		z-index: 10;
+		visibility: hidden;
+		&.searching {
+			visibility: visible;
+		}
+	}
+
 	.category {
+		margin-top: -8em;
+		padding-top: 8em;
 		.cat-header {
 			display: grid;
 			grid-template-columns: auto 1fr auto;
