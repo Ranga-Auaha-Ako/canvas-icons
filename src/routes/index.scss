@@ -86,7 +86,7 @@
 			transition: 0.5s ease background-color;
 			border-radius: 6px;
 			cursor: pointer;
-			&:global(.active) {
+			&.active {
 				background-color: rgb(139, 212, 157);
 			}
 		}
