@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { titleCase } from 'title-case';
 	import type { Icon } from '../icons';
 	export let icons: any[];
@@ -17,6 +18,8 @@
 			.join('-')
 			.replace(' ', '_');
 	};
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <div
@@ -34,7 +37,12 @@
 				class:match={highlight !== false && highlight.includes(i)}
 				title={titleCase(icon.term ? icon.term : icon.title)}
 				tabindex="0"
-				role="listitem"
+				role="button"
+				on:click={() =>
+					dispatch('selectIcon', {
+						url: icon.url,
+						alt: titleCase(icon.term ? icon.term : icon.title)
+					})}
 			>
 				<div
 					class="img"

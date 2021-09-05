@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@smarterservices/ims-lti': ^3.0.7
   '@sveltejs/adapter-node': ^1.0.0-next.45
   '@sveltejs/kit': next
   '@typescript-eslint/eslint-plugin': ^4.19.0
@@ -9,6 +10,8 @@ specifiers:
   eslint-config-prettier: ^8.1.0
   eslint-plugin-svelte3: ^3.2.0
   fuse.js: ^6.4.6
+  html-escaper: ^3.0.3
+  oauth1-signature: ^1.0.5
   prettier: ~2.2.1
   prettier-plugin-svelte: ^2.2.0
   sass: ^1.39.0
@@ -21,7 +24,10 @@ specifiers:
   typescript: ^4.0.0
 
 dependencies:
+  '@smarterservices/ims-lti': 3.0.7
   fuse.js: 6.4.6
+  html-escaper: 3.0.3
+  oauth1-signature: 1.0.5
   sass: 1.39.0
   simple-scrollspy: 2.1.0
   title-case: 3.0.3
@@ -124,6 +130,14 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.0
     dev: true
+
+  /@smarterservices/ims-lti/3.0.7:
+    resolution: {integrity: sha1-zgoUP1ijAvjZgSQyevii2Xax4d4=}
+    dependencies:
+      node-uuid: 1.4.8
+      xml2js: 0.4.23
+      xmlbuilder: 2.4.6
+    dev: false
 
   /@sveltejs/adapter-node/1.0.0-next.45:
     resolution: {integrity: sha512-oZN3XjCSLBJDPWhaf7g84BfQa21Qsqj+DHcem0r4W13IgEF4gcVGj1K94IIibDgCl8uArZq5AfI5wJejo/vtwg==}
@@ -827,6 +841,10 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /html-escaper/3.0.3:
+    resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
+    dev: false
+
   /ignore/4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}
     engines: {node: '>= 4'}
@@ -933,6 +951,11 @@ packages:
       type-check: 0.4.0
     dev: true
 
+  /lodash-node/2.4.1:
+    resolution: {integrity: sha1-6oL3sQDHM9GkKvdoAeUGEF4qgOw=}
+    deprecated: This package is discontinued. Use lodash@^4.0.0.
+    dev: false
+
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
     dev: true
@@ -1005,9 +1028,19 @@ packages:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
 
+  /node-uuid/1.4.8:
+    resolution: {integrity: sha1-sEDrCSOWivq/jTL7HxfxFn/auQc=}
+    deprecated: Use uuid module instead
+    hasBin: true
+    dev: false
+
   /normalize-path/3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
+
+  /oauth1-signature/1.0.5:
+    resolution: {integrity: sha512-Eg50fJSc86FiqM57CzeEDzKR1FWq9g8LlbMr3Ow/9fw2K8Lr+uDdNBgII8ozdWKX/GLI5mPoRSIHFmqW+hk8Ew==}
+    dev: false
 
   /once/1.4.0:
     resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=}
@@ -1172,6 +1205,10 @@ packages:
     hasBin: true
     dependencies:
       chokidar: 3.5.2
+    dev: false
+
+  /sax/1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: false
 
   /semver/7.3.5:
@@ -1473,6 +1510,26 @@ packages:
   /wrappy/1.0.2:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
     dev: true
+
+  /xml2js/0.4.23:
+    resolution: {integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==}
+    engines: {node: '>=4.0.0'}
+    dependencies:
+      sax: 1.2.4
+      xmlbuilder: 11.0.1
+    dev: false
+
+  /xmlbuilder/11.0.1:
+    resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
+    engines: {node: '>=4.0'}
+    dev: false
+
+  /xmlbuilder/2.4.6:
+    resolution: {integrity: sha1-QsZk8TWIZOW+sUYbQ0auyHtjRQ8=}
+    engines: {node: 0.8.x || 0.10.x || 0.11.x  || 1.0.x}
+    dependencies:
+      lodash-node: 2.4.1
+    dev: false
 
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}

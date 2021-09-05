@@ -2,6 +2,10 @@
 	import { onMount } from 'svelte';
 	import Fuse from 'fuse.js';
 	import scrollSpy from 'simple-scrollspy';
+	import { page, session } from '$app/stores';
+
+	// Stylesheet
+	import './index.scss';
 
 	// Load Icons
 
@@ -42,6 +46,8 @@
 
 	let colour = 'black';
 
+	let debug = false;
+
 	// Scrollspy, so that the active category is highlighted
 	onMount(async () => {
 		scrollSpy(document.getElementById('shortcuts'), {
@@ -50,32 +56,100 @@
 			hrefAttribute: 'data-href',
 			offset: 200
 		});
+		const urlSearchParams = new URLSearchParams(window.location.search);
+		debug = urlSearchParams.has('debug');
 	});
 
 	const goToCategory = (cat, i) => {
 		searching = false;
 		// Get first child and focus!
-		document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus();
+		document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus({
+			preventScroll: true
+		});
 		setTimeout(() => {
 			window.scroll({
 				top: document.querySelector(`#cat-${i}-${cat.name.toLowerCase()}`).offsetTop,
 				left: 0,
 				behavior: 'smooth'
 			});
-		}, 300);
+		}, 150);
+	};
+
+	// Handle clicking on an icon
+	const selectIcon = (e) => {
+		const iconAlt = e.detail.alt;
+		const iconUrl = e.detail.url;
+		const callback = $session.callback;
+		const data = $session.data;
+		if (!iconUrl || !data || !callback) {
+			console.error(
+				'Missing information! This is likely due to data not being picked up on load. We only have: ',
+				[iconUrl, data, callback]
+			);
+			debugger;
+		}
+		// Make a request to buildIcon to get the form which will send us back
+		window.location.href = `buildIcon.html?${new URLSearchParams({
+			'icon-url': iconUrl,
+			'icon-alt': iconAlt,
+			callback: callback,
+			data
+		}).toString()}`;
+		// fetch(
+		// 	`buildIcon.json?${new URLSearchParams({
+		// 		'icon-url': iconUrl,
+		// 		'icon-alt': iconAlt,
+		// 		data
+		// 	}).toString()}`
+		// )
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		// We have the data, log to console
+		// 		console.log(data);
+		// 		debugger;
+		// 		// Post to callback
+		// 		fetch($session.callback, {
+		// 			method: 'POST',
+		// 			headers: {
+		// 				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+		// 			},
+		// 			mode: 'no-cors',
+		// 			body: new URLSearchParams(data)
+		// 		})
+		// 			.then((res) => res.text())
+		// 			.then((output) => {
+		// 				console.log(output);
+		// 				window.location = $session.callback;
+		// 			});
+		// 	});
 	};
 </script>
 
 <div style="--iconColor: {colour}">
+	{#if debug}
+		<pre>
+{JSON.stringify($session)}
+{JSON.stringify($page)}
+		</pre>
+	{/if}
 	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
 			<!--  - Search -->
-			<input bind:value={search} on:focus={(_) => (searching = true)} />
+			<input
+				type="search"
+				bind:value={search}
+				on:focus={(_) => (searching = true)}
+				placeholder="Kia ora{$session.user && $session.user.name
+					? ` ${$session.user.name}`
+					: ''}, type to start searching..."
+			/>
 			<div class="more" class:searching>
-				{#if search}
+				{#if searchResults.length > 0}
 					<!--  - Top matching icons -->
-					<IconList icons={searchResults} {colour} />
+					<IconList on:selectIcon={selectIcon} icons={searchResults} {colour} />
+				{:else if search}
+					<p class="no-results">[No icons found! Try another search]</p>
 				{:else}
 					<p class="no-results">[Type to see relevant icons here]</p>
 				{/if}
@@ -135,6 +209,7 @@
 				</div>
 				<div class="icons">
 					<IconList
+						on:selectIcon={selectIcon}
 						icons={allIcons}
 						highlight={search ? filteredIndices : false}
 						colour="black"
@@ -145,148 +220,3 @@
 		{/each}
 	</main>
 </div>
-
-<style lang="scss">
-	#toolbar {
-		position: sticky;
-		z-index: 20;
-		top: 0;
-		background: white;
-		z-index: 10;
-		padding: 1.5em 1em;
-		display: grid;
-		grid-template:
-			'filter		filter' auto
-			'shortcuts	colour' auto;
-		row-gap: 0.5em;
-		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-
-		#filter {
-			grid-area: filter;
-
-			.more {
-				height: 0;
-				will-change: height;
-				transition: 0.3s ease height;
-				overflow: hidden;
-				&.searching {
-					height: 5em;
-				}
-
-				.no-results {
-					text-align: center;
-					height: 5em;
-					line-height: 2em;
-					margin: 1.5em;
-					opacity: 0.5;
-					user-select: none;
-				}
-			}
-
-			input {
-				width: 100%;
-				font-size: 1.1em;
-				line-height: 1;
-				padding: 0.6em 0.4em;
-				display: block;
-				font-weight: 400;
-				border: 1px solid #ced4da;
-				-webkit-appearance: none;
-				-moz-appearance: none;
-				appearance: none;
-				border-radius: 0.25rem;
-				transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-				&:focus {
-					color: #212529;
-					background-color: #fff;
-					border-color: #86b7fe;
-					outline: 0;
-					box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
-				}
-			}
-		}
-
-		#shortcuts {
-			grid-area: shortcuts;
-			display: flex;
-			flex-wrap: wrap;
-			column-gap: 0.4em;
-			row-gap: 0.4em;
-			font-size: 0.8em;
-			.cat-shortcut {
-				appearance: none;
-				-webkit-appearance: none;
-				border: 0;
-				color: black;
-				text-decoration: none;
-				display: block;
-				padding: 0.5em 0.5em;
-				line-height: 1;
-				background-color: #e7e7e7;
-				will-change: background-color;
-				transition: 0.5s ease background-color;
-				border-radius: 6px;
-				cursor: pointer;
-				&:global(.active) {
-					background-color: rgb(139, 212, 157);
-				}
-			}
-		}
-	}
-
-	.shadowbox {
-		position: fixed;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: #00000012;
-		z-index: 10;
-		visibility: hidden;
-		&.searching {
-			visibility: visible;
-		}
-	}
-
-	.category {
-		margin-top: -8em;
-		padding-top: 8em;
-		.cat-header {
-			display: grid;
-			grid-template-columns: auto 1fr auto;
-			column-gap: 1em;
-			align-items: center;
-			padding: 0 1em;
-			background: #f3f3f3;
-
-			.total {
-				background-color: #0000000d;
-				padding: 0.4em 0.6em;
-				border-radius: 0.3em;
-			}
-
-			.matched {
-				font-weight: normal;
-			}
-		}
-	}
-
-	// https://css-tricks.com/how-to-create-a-skip-to-content-link/
-	.skip-to-nav-link {
-		background: #e77e23;
-		color: white;
-		text-decoration: none;
-		line-height: 1;
-		height: 1.8em;
-		left: 0%;
-		padding: 0.4em;
-		border-top-right-radius: 0.4em;
-		border-bottom-right-radius: 0.4em;
-		position: absolute;
-		transform: translateX(-100%);
-		transition: transform 0.3s;
-	}
-
-	.skip-to-nav-link:focus {
-		transform: translateX(0%);
-	}
-</style>

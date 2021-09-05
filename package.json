@@ -38,7 +38,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@smarterservices/ims-lti": "^3.0.7",
 		"fuse.js": "^6.4.6",
+		"html-escaper": "^3.0.3",
+		"oauth1-signature": "^1.0.5",
 		"sass": "^1.39.0",
 		"simple-scrollspy": "^2.1.0",
 		"title-case": "^3.0.3"
