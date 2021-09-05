@@ -19,7 +19,12 @@
 	};
 </script>
 
-<div class="iconList" class:filtered={highlight !== false} style="--iconColor: {colour}">
+<div
+	role="list"
+	class="iconList"
+	class:filtered={highlight !== false}
+	style="--iconColor: {colour}"
+>
 	<!-- Recent icons -->
 	{#each icons as icon, i}
 		{#if show === false || show.includes(i)}
@@ -28,6 +33,8 @@
 				class="icon"
 				class:match={highlight !== false && highlight.includes(i)}
 				title={titleCase(icon.term ? icon.term : icon.title)}
+				tabindex="0"
+				role="listitem"
 			>
 				<div
 					class="img"

@@ -47,6 +47,7 @@
 		scrollSpy(document.getElementById('shortcuts'), {
 			sectionClass: '.category',
 			menuActiveTarget: '.cat-shortcut',
+			hrefAttribute: 'data-href',
 			offset: 200
 		});
 	});
@@ -54,12 +55,19 @@
 	const goToCategory = (cat, i) => {
 		searching = false;
 		// Get first child and focus!
-		document.querySelector<HTMLElement>(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus();
+		document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus();
+		setTimeout(() => {
+			window.scroll({
+				top: document.querySelector(`#cat-${i}-${cat.name.toLowerCase()}`).offsetTop,
+				left: 0,
+				behavior: 'smooth'
+			});
+		}, 300);
 	};
 </script>
 
 <div style="--iconColor: {colour}">
-	<div id="toolbar">
+	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
 			<!--  - Search -->
@@ -76,29 +84,38 @@
 		<div id="shortcuts">
 			<!--  - Category Shortcuts -->
 			{#each categories as cat, i}
-				<a
+				<button
 					class="cat-shortcut"
-					href="#cat-{i}-{cat.name.toLowerCase()}"
+					data-href="#cat-{i}-{cat.name.toLowerCase()}"
+					tabindex="0"
 					on:click={(e) => goToCategory(cat, i)}
 				>
 					{cat.name}
 					{#if search}
 						({filteredIndices.filter((icon) => catIconIndex[i].includes(icon)).length})
 					{/if}
-				</a>
+				</button>
 			{/each}
 			<!--  - Colour Selector -->
 			<!-- <ColourPicker bind:value={colour} /> -->
 		</div>
-	</div>
+	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->
 	<div class="shadowbox" class:searching on:click={(_) => (searching = false)} />
 	<!-- Full icon list -->
-	<div id="all">
+	<main id="all">
 		<!-- Icons by category (filterable) -->
 		{#each catIconIndex as cat, i}
-			<section class="category" id="cat-{i}-{categories[i].name.toLowerCase()}">
+			<section
+				aria-label="{categories[i].name} ({categories[i].icons.length} icon{categories[i].icons
+					.length != 1
+					? 's'
+					: ''})"
+				class="category"
+				id="cat-{i}-{categories[i].name.toLowerCase()}"
+			>
 				<div class="cat-header">
+					<a class="skip-to-nav-link" href="#toolbar"> Return to navigation </a>
 					<h3
 						class="total"
 						title="{categories[i].icons.length} icon{categories[i].icons.length != 1 ? 's' : ''}"
@@ -126,7 +143,7 @@
 				</div>
 			</section>
 		{/each}
-	</div>
+	</main>
 </div>
 
 <style lang="scss">
@@ -197,6 +214,9 @@
 			row-gap: 0.4em;
 			font-size: 0.8em;
 			.cat-shortcut {
+				appearance: none;
+				-webkit-appearance: none;
+				border: 0;
 				color: black;
 				text-decoration: none;
 				display: block;
@@ -206,6 +226,7 @@
 				will-change: background-color;
 				transition: 0.5s ease background-color;
 				border-radius: 6px;
+				cursor: pointer;
 				&:global(.active) {
 					background-color: rgb(139, 212, 157);
 				}
@@ -247,5 +268,25 @@
 				font-weight: normal;
 			}
 		}
+	}
+
+	// https://css-tricks.com/how-to-create-a-skip-to-content-link/
+	.skip-to-nav-link {
+		background: #e77e23;
+		color: white;
+		text-decoration: none;
+		line-height: 1;
+		height: 1.8em;
+		left: 0%;
+		padding: 0.4em;
+		border-top-right-radius: 0.4em;
+		border-bottom-right-radius: 0.4em;
+		position: absolute;
+		transform: translateX(-100%);
+		transition: transform 0.3s;
+	}
+
+	.skip-to-nav-link:focus {
+		transform: translateX(0%);
 	}
 </style>
