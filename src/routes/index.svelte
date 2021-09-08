@@ -46,8 +46,6 @@
 
 	let colour = 'black';
 
-	let debug = false;
-
 	// Scrollspy, so that the active category is highlighted
 	onMount(async () => {
 		scrollSpy(document.getElementById('shortcuts'), {
@@ -57,7 +55,6 @@
 			offset: 200
 		});
 		const urlSearchParams = new URLSearchParams(window.location.search);
-		debug = urlSearchParams.has('debug');
 	});
 
 	const goToCategory = (cat, i) => {
