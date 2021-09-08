@@ -13,6 +13,10 @@
 	import type { Category, Icon } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
 
+	// Load colour picker
+	import ColourPicker from '$lib/components/colourPicker.svelte';
+	let colour = '#000000';
+
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
 	let allIcons: Icon[] = categories.reduce((acc, cv) => acc.concat(cv.icons), []);
@@ -44,9 +48,6 @@
 	$: filteredIndices = filteredIcons.map((i) => i.refIndex);
 	$: searchResults = filteredIcons.slice(0, 15).map((i) => i.item);
 
-	// Colour Selector
-	let colour = 'black';
-
 	// Scrollspy, so that the active category is highlighted
 	onMount(async () => {
 		scrollSpy(document.getElementById('shortcuts'), {
@@ -76,7 +77,9 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/${e.detail.url}`;
+		const iconUrl = `https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/${
+			e.detail.url
+		}?color=${colour.replace('#', '')}`;
 		const callback = $session.callback;
 		const data = $session.data;
 		if (!iconUrl || !data || !callback) {
@@ -93,33 +96,6 @@
 			callback: callback,
 			data
 		}).toString()}`;
-		// fetch(
-		// 	`buildIcon.json?${new URLSearchParams({
-		// 		'icon-url': iconUrl,
-		// 		'icon-alt': iconAlt,
-		// 		data
-		// 	}).toString()}`
-		// )
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		// We have the data, log to console
-		// 		console.log(data);
-		// 		debugger;
-		// 		// Post to callback
-		// 		fetch($session.callback, {
-		// 			method: 'POST',
-		// 			headers: {
-		// 				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-		// 			},
-		// 			mode: 'no-cors',
-		// 			body: new URLSearchParams(data)
-		// 		})
-		// 			.then((res) => res.text())
-		// 			.then((output) => {
-		// 				console.log(output);
-		// 				window.location = $session.callback;
-		// 			});
-		// 	});
 	};
 </script>
 
@@ -162,8 +138,10 @@
 					{/if}
 				</button>
 			{/each}
+		</div>
+		<div id="colour-picker">
 			<!--  - Colour Selector -->
-			<!-- <ColourPicker bind:value={colour} /> -->
+			<ColourPicker bind:value={colour} />
 		</div>
 	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->
@@ -204,7 +182,7 @@
 						on:selectIcon={selectIcon}
 						icons={allIcons}
 						highlight={search ? filteredIndices : false}
-						colour="black"
+						{colour}
 						show={cat}
 					/>
 				</div>

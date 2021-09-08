@@ -11,10 +11,10 @@
 	z-index: 10;
 	padding: 1.5em 1em;
 	display: grid;
-	grid-template:
-		'filter		filter' auto
-		'shortcuts	colour' auto;
+	grid-template-areas: 'filter filter' 'shortcuts colour';
+	grid-template-columns: minmax(1em, max-content) minmax(min-content, auto);
 	row-gap: 0.5em;
+	column-gap: 1.5em;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
 	#filter {
@@ -95,6 +95,10 @@
 				background-color: rgb(139, 212, 157);
 			}
 		}
+	}
+
+	#colour-picker {
+		grid-area: colour;
 	}
 }
 
