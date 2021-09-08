@@ -2,9 +2,10 @@
 	"name": "canvas-icon",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
-		"host": "svelte-kit dev --host",
-		"build": "svelte-kit build",
+		"dev": "node buildSprites.js svelte-kit dev",
+		"host": "node buildSprites.js svelte-kit dev --host",
+		"build": "node buildSprites.js && svelte-kit build",
+		"icons": "node buildSprites.js",
 		"preview": "svelte-kit preview",
 		"host-preview": "svelte-kit preview --host",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -39,10 +40,15 @@
 	"type": "module",
 	"dependencies": {
 		"fuse.js": "^6.4.6",
+		"glob": "^7.1.7",
 		"html-escaper": "^3.0.3",
 		"oauth1-signature": "^1.0.5",
+		"rimraf": "^3.0.2",
 		"sass": "^1.39.0",
 		"simple-scrollspy": "^2.1.0",
-		"title-case": "^3.0.3"
+		"slash": "^4.0.0",
+		"svg-sprite": "^1.5.2",
+		"title-case": "^3.0.3",
+		"vinyl": "^2.2.1"
 	}
 }
