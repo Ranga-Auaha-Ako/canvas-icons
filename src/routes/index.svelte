@@ -44,6 +44,7 @@
 	$: filteredIndices = filteredIcons.map((i) => i.refIndex);
 	$: searchResults = filteredIcons.slice(0, 15).map((i) => i.item);
 
+	// Colour Selector
 	let colour = 'black';
 
 	// Scrollspy, so that the active category is highlighted
