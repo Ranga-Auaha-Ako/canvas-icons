@@ -32,13 +32,12 @@
 	<!-- Recent icons -->
 	{#each icons as icon, i}
 		{#if show === false || show.includes(i)}
-			<div
+			<button
 				id={`${i}-${getIconClass(icon.url)}`}
 				class="icon"
 				class:match={highlight !== false && highlight.includes(i)}
 				title={titleCase(icon.term ? icon.term : icon.title)}
 				tabindex="0"
-				role="button"
 				on:click={() =>
 					dispatch('selectIcon', {
 						url: icon.url,
@@ -52,7 +51,7 @@
 				-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');"
 				/>
 				<!-- <img  src={icon.url} /> -->
-			</div>
+			</button>
 		{/if}
 	{/each}
 </div>
@@ -67,6 +66,9 @@
 			opacity: 0.5;
 		}
 		.icon {
+			appearance: none;
+			-webkit-appearance: none;
+			background: white;
 			display: inline-block;
 			margin: 0.5em;
 			padding: 0.5em;
