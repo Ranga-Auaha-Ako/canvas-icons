@@ -76,7 +76,7 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = e.detail.url;
+		const iconUrl = `https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/${e.detail.url}`;
 		const callback = $session.callback;
 		const data = $session.data;
 		if (!iconUrl || !data || !callback) {

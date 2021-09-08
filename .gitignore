@@ -5,3 +5,5 @@ node_modules
 /package
 
 static/icon-sprite/
+
+src/lib/icons/icon-sprite/

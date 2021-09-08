@@ -2,21 +2,22 @@
 	import { createEventDispatcher } from 'svelte';
 	import { titleCase } from 'title-case';
 	import type { Icon } from '../icons';
+	// import '../../../static/icon-sprite/css/sprite.css';
+
 	export let icons: any[];
 	export let colour: String;
 	export let highlight: Number[] | false = false;
 	export let show: Number[] | false = false;
 
-	// The font ID is generated based on the path. Find that out here:
-	const getFontId = (url: string) => {
-		const Url = new URL(url);
-		const path = Url.pathname;
-		return path
-			.replace('.svg', '')
-			.split('/')
-			.filter((a) => a && a != 'icon-set')
-			.join('-')
-			.replace(' ', '_');
+	// The icon CSS class name is generated based on the path. Find that out here:
+	const getIconClass = (url: string) => {
+		// eg : svg-Aotearoa--noun_Beehive_147848
+		// Strip svg from end
+		url = url.replace(/\.svg$/, '');
+		url = url.replace(/\s/g, '_');
+		// Split into folders
+		const parts = url.split('/');
+		return `${parts.join('--')}`;
 	};
 
 	const dispatch = createEventDispatcher();
@@ -32,7 +33,7 @@
 	{#each icons as icon, i}
 		{#if show === false || show.includes(i)}
 			<div
-				id={getFontId(icon.url)}
+				id={`${i}-${getIconClass(icon.url)}`}
 				class="icon"
 				class:match={highlight !== false && highlight.includes(i)}
 				title={titleCase(icon.term ? icon.term : icon.title)}
@@ -47,8 +48,8 @@
 				<div
 					class="img"
 					style="
-				mask-image: url('{icon.url}');
-				-webkit-mask-image: url('{icon.url}');"
+				mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');
+				-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');"
 				/>
 				<!-- <img  src={icon.url} /> -->
 			</div>

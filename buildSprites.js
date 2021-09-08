@@ -16,17 +16,32 @@ var spriter = new SVGSpriter({
 			example: true,
 			render: {
 				css: true
-			}
+			},
+			bust: false
+		},
+		view: {
+			example: true,
+			render: {
+				css: true
+			},
+			bust: false
+		},
+		stack: {
+			example: true,
+			render: {
+				css: true
+			},
+			bust: false
 		}
-		// view: {
-		// 	example: true,
-		// 	render: {
-		// 		css: true
-		// 	}
-		// }
 		// defs: true,
 		// symbol: true,
 		// stack: true
+	},
+	shape: {
+		spacing: {
+			padding: 0,
+			box: 'icon'
+		}
 	}
 });
 
