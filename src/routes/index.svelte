@@ -13,7 +13,7 @@
 	import type { Category, Icon } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
 
-	// Conver to list of icons and list of categories with icon indices
+	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
 	let allIcons: Icon[] = categories.reduce((acc, cv) => acc.concat(cv.icons), []);
 
