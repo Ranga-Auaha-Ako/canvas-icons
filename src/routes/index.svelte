@@ -124,12 +124,6 @@
 </script>
 
 <div style="--iconColor: {colour}">
-	{#if debug}
-		<pre>
-{JSON.stringify($session)}
-{JSON.stringify($page)}
-		</pre>
-	{/if}
 	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
