@@ -82,20 +82,37 @@
 		}?color=${colour.replace('#', '')}`;
 		const callback = $session.callback;
 		const data = $session.data;
-		if (!iconUrl || !data || !callback) {
+		if (iconUrl && data && callback) {
+			// Make a request to buildIcon to get the form which will send us back
+			window.location.href = `buildIcon.html?${new URLSearchParams({
+				'icon-url': iconUrl,
+				'icon-alt': iconAlt,
+				callback: callback,
+				data
+			}).toString()}`;
+		} else {
 			console.error(
 				'Missing information! This is likely due to data not being picked up on load. We only have: ',
 				[iconUrl, data, callback]
 			);
+			console.log(
+				"This can happen because you loaded the app in the web browser rather than through canvas. Let's make it work!"
+			);
 			debugger;
+			fetch(iconUrl)
+				.then((resp) => resp.blob())
+				.then((blob) => {
+					const url = window.URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.style.display = 'none';
+					a.href = url;
+					// the filename you want
+					a.download = `canvas-${iconAlt.toLowerCase().replace(/\s/g, '-')}.svg`;
+					document.body.appendChild(a);
+					a.click();
+					window.URL.revokeObjectURL(url);
+				});
 		}
-		// Make a request to buildIcon to get the form which will send us back
-		window.location.href = `buildIcon.html?${new URLSearchParams({
-			'icon-url': iconUrl,
-			'icon-alt': iconAlt,
-			callback: callback,
-			data
-		}).toString()}`;
 	};
 </script>
 
