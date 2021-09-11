@@ -17,6 +17,10 @@
 	column-gap: 1.5em;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
+	@media only screen and (max-width: 550px) {
+		grid-template-areas: 'filter filter' 'shortcuts shortcuts' 'colour colour';
+	}
+
 	#filter {
 		grid-area: filter;
 
