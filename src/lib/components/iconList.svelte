@@ -8,7 +8,6 @@
 	export let colour: String;
 	export let highlight: Number[] | false = false;
 	export let show: Number[] | false = false;
-	export let editable = false;
 
 	// The icon CSS class name is generated based on the path. Find that out here:
 	import { getIconClass } from '$lib/icons';

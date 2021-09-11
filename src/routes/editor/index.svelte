@@ -5,7 +5,7 @@
 	import { page, session } from '$app/stores';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import NounProject from 'the-noun-project';
+	// import NounProject from 'the-noun-project';
 
 	// Bootstrap components
 	import {
@@ -205,15 +205,15 @@
 		height: 100%;
 		position: absolute;
 		z-index: 0;
-		iframe {
-			border: 0;
-			filter: blur(10px);
-			pointer-events: none;
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-			z-index: 1;
-		}
+		// iframe {
+		// 	border: 0;
+		// 	filter: blur(10px);
+		// 	pointer-events: none;
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	overflow: hidden;
+		// 	z-index: 1;
+		// }
 		.shadow {
 			width: 100%;
 			height: 100%;
@@ -245,14 +245,14 @@
 			}
 		}
 
-		.addIcon {
-			font-size: 3rem;
-			line-height: 3rem;
-			cursor: pointer;
-			border: 0;
-			background: none;
-			margin: 0;
-			padding: 0;
-		}
+		// .addIcon {
+		// 	font-size: 3rem;
+		// 	line-height: 3rem;
+		// 	cursor: pointer;
+		// 	border: 0;
+		// 	background: none;
+		// 	margin: 0;
+		// 	padding: 0;
+		// }
 	}
 </style>
