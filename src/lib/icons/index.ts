@@ -53,4 +53,13 @@ const categories : Category[] = [
 ]
 
 export default categories
+export const getIconClass = (url: string) : string => {
+	// eg : svg-Aotearoa--noun_Beehive_147848
+	// Strip svg from end
+	url = url.replace(/\.svg$/, '');
+	url = url.replace(/\s/g, '_');
+	// Split into folders
+	const parts = url.split('/');
+	return `${parts.join('--')}`;
+};
 export type {Icon, Category}

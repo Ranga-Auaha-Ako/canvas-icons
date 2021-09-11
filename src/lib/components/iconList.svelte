@@ -8,17 +8,10 @@
 	export let colour: String;
 	export let highlight: Number[] | false = false;
 	export let show: Number[] | false = false;
+	export let editable = false;
 
 	// The icon CSS class name is generated based on the path. Find that out here:
-	const getIconClass = (url: string) => {
-		// eg : svg-Aotearoa--noun_Beehive_147848
-		// Strip svg from end
-		url = url.replace(/\.svg$/, '');
-		url = url.replace(/\s/g, '_');
-		// Split into folders
-		const parts = url.split('/');
-		return `${parts.join('--')}`;
-	};
+	import { getIconClass } from '$lib/icons';
 
 	const dispatch = createEventDispatcher();
 </script>
