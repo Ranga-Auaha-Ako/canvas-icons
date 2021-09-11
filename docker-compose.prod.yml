@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  web:
+    image: web
+    restart: on-failure
+    build:
+      context: .
+      target: prod
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
