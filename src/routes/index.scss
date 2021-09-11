@@ -142,6 +142,15 @@
 	}
 }
 
+footer {
+	margin: 3em;
+	text-align: center;
+	font-size: 0.8em;
+	a {
+		text-decoration: none;
+	}
+}
+
 // https://css-tricks.com/how-to-create-a-skip-to-content-link/
 .skip-to-nav-link {
 	background: #e77e23;

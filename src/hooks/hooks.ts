@@ -1,3 +1,4 @@
+import { version } from '../../package.json'
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // import lti from '@smarterservices/ims-lti'
 
@@ -11,8 +12,9 @@ export function getSession(request) {
             },
             data: request.body.get("data"),
             callback: request.body.get("content_item_return_url"),
+            version,
         }
     } else {
-        return {}
+        return {version,}
     }
 }
