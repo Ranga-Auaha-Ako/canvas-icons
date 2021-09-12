@@ -65,7 +65,7 @@
 	};
 
 	const getIcon = () => {
-		const nounProject = new NounProject({ key: tnpImport.key, secret: tnpImport.secret });
+		// const nounProject = new NounProject({ key: tnpImport.key, secret: tnpImport.secret });
 	};
 </script>
 

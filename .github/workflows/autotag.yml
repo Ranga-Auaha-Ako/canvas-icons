@@ -29,10 +29,12 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn run check
+      - run: echo "Releasing for tag '${{ needs.makeTag.outputs.tagname }}'"
       # Create a release if it's working!
       - uses: 'marvinpinto/action-automatic-releases@latest'
         with:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          automatic_release_tag: '${{ needs.makeTag.outputs.tagname }}'
           prerelease: false
           # files: |
           #   LICENSE.txt

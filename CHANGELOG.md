@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Prevent auto-building and publishing when there isn't a new semver (prevents incomplete features breaking production if they are pushed to master)
+- Typescript issues with sveltestrap were too much - disabling type checking for this module
+- Fixed misc. typescript errors
 
 ## [0.4.0] - 2021-09-12
 

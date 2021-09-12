@@ -62,12 +62,13 @@
 	const goToCategory = (cat, i) => {
 		searching = false;
 		// Get first child and focus!
-		document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`).focus({
+		(document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`) as HTMLElement)?.focus({
 			preventScroll: true
 		});
 		setTimeout(() => {
 			window.scroll({
-				top: document.querySelector(`#cat-${i}-${cat.name.toLowerCase()}`).offsetTop,
+				top: (document.querySelector(`#cat-${i}-${cat.name.toLowerCase()}`) as HTMLElement)
+					?.offsetTop,
 				left: 0,
 				behavior: 'smooth'
 			});
