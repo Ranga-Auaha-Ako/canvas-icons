@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Auto Tag
+        id: auto-tag
         uses: Klemensas/action-autotag@stable
         with:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
