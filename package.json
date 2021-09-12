@@ -1,6 +1,6 @@
 {
 	"name": "canvas-icon",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"scripts": {
 		"dev": "node buildSprites.js && svelte-kit dev",
 		"dev:host": "node buildSprites.js && svelte-kit dev --host 0.0.0.0",

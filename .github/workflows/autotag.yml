@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: makeTag
     if: ${{ needs.makeTag.outputs.tagname != '' }}
+    steps:
       # Run checks to make sure the build is good
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }} to run pre-release checks
