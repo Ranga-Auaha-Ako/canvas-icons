@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
-## [0.4.4] - 2021-09-12
+## [0.4.8] - 2021-09-12
 
 ### Fixed
 
 - Prevent auto-building and publishing when there isn't a new semver (prevents incomplete features breaking production if they are pushed to master)
+- Added code checking to release step to prevent bad releases
 - Typescript issues with sveltestrap were too much - disabling type checking for this module
 - Fixed misc. typescript errors
 
@@ -30,5 +31,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - -->
 
 [unreleased]: https://github.com/HexaCubist/canvas-icons/compare/v0.4.3...HEAD
-[0.4.4]: https://github.com/HexaCubist/canvas-icons/compare/v0.4.0...v0.4.4
+[0.4.8]: https://github.com/HexaCubist/canvas-icons/compare/v0.4.0...v0.4.8
 [0.4.0]: https://github.com/HexaCubist/canvas-icons/compare/v0.0.1...v0.4.0
