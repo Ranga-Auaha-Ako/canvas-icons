@@ -18,7 +18,7 @@ jobs:
   makeRelease:
     runs-on: ubuntu-latest
     needs: makeTag
-    if: ${{ needs.makeTag.outputs.tagname != '' }}
+    # if: ${{ needs.makeTag.outputs.tagname != '' }}
     steps:
       # Run checks to make sure the build is good
       - uses: actions/checkout@v2
