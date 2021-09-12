@@ -211,7 +211,7 @@
 	<footer>
 		<p>
 			Canvas Icons <strong>v{$session.version}</strong>.
-			<a href="https://github.com/HexaCubist/canvas-icons/"> Source & Contribute</a>
+			<a target="_blank" href="https://github.com/HexaCubist/canvas-icons/"> Source & Contribute</a>
 		</p>
 	</footer>
 </div>
