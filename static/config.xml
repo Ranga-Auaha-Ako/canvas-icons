@@ -11,6 +11,7 @@
   <blti:title>Icon selector</blti:title>
   <blti:description>Insert accessible icons directly into pages in your Course</blti:description>
   <blti:icon>https://canvasicons.h.zac.nz/favicon.png</blti:icon>
+  <blti:launch_url>https://canvasicons.h.zac.nz/</blti:launch_url>
   <blti:extensions platform="canvas.instructure.com">
     <lticm:property name="tool_id">icon_selector</lticm:property>
     <lticm:property name="privacy_level">public</lticm:property>
