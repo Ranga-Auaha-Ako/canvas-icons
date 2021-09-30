@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
 	// Get the object from the event and show its content type
 	const key = decodeURIComponent(event.queryStringParameters.key.replace(/\+/g, ' '));
 	// Extract colour code from key
-	const keyRegex = /^(?:colour\/)(.+)\.([\w\d#]+).svg$/g;
+	const keyRegex = /^(?:colour\/)?(.+)\.([\w\d#]+).svg$/g;
 	const match = keyRegex.exec(key);
 	const params = {
 		Bucket: 'canvas-icons-static',
