@@ -1,9 +1,8 @@
 name: Upload Icons
 
 on:
-  push:
-    tags:        
-      - v*
+  repository_dispatch:
+    types: [new-release]
 
 jobs:
   icons:
