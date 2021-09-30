@@ -78,9 +78,10 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `http://canvas-icons-static.s3-website-ap-southeast-2.amazonaws.com/${
-			e.detail.url
-		}?color=${colour.replace('#', '')}`;
+		const iconUrl = `http://canvas-icons-static.s3-website-ap-southeast-2.amazonaws.com/${e.detail.url.replace(
+			'.svg',
+			`.${colour}.svg`
+		)}`;
 		const callback = $session.callback;
 		const data = $session.data;
 		if (iconUrl && data && callback) {
