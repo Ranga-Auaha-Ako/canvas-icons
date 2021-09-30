@@ -78,7 +78,7 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `https://flexiblelearning.auckland.ac.nz/icon-set/noun-project-icons/${
+		const iconUrl = `http://canvas-icons-static.s3-website-ap-southeast-2.amazonaws.com/${
 			e.detail.url
 		}?color=${colour.replace('#', '')}`;
 		const callback = $session.callback;
