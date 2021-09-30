@@ -78,7 +78,7 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `http://canvas-icons-static.s3-website-ap-southeast-2.amazonaws.com/colour/${e.detail.url.replace(
+		const iconUrl = `https://d1hlip3vmfgce2.cloudfront.net/colour/${e.detail.url.replace(
 			'.svg',
 			`.${colour}.svg`
 		)}`;
