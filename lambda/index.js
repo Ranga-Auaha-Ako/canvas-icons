@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
 	// Get the object from the event and show its content type
 	const key = decodeURIComponent(event.queryStringParameters.key.replace(/\+/g, ' '));
 	// Extract colour code from key
-	const keyRegex = /^\/?(?:colour\/)?(.+)\.([\w\d#]+).svg$/g;
+	const keyRegex = /^\/?(?:colour\/)?(.+)\.([a-fA-F\d]+).svg$/g;
 	const match = keyRegex.exec(key);
 	const params = {
 		Bucket: 'canvas-icons-static',
@@ -21,10 +21,13 @@ exports.handler = async (event, context) => {
 		const { ContentType, Body } = await s3.getObject(params).promise();
 		console.log('CONTENT TYPE:', ContentType);
 		const svgContents = Body.toString('utf-8');
-		const output = svgContents.replace(/#0{3,6}|black/g, match[2]);
+		const output = svgContents.replace(
+			/#0{3,6}|black|rgb\(0,0,0\)|rgba\(0,0,0,1\)/g,
+			`#${match[2]}`
+		);
 		const response = {
 			statusCode: 200,
-			headers: { 'content-type': ContentType },
+			headers: { 'content-type': ContentType, 'Access-Control-Allow-Origin': '*' },
 			body: output
 		};
 		return response;

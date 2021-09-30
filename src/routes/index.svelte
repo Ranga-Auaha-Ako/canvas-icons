@@ -80,7 +80,7 @@
 		const iconAlt = e.detail.alt;
 		const iconUrl = `https://d1hlip3vmfgce2.cloudfront.net/colour/${e.detail.url.replace(
 			'.svg',
-			`.${colour}.svg`
+			`.${colour.replace('#', '')}.svg`
 		)}`;
 		const callback = $session.callback;
 		const data = $session.data;
