@@ -33,20 +33,29 @@
 	// Initiate Search
 	const fuse = new Fuse(allIcons, {
 		keys: [
-			{ name: 'title', weight: 0.5 },
-			{ name: 'term', weight: 0.5 },
+			{ name: 'title', weight: 0.3 },
+			{ name: 'term', weight: 0.3 },
 			{ name: 'tags', weight: 0.3 },
-			{ name: 'collections', weight: 0.3 }
+			{ name: 'collections', weight: 0.1 }
 		],
 		shouldSort: true,
 		minMatchCharLength: 2,
+		includeScore: true,
 		threshold: 0.25
 	});
 	let search = '';
 	let searching = false;
 	$: filteredIcons = fuse.search(search);
 	$: filteredIndices = filteredIcons.map((i) => i.refIndex);
-	$: searchResults = filteredIcons.slice(0, 15).map((i) => i.item);
+	$: searchResults = filteredIcons
+		.filter((i) => i.score < 0.25)
+		.slice(0, 15)
+		.map((i) => ({
+			...i.item,
+			term: `${i.item.term ? i.item.term : i.item.title} - ${Math.round(
+				(1 - i.score) * 100
+			)}% match`
+		}));
 
 	// Scrollspy, so that the active category is highlighted
 	onMount(async () => {
