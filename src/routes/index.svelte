@@ -87,7 +87,7 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `https://d1hlip3vmfgce2.cloudfront.net/colour/${e.detail.url.replace(
+		const iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${e.detail.url.replace(
 			'.svg',
 			`.${colour.replace('#', '')}.svg`
 		)}`;
