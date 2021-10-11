@@ -10,13 +10,13 @@
     http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">
   <blti:title>Icon selector</blti:title>
   <blti:description>Insert accessible icons directly into pages in your Course</blti:description>
-  <blti:icon>https://canvasicons.h.zac.nz/favicon.png</blti:icon>
+  <blti:icon>https://canvasicons.auckland.ac.nz/favicon.png</blti:icon>
   <blti:extensions platform="canvas.instructure.com">
     <lticm:property name="tool_id">icon_selector</lticm:property>
     <lticm:property name="privacy_level">public</lticm:property>
     <lticm:options name="editor_button">
       <lticm:property name="message_type">ContentItemSelectionRequest</lticm:property>
-      <lticm:property name="url">https://canvasicons.h.zac.nz/</lticm:property>
+      <lticm:property name="url">https://canvasicons.auckland.ac.nz/</lticm:property>
       <lticm:property name="text">UoA Canvas Icons</lticm:property>
       <lticm:property name="selection_width">800</lticm:property>
       <lticm:property name="selection_height">700</lticm:property>
