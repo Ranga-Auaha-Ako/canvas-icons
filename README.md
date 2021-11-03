@@ -1,5 +1,7 @@
 # Canvas Icons Selector
 
+> **View latest documentation [here](https://ranga-auaha-ako.github.io/canvas-icons/)**
+
 ## Developing
 
 First, install [yarn](https://yarnpkg.com/) on your operating system of choice.
