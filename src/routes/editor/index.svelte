@@ -95,8 +95,8 @@
 				Welcome to the Canvas Icon configuration editor. You can use this to add, edit, and remove
 				icons from the interface. <strong
 					>Keep in mind that you will need to submit a pull request to the Canvas Icons repository
-					available <a href="https://github.com/HexaCubist/canvas-icons/">
-						on GitHub (HexaCubist/canvas-icons)</a
+					available <a href="https://github.com/Ranga-Auaha-Ako/canvas-icons/">
+						on GitHub (Ranga-Auaha-Ako/canvas-icons)</a
 					></strong
 				>. If you're not sure what that is, we reccomend you take a look before editing here.
 			</p>

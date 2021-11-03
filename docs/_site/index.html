@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Canvas Icons | An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Canvas Icons" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages." />
+<meta property="og:description" content="An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages." />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="Canvas Icons" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Canvas Icons" />
+<script type="application/ld+json">
+{"@type":"WebSite","headline":"Canvas Icons","description":"An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.","url":"http://localhost:4000/","name":"Canvas Icons","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#221910">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta property="og:image" content="receipt.jpg"/>
+    <link rel="stylesheet" href="/assets/css/style.css?v=288caa17369506ccfc3a013478a8054ae740f61a">
+    <!-- Inline custom CSS -->
+    <style>
+.page-header {
+    background-color: transparent;
+    background-image: linear-gradient(to bottom, #ffffffbf, #ffffffbf, transparent);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: black;
+}
+
+.btn.btn-dark {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: rgba(0,0,0,0.7);
+    background-color: rgba(255,255,255,0.08);
+    border-color: rgba(0,0,0,0.2);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.3rem;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+    backdrop-filter: blur(5px);
+    box-shadow: 0px 2.4px 6.1px rgb(0 0 0 / 11%), 0px 8px 20.5px rgb(0 0 0 / 7%), 0px 36px 92px rgb(0 0 0 / 4%);
+}
+
+.btn.btn-dark:hover {
+    color: rgba(0,0,0,0.8);
+    text-decoration: none;
+    background-color: rgba(255,255,255,0.2);
+    border-color: rgba(0,0,0,0.3);
+}
+
+#skip-to-content {
+    height: 1px;
+    width: 1px;
+    position: absolute;
+    overflow: hidden;
+    top: -10px;
+}
+
+body {
+    background-image: url("page-bg.svg");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: top center;
+}
+
+.main-content {
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0px 2.8px 2.2px rgba(0, 0, 0, 0.02), 0px 6.7px 5.3px rgba(0, 0, 0, 0.028), 0px 12.5px 10px rgba(0, 0, 0, 0.035), 0px 22.3px 17.9px rgba(0, 0, 0, 0.042), 0px 41.8px 33.4px rgba(0, 0, 0, 0.05), 0px 100px 80px rgba(0, 0, 0, 0.07);
+    margin-bottom: 10em;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+    </style>
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Canvas Icons</h1>
+      <h2 class="project-tagline">An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.</h2>
+      
+        <a href="https://github.com/Ranga-Auaha-Ako/canvas-icons" class="btn btn-dark">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <blockquote>
+  <p><strong>NOTE: This project is still in BETA. Deployment is still a manual process, and you will need a <a href="https://thenounproject.com/pricing/">license from The Noun Project</a> to use icons from our default repository without attribution.</strong></p>
+</blockquote>
+
+<!-- # Quick Links
+ - [The Noun Project](https://thenounproject.com/)
+----
+ -->
+
+<h1 id="technology--infrastructure">Technology &amp; Infrastructure</h1>
+
+<p>This tool is split into two components for durability. One key advantage of this is that if the icon selector part of the tool goes down (or needs to be decomissioned in the future), then the icons can still be safely hosted at minimal cost.</p>
+
+<h2 id="icon-selector">Icon Selector</h2>
+
+<p>The icon selector itself runs on <a href="https://svelte.dev/">Svelte</a> using <a href="https://kit.svelte.dev/">SvelteKit</a> with the <a href="https://github.com/sveltejs/kit/tree/master/packages/adapter-node">NodeJS Adapter</a>. This allows for a speedy “compiled” interface with no extra unused bits. As a pre-build step, the <a href="https://github.com/Ranga-Auaha-Ako/canvas-icons/tree/master/static/icons">icon repository</a> is automatically crunched down into a single SVG sprite file using <a href="https://www.npmjs.com/package/svg-sprite">svg-sprite</a>.</p>
+
+<h2 id="icon-host">Icon Host</h2>
+
+<p>Because the icons are hosted with serverless architecture (<a href="https://aws.amazon.com/lambda/">AWS Lambda</a> + <a href="https://aws.amazon.com/api-gateway/">AWS API Gateway</a> + <a href="https://aws.amazon.com/s3/">AWS S3</a>), there’s little risk of massive student demand (e.g. around exam times) causing slowdowns, as this part of the tool can scale nearly instantly to handle additional load. The reason there’s any compute happening here at all is because we need to transform the source SVG to allow custom colour choices. For example, <code class="language-plaintext highlighter-rouge">https://assets.canvasicons.auckland.ac.nz/colour/Teaching/noun_Magnifying_Glass_1142952.</code><strong><code class="language-plaintext highlighter-rouge">01ABCD</code></strong><code class="language-plaintext highlighter-rouge">.svg</code> loads icon <code class="language-plaintext highlighter-rouge">noun_Magnifying_Glass_1142952</code> from the <code class="language-plaintext highlighter-rouge">Teaching</code> category, and replaces the default <code class="language-plaintext highlighter-rouge">black</code> colour with <code class="language-plaintext highlighter-rouge">01ABCD</code>. It does this using a simple NodeJS Lambda function running through AWS’s API Gateway.</p>
+
+<h1 id="developing">Developing</h1>
+
+<p>First, install <a href="https://yarnpkg.com/">yarn</a> on your operating system of choice.</p>
+
+<p>Once you’ve created a project and installed dependencies with <code class="language-plaintext highlighter-rouge">yarn install</code>), start a development server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn run dev
+
+<span class="c"># or start the server and open the app in a new browser tab</span>
+yarn run dev <span class="nt">--</span> <span class="nt">--open</span>
+</code></pre></div></div>
+
+<p>You can test out all of the features of the icon selector, but choosing an icon will download it rather than send it to Canvas, similarly to how it does on the <a href="https://canvasicons.auckland.ac.nz/">live site</a>. If you would like to test integration with Canvas, use the “Paste XML” configuration type and copy + paste the XML from <code class="language-plaintext highlighter-rouge">./src/static/config.dev.xml</code> into the “XML Configuration” box. Choose a memorable name, and save it to a test course of your choosing. Hot reload is enabled, but hot-reloading while previewing in Canvas will discard the callback information required to save the icon. This means that you’ll need to close and re-open the dialogue if you want to test that functionality.</p>
+
+<h2 id="building">Building</h2>
+
+<p>This project is automatically built when pushed to master, and will appear for public use at <a href="https://canvasicons.auckland.ac.nz/">canvasicons.auckland.ac.nz</a>. To test the build process, use one of the following methods:</p>
+
+<h3 id="with-docker">With Docker</h3>
+
+<p>First, install <a href="https://www.docker.com/get-started">Docker Desktop</a>.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">docker compose -f .\docker-compose.prod.yml up</code>. A NodeJS server with the production build will start and be accessible at http://localhost:3000/.</p>
+
+<h3 id="the-traditional-way">The traditional way</h3>
+
+<p>To build the project for testing the “production” output:<code class="language-plaintext highlighter-rouge">yarn run build</code></p>
+
+<blockquote>
+  <p>You can preview the built app with <code class="language-plaintext highlighter-rouge">yarn run preview</code>. This should <em>not</em> be used to serve your app in production. You can host the app to be available to other devices on the network through <code class="language-plaintext highlighter-rouge">yarn run host-preview</code> (for testing the built app) and <code class="language-plaintext highlighter-rouge">yarn run host</code> (for testing with dev features enabled).</p>
+</blockquote>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/Ranga-Auaha-Ako/canvas-icons">canvas-icons</a> is maintained by <a href="https://github.com/Ranga-Auaha-Ako">Ranga-Auaha-Ako</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>

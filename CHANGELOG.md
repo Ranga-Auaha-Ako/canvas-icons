@@ -30,6 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - -->
 
-[unreleased]: https://github.com/HexaCubist/canvas-icons/compare/v0.4.3...HEAD
-[0.4.8]: https://github.com/HexaCubist/canvas-icons/compare/v0.4.0...v0.4.8
-[0.4.0]: https://github.com/HexaCubist/canvas-icons/compare/v0.0.1...v0.4.0
+[unreleased]: https://github.com/Ranga-Auaha-Ako/canvas-icons/compare/v0.4.3...HEAD
+[0.4.8]: https://github.com/Ranga-Auaha-Ako/canvas-icons/compare/v0.4.0...v0.4.8
+[0.4.0]: https://github.com/Ranga-Auaha-Ako/canvas-icons/compare/v0.0.1...v0.4.0
