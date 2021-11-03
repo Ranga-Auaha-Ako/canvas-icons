@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.1.3] - 2021-11-03
+
+### Added
+ - Documented through GitHub Pages, available at https://ranga-auaha-ako.github.io/canvas-icons/
+
+### Changed
+ - Moved to UoA infrastructure: https://canvasicons.auckland.ac.nz/
+
+### Security
+
+ - Updated package dependencies to latest versions
+
 ## [0.4.8] - 2021-09-12
 
 ### Fixed
