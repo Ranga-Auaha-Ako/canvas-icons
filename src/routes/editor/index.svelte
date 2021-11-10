@@ -5,6 +5,8 @@
 	import { page, session } from '$app/stores';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
+	import rfdc from 'rfdc';
+	import { nanoid } from 'nanoid';
 	// import NounProject from 'the-noun-project';
 
 	// Bootstrap components
@@ -41,22 +43,27 @@
 	import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
 	import { getIconClass } from '$lib/icons';
+	import { Icon } from 'sveltestrap';
 
 	// Colour
 	let colour = '#000000';
 
-	let currentCategory = categories[0];
-
-	const flipDurationMs = 300;
-	function handleDndConsider(e) {
-		currentCategory.icons = e.detail.items;
-	}
-	function handleDndFinalize(e) {
-		currentCategory.icons = e.detail.items;
-	}
+	// Make a copy of the categories for modification
+	const clone = rfdc();
+	let unsavedStateCategories: Category[] = clone(categories);
+	let currentCategory = unsavedStateCategories[0];
 
 	// Whether we're adding an icon or editing it
 	let editIcon = null;
+	const getIcon = (id) => currentCategory.icons.find((e) => e.id == id);
+
+	// Handle movement of Drag&Drop icons, animation
+	const flipDurationMs = 300;
+	function handleSort(e) {
+		console.log('Dragging...');
+		console.log(e);
+		currentCategory.icons = e.detail.items;
+	}
 
 	let tnpImport = {
 		key: '',
@@ -64,8 +71,22 @@
 		iconID: ''
 	};
 
-	const getIcon = () => {
+	const importIcon = () => {
 		// const nounProject = new NounProject({ key: tnpImport.key, secret: tnpImport.secret });
+	};
+
+	const removeIcon = (i) => {
+		currentCategory.icons = currentCategory.icons.filter((e, id) => i !== id);
+	};
+
+	const cloneIcon = (i) => {
+		let clonedIcon = clone(currentCategory.icons[i]);
+		clonedIcon.id = nanoid();
+		currentCategory.icons = [
+			...currentCategory.icons.slice(0, i + 1),
+			clonedIcon,
+			...currentCategory.icons.slice(i + 1)
+		];
 	};
 </script>
 
@@ -105,7 +126,7 @@
 					<FormGroup>
 						<Label for="categorySelect">Category</Label>
 						<Input type="select" id="categorySelect" bind:value={currentCategory}>
-							{#each categories as cat}
+							{#each unsavedStateCategories as cat}
 								<option value={cat}>{cat.name}</option>
 							{/each}
 						</Input>
@@ -113,15 +134,25 @@
 							<div
 								class="icons"
 								use:dndzone={{ items: currentCategory.icons, flipDurationMs }}
-								on:consider={handleDndConsider}
-								on:finalize={handleDndFinalize}
+								on:consider={handleSort}
+								on:finalize={handleSort}
 							>
-								{#each currentCategory.icons as icon, i (i)}
+								{#each currentCategory.icons as icon, i (icon.id)}
 									<div
 										class="icon"
+										class:editing={editIcon == icon.id}
 										animate:flip={{ duration: flipDurationMs }}
-										on:click={(e) => (editIcon = i)}
+										on:click={(e) => (editIcon = editIcon == icon.id ? null : icon.id)}
+										title={icon.term}
 									>
+										{#if editIcon == icon.id}
+											<div class="editTools">
+												<div role="button" class="delete" on:click={(_) => removeIcon(i)}>
+													Delete
+												</div>
+												<div role="button" class="clone" on:click={(_) => cloneIcon(i)}>Clone</div>
+											</div>
+										{/if}
 										<img
 											src="/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}"
 											alt={icon.title}
@@ -133,6 +164,22 @@
 					</FormGroup>
 				</Col>
 				<Col>
+					<Card class="mb-3">
+						<CardHeader>
+							<CardTitle
+								>Edit {editIcon === null ? 'Icon' : `"${getIcon(editIcon).term}" Icon`}</CardTitle
+							>
+						</CardHeader>
+						<CardBody>
+							<div class="editPane">
+								{#if editIcon === null}
+									<div class="none">To begin, select an icon.</div>
+								{:else}
+									You selected "{getIcon(editIcon).term}"!
+								{/if}
+							</div>
+						</CardBody>
+					</Card>
 					<Card class="mb-3">
 						<CardHeader>
 							<CardTitle>Add Icons</CardTitle>
@@ -174,23 +221,10 @@
 											placeholder="Enter the ID of the icon you want to import"
 										/>
 									</FormGroup>
-									<Button on:click={getIcon} color="primary">Import Icon</Button>
+									<Button on:click={importIcon} color="primary">Import Icon</Button>
 								</TabPane>
 								<TabPane tabId="manual" tab="Add icons manually" />
 							</TabContent>
-						</CardBody>
-					</Card>
-
-					<Card class="mb-3">
-						<CardHeader>
-							<CardTitle>Edit Icon</CardTitle>
-						</CardHeader>
-						<CardBody>
-							{#if !editIcon}
-								To begin, select an icon.
-							{:else}
-								You selected "{currentCategory.icons[editIcon].title}"!
-							{/if}
 						</CardBody>
 					</Card>
 				</Col>
@@ -199,60 +233,8 @@
 	</Modal>
 </div>
 
-<style type="scss">
-	.home {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		z-index: 0;
-		// iframe {
-		// 	border: 0;
-		// 	filter: blur(10px);
-		// 	pointer-events: none;
-		// 	width: 100%;
-		// 	height: 100%;
-		// 	overflow: hidden;
-		// 	z-index: 1;
-		// }
-		.shadow {
-			width: 100%;
-			height: 100%;
-			top: 0;
-			left: 0;
-			position: absolute;
-			background: rgba(0, 0, 0, 0.8);
-			z-index: 2;
-		}
-	}
-
-	.iconList {
-		// display: grid;
-		// grid-template-columns: repeat(7, 1fr);
-		// grid-auto-rows: 5em;
-
-		.icons {
-			display: grid;
-			grid-template-columns: repeat(7, 1fr);
-			grid-auto-rows: 5em;
-		}
-
-		.icon {
-			padding: 1em;
-			transition: opacity 0.25s ease, transform 0.25s ease;
-			&:hover {
-				opacity: 0.5;
-				transform: scale(1.1);
-			}
-		}
-
-		// .addIcon {
-		// 	font-size: 3rem;
-		// 	line-height: 3rem;
-		// 	cursor: pointer;
-		// 	border: 0;
-		// 	background: none;
-		// 	margin: 0;
-		// 	padding: 0;
-		// }
+<style>
+	:global(.icon#dnd-action-dragged-el .editTools) {
+		display: none;
 	}
 </style>
