@@ -42,8 +42,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"fast-glob": "^3.2.7",
 		"fuse.js": "^6.4.6",
-		"glob": "^7.1.7",
 		"html-escaper": "^3.0.3",
 		"nanoid": "^3.1.30",
 		"oauth1-signature": "^1.0.5",
@@ -52,6 +52,7 @@
 		"sass": "^1.39.0",
 		"simple-scrollspy": "^2.1.0",
 		"slash": "^4.0.0",
+		"svelte-tags-input": "^2.8.1",
 		"sveltestrap": "^5.6.3",
 		"svg-sprite": "^1.5.2",
 		"title-case": "^3.0.3",
