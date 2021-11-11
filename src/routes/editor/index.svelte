@@ -275,9 +275,11 @@
 					<div class="addCard">
 						<Card class="mb-3">
 							<CardHeader>
-								<CardTitle>Add Icons</CardTitle>
+								<CardTitle>Add Icons (still in development)</CardTitle>
 							</CardHeader>
-							<CardBody>
+							<CardBody
+								style="filter: blur(5px) grayscale(1); pointer-events: none; user-select: none; opacity: 0.2"
+							>
 								<TabContent>
 									<TabPane tabId="tnp" tab="The Noun Project" active>
 										<h3>Add icons with The Noun Project</h3>
