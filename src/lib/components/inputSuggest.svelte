@@ -8,6 +8,7 @@
 	export let id: string;
 	export let required = false;
 	export let suggestions: string[];
+	export let placeholder: string;
 
 	const fuse = new Fuse(suggestions, {
 		shouldSort: true,
@@ -42,6 +43,7 @@
 		bind:value
 		type="search"
 		{id}
+		{placeholder}
 		bind:inner={searchElem}
 		on:input={(_) => {
 			editing = true;

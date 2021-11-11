@@ -1,3 +1,4 @@
+<!-- @hmr:keep-all -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Fuse from 'fuse.js';
@@ -7,7 +8,6 @@
 	import { flip } from 'svelte/animate';
 	import rfdc from 'rfdc';
 	import { nanoid } from 'nanoid';
-	// import NounProject from 'the-noun-project';
 
 	// Bootstrap components
 	import {
@@ -30,21 +30,32 @@
 		CardHeader,
 		CardTitle,
 		Figure,
-		Image
+		Image,
+		ButtonGroup,
+		InputGroup,
+		Styles
 	} from 'sveltestrap';
-	// Svelte Tags input
+	// Svelte Tags input (Used to select tags and colections in editor)
 	import Tags from 'svelte-tags-input';
+	// Svelte text highlight
+	import Highlight from 'svelte-highlight';
+	import json from 'svelte-highlight/src/languages/json';
+	import github from 'svelte-highlight/src/styles/github';
 
 	// Stylesheet
 	import '../index.scss';
 	//  - Overrides for editor
 	import './index.scss';
 
+	// Import Store
+	import { nounProjectAuth } from './store';
+
 	// Load Icons
 	import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
 	import { getIconClass } from '$lib/icons';
 	import InputSuggest from '$lib/components/inputSuggest.svelte';
+	import IconEditor from '$lib/components/editor/iconEditor.svelte';
 
 	// Load list of icon files
 	const iconFileListImport = import.meta.glob('/static/icons/**/*.svg');
@@ -96,7 +107,28 @@
 	let editIcon = null;
 	const getIcon = (id) => currentCategory.icons.find((e) => e.id == id);
 	$: editingIcon = currentCategory.icons.find((e) => e.id == editIcon);
-
+	// Icon add template
+	let addIconContents;
+	const resetAddIcon = () => {
+		addIconContents = clone({
+			id: nanoid(),
+			url: '',
+			title: '',
+			width: 48,
+			height: 48,
+			tnp_id: '',
+			tags: [],
+			term: '',
+			collections: []
+		});
+	};
+	resetAddIcon();
+	const finishAddIcon = () => {
+		currentCategory.icons = [clone(addIconContents), ...currentCategory.icons];
+		editIcon = addIconContents.id;
+		resetAddIcon();
+		hideIconImport(); // Hide TNP import in case it was imported from there
+	};
 	// Handle movement of Drag&Drop icons, animation
 	const flipDurationMs = 300;
 	function handleSort(e) {
@@ -105,18 +137,69 @@
 		currentCategory.icons = e.detail.items;
 	}
 
-	let tnpImport = {
-		key: '',
-		secret: '',
-		iconID: ''
+	let tnp_iconID;
+
+	let iconImportOpen = false;
+	let addIconNounData = {
+		preview_url: null,
+		svg_url: null,
+		view_url: null,
+		filename: null
+	};
+	const hideIconImport = () => {
+		iconImportOpen = false;
+	};
+	const importIcon = async () => {
+		const response = await fetch('/editor/nounfetch.json', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				key: $nounProjectAuth.key,
+				secret: $nounProjectAuth.secret,
+				id: tnp_iconID
+			})
+		});
+		const iconData = await response.json();
+		if (iconData.error) {
+			console.error(
+				'Error encountered whilst fetching TNP icon! Likely this is due to the API Keys being wrong or an incorrect TNP ID.'
+			);
+			return;
+		}
+		addIconContents = {
+			id: nanoid(),
+			url: `/[relevant folder]/noun_${iconData.icon.term_slug}_${iconData.icon.id}`,
+			title: iconData.icon.term,
+			width: 48,
+			height: 48,
+			tnp_id: iconData.icon.id,
+			tags: iconData.icon.tags.map((t) => t.slug),
+			term: iconData.icon.term,
+			collections: iconData.icon.collections.map((t) => t.name)
+		};
+		addIconNounData = {
+			preview_url: iconData.icon.preview_url,
+			svg_url: iconData.icon.icon_url,
+			view_url: `https://thenounproject.com${iconData.icon.permalink}`,
+			filename: `noun_${iconData.icon.term_slug}_${iconData.icon.id}`
+		};
+		iconImportOpen = true;
 	};
 
-	const importIcon = () => {
-		// const nounProject = new NounProject({ key: tnpImport.key, secret: tnpImport.secret });
+	const removeIcon = (i: number | boolean = false, id: string | boolean = false) => {
+		if (id) {
+			currentCategory.icons = currentCategory.icons.filter((e, idx) => id !== e.id);
+		} else {
+			currentCategory.icons = currentCategory.icons.filter((e, idx) => i !== idx);
+		}
 	};
 
-	const removeIcon = (i) => {
-		currentCategory.icons = currentCategory.icons.filter((e, id) => i !== id);
+	const cloneEditToAdd = () => {
+		addIconContents = clone(editingIcon);
+		addIconContents.id = nanoid();
+		editIcon = null;
 	};
 
 	const cloneIcon = (i) => {
@@ -128,13 +211,29 @@
 			...currentCategory.icons.slice(i + 1)
 		];
 	};
+
+	// Modal handler for "exporting" code
+	let codeExportOpen = false;
+	let codeExportContents =
+		"Sadly the export failed. If you're a developer, check the console logs for more information.";
+	const hideCode = () => (codeExportOpen = false);
+	const exportCode = (code, format = true) => {
+		if (typeof code == 'string') {
+			codeExportContents = code;
+		} else {
+			codeExportContents = JSON.stringify(code, null, format ? '\t' : undefined);
+		}
+		codeExportOpen = true;
+	};
 </script>
 
 <svelte:head>
-	<link
+	<!-- <link
 		rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
-	/>
+	/> -->
+	<Styles icons={false} />
+	{@html github}
 </svelte:head>
 
 <div style="--iconColor: {colour}">
@@ -149,7 +248,79 @@
 		<div class="shadow" />
 	</a>
 	<!-- Container for editor -->
-	<Modal isOpen={true} size="xl">
+	<Modal body header="View source" backdrop={true} isOpen={codeExportOpen} toggle={hideCode}>
+		<Highlight style="user-select: all" language={json} code={codeExportContents} />
+	</Modal>
+	<Modal
+		body
+		header="Confirm Import"
+		backdrop={true}
+		isOpen={iconImportOpen}
+		toggle={hideIconImport}
+	>
+		<IconEditor bind:icon={addIconContents} {existingCollections} {existingTags} {iconFileList} />
+		<hr />
+		<Row>
+			<Col xs="3" class="d-flex align-items-center">
+				{#if addIconNounData.svg_url}
+					<a href={addIconNounData.svg_url} target="_blank">
+						<Image class="w-100" src={addIconNounData.svg_url} alt="Preview of your icon" />
+					</a>
+				{:else}
+					<a href={addIconNounData.view_url} target="_blank">
+						<Image class="w-100" src={addIconNounData.preview_url} alt="Preview of your icon" />
+					</a>
+				{/if}
+			</Col>
+			<Col>
+				<p>
+					Congrats! If the above looks right to you, you're ready to import this icon. Before
+					continuing, you first need to download this icon and place it in the repository. <strong
+						>If you are running this app in development mode, the hot reload may delete the state of
+						this page. Therefore, wait until you have finished editing to copy in the icons.</strong
+					>
+				</p>
+				{#if addIconNounData.svg_url}
+					<p class="text-center">
+						<Button
+							color="success"
+							on:click={async (_) => {
+								const res = await fetch(addIconNounData.svg_url);
+								const blob = await res.blob();
+								const link = document.createElement('a');
+								link.href = URL.createObjectURL(blob);
+								link.download = addIconNounData.filename;
+								link.click();
+							}}>Download Icon</Button
+						>
+						<br />
+					</p>
+				{:else}
+					<p class="text-center">
+						<a href={addIconNounData.view_url} target="_blank" class="btn btn-success"
+							>Visit Site to download</a
+						>
+					</p>
+					<p>
+						Sadly, The Noun Project didn't give you a direct download link for this icon, so you
+						will need to visit the link above and download the icon. Make sure to name the file "{addIconNounData.filename}".
+					</p>
+				{/if}
+			</Col>
+		</Row>
+		<p>
+			When you have the icon downloaded and placed in your folder of choice, make sure the icon path
+			above matches.
+		</p>
+		<strong
+			>Please note that continuing will not save your changes. You will still need to export the
+			category when you are done making changes and manually paste in the new config.</strong
+		>
+		<Button on:click={exportCode(addIconContents)}>View Code</Button>
+		<Button color="danger" on:click={hideIconImport}>Cancel and return</Button>
+		<Button color="success" on:click={finishAddIcon}>Import Icon</Button>
+	</Modal>
+	<Modal isOpen={true} static size="xl">
 		<ModalHeader>Configuration Editor</ModalHeader>
 		<ModalBody>
 			<p>
@@ -165,11 +336,16 @@
 				<Col>
 					<FormGroup>
 						<Label for="categorySelect">Category</Label>
-						<Input type="select" id="categorySelect" bind:value={currentCategory}>
-							{#each unsavedStateCategories as cat}
-								<option value={cat}>{cat.name}</option>
-							{/each}
-						</Input>
+						<InputGroup>
+							<Input type="select" id="categorySelect" bind:value={currentCategory}>
+								{#each unsavedStateCategories as cat}
+									<option value={cat}>{cat.name}</option>
+								{/each}
+							</Input>
+							<Button outline color="primary" on:click={exportCode(currentCategory)}
+								>Export Category</Button
+							>
+						</InputGroup>
 					</FormGroup>
 					<div class="iconList">
 						<div
@@ -205,68 +381,39 @@
 					<div class="editCard">
 						<Card class="mb-3">
 							<CardHeader>
-								<CardTitle>Edit {!editingIcon ? 'Icon' : `"${editingIcon.term}" Icon`}</CardTitle>
+								<CardTitle>
+									Edit
+									{#if editingIcon}
+										"{editingIcon.title ?? editingIcon.term}" Icon
+										<ButtonGroup class="float-end">
+											<Button size="sm" color="primary" on:click={exportCode(editingIcon)}
+												>View Code</Button
+											>
+											<Button size="sm" color="warning" on:click={cloneEditToAdd}
+												>Clone to new icon</Button
+											>
+											<Button
+												size="sm"
+												color="danger"
+												on:click={(_) => removeIcon(false, editingIcon.id)}>Delete Icon</Button
+											>
+										</ButtonGroup>
+									{:else}
+										Icon
+									{/if}
+								</CardTitle>
 							</CardHeader>
 							<CardBody>
 								<div class="editPane">
 									{#if !editingIcon}
 										<div class="none">To begin, select an icon.</div>
 									{:else}
-										<FormGroup>
-											<Label for="iconTitle">Icon Title</Label>
-											<Input
-												id="iconTitle"
-												bind:value={editingIcon.title}
-												invalid={editingIcon.title == ''}
-											/>
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconTerm">Icon "Term" (from The Noun Project)</Label>
-											<Input id="iconTerm" bind:value={editingIcon.term} />
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconTerm">Icon "Collections" (from The Noun Project)</Label>
-											<Input id="iconTerm" bind:value={editingIcon.collections} />
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconPath">Icon Path</Label>
-											<InputSuggest
-												id="iconPath"
-												bind:value={editingIcon.url}
-												suggestions={iconFileList}
-												required
-											/>
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconTnp_id">The Noun Project source ID</Label>
-											<Input
-												id="iconTnp_id"
-												bind:value={editingIcon.tnp_id}
-												invalid={!/^\d+$/.test(editingIcon.tnp_id)}
-											/>
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconTags">Icon Tags</Label>
-											<Tags
-												id="iconTags"
-												addKeys={[9, 188, 13]}
-												tags={editingIcon.tags}
-												allowPaste={true}
-												onlyUnique={true}
-												autoComplete={existingTags}
-											/>
-										</FormGroup>
-										<FormGroup>
-											<Label for="iconCollections">The Noun Project "Collections"</Label>
-											<Tags
-												id="iconCollections"
-												addKeys={[9, 188, 13]}
-												tags={editingIcon.collections}
-												allowPaste={true}
-												onlyUnique={true}
-												autoComplete={existingCollections}
-											/>
-										</FormGroup>
+										<IconEditor
+											bind:icon={editingIcon}
+											{existingCollections}
+											{existingTags}
+											{iconFileList}
+										/>
 									{/if}
 								</div>
 							</CardBody>
@@ -275,13 +422,21 @@
 					<div class="addCard">
 						<Card class="mb-3">
 							<CardHeader>
-								<CardTitle>Add Icons (still in development)</CardTitle>
+								<CardTitle>Add Icons</CardTitle>
 							</CardHeader>
-							<CardBody
-								style="filter: blur(5px) grayscale(1); pointer-events: none; user-select: none; opacity: 0.2"
-							>
+							<CardBody>
 								<TabContent>
-									<TabPane tabId="tnp" tab="The Noun Project" active>
+									<TabPane tabId="manual" id="manual" tab="Add icons manually" active>
+										<IconEditor
+											bind:icon={addIconContents}
+											{existingCollections}
+											{existingTags}
+											{iconFileList}
+										/>
+										<Button color="danger" on:click={resetAddIcon}>Reset</Button>
+										<Button color="primary" on:click={finishAddIcon}>Add</Button>
+									</TabPane>
+									<TabPane tabId="tnp" id="tnp" tab="Add with The Noun Project">
 										<h3>Add icons with The Noun Project</h3>
 										<p>
 											Looking to add icons to the project licensed under The Noun Project? Look no
@@ -292,14 +447,14 @@
 											<FormGroup>
 												<Label for="exampleEmail">TNP API Key</Label>
 												<Input
-													bind:value={tnpImport.key}
+													bind:value={$nounProjectAuth.key}
 													placeholder="Enter your API Key here..."
 												/>
 											</FormGroup>
 											<FormGroup>
 												<Label for="exampleEmail">TNP API Secret</Label>
 												<Input
-													bind:value={tnpImport.secret}
+													bind:value={$nounProjectAuth.secret}
 													type="password"
 													placeholder="Enter your API Secret here..."
 												/>
@@ -315,13 +470,12 @@
 										<FormGroup>
 											<Label for="exampleEmail">Icon ID</Label>
 											<Input
-												bind:value={tnpImport.iconID}
+												bind:value={tnp_iconID}
 												placeholder="Enter the ID of the icon you want to import"
 											/>
 										</FormGroup>
 										<Button on:click={importIcon} color="primary">Import Icon</Button>
 									</TabPane>
-									<TabPane tabId="manual" tab="Add icons manually" />
 								</TabContent>
 							</CardBody>
 						</Card>

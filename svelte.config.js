@@ -13,7 +13,7 @@ const config = {
 		adapter: node(),
 		files: {
 			hooks: 'src/hooks/hooks.ts'
-		}
+		},
 		// https://jenyus.web.app/blog/2021-05-30-setting-up-a-development-environment-for-sveltekit-with-docker-and-compose
 		// "Vite uses Chokidar under the hood to watch files, and its default method of doing so doesn't work in Docker containers"
 		// vite: {
@@ -23,6 +23,16 @@ const config = {
 		// 		}
 		// 	}
 		// }
+		vite: {
+			build: {
+				commonjsOptions: {
+				  transformMixedEsModules: true,
+				},
+			},
+			optimizeDeps: {
+				  include: ["highlight.js/lib/core"],
+			}
+		}
 	}
 };
 
