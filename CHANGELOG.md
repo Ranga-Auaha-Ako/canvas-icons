@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.2.0] - 2021-11-12
+
+### Added
+ - Icon editor now supports adding, deleting, and importing of icons within each category.
+
 ## [2.1.3] - 2021-11-03
 
 ### Added
