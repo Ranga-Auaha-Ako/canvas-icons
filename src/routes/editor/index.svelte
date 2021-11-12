@@ -320,7 +320,7 @@
 		<Button color="danger" on:click={hideIconImport}>Cancel and return</Button>
 		<Button color="success" on:click={finishAddIcon}>Import Icon</Button>
 	</Modal>
-	<Modal isOpen={true} static size="xl">
+	<Modal isOpen={true} static fullscreen={true}>
 		<ModalHeader>Configuration Editor</ModalHeader>
 		<ModalBody>
 			<p>
@@ -333,7 +333,7 @@
 				>. If you're not sure what that is, we reccomend you take a look before editing here.
 			</p>
 			<Row>
-				<Col>
+				<Col xs="12" sm="6">
 					<FormGroup>
 						<Label for="categorySelect">Category</Label>
 						<InputGroup>
@@ -377,7 +377,7 @@
 						</div>
 					</div>
 				</Col>
-				<Col>
+				<Col xs="12" sm="6">
 					<div class="editCard">
 						<Card class="mb-3">
 							<CardHeader>
