@@ -17,8 +17,9 @@
 .iconList {
     .icons {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(5rem, max-content));
         grid-auto-rows: 5em;
+        justify-content: space-between;
     }
     
     .icon {
