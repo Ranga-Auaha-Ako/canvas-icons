@@ -19,20 +19,20 @@ interface Category {
 }
 
 const categoryOrder = [
-	'./Teaching.json',
-	'./General.json',
-	'./Aotearoa.json',
-	'./Architecture.json',
-	'./Arts.json',
-	'./Business.json',
-	'./Engineering.json',
-	'./Food.json',
-	'./Law.json',
-	'./Medical.json',
-	'./People.json',
-	'./Places.json',
-	'./Science.json',
-	'./Sports.json'
+	'./icon-data/Teaching.json',
+	'./icon-data/General.json',
+	'./icon-data/Aotearoa.json',
+	'./icon-data/Architecture.json',
+	'./icon-data/Arts.json',
+	'./icon-data/Business.json',
+	'./icon-data/Engineering.json',
+	'./icon-data/Food.json',
+	'./icon-data/Law.json',
+	'./icon-data/Medical.json',
+	'./icon-data/People.json',
+	'./icon-data/Places.json',
+	'./icon-data/Science.json',
+	'./icon-data/Sports.json'
 ];
 
 const categories: Category[] = categoryOrder.map((filename) => {
