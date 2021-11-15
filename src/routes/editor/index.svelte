@@ -33,6 +33,7 @@
 		Image,
 		ButtonGroup,
 		InputGroup,
+		Tooltip,
 		Styles
 	} from 'sveltestrap';
 	// Svelte Tags input (Used to select tags and colections in editor)
@@ -65,6 +66,9 @@
 
 	// Colour
 	let colour = '#000000';
+
+	console.log(categories);
+	// Example empty category list [{ name: 'test', icons: [] }]
 
 	// Make a copy of the categories for modification
 	const clone = rfdc();
@@ -216,14 +220,17 @@
 	let codeExportOpen = false;
 	let codeExportContents =
 		"Sadly the export failed. If you're a developer, check the console logs for more information.";
+	let codeExportFilename: false | string = false;
 	const hideCode = () => (codeExportOpen = false);
-	const exportCode = (code, format = true) => {
+	const exportCode = (code, format = true, fileName: false | string = false) => {
 		if (typeof code == 'string') {
 			codeExportContents = code;
 		} else {
 			codeExportContents = JSON.stringify(code, null, format ? '\t' : undefined);
 		}
+		codeExportFilename = fileName;
 		codeExportOpen = true;
+		return codeExportContents;
 	};
 </script>
 
@@ -238,7 +245,7 @@
 
 <div style="--iconColor: {colour}">
 	<!-- Iframe to show main app -->
-	<a href="../" class="home" aria-label="Return home">
+	<div class="home" aria-label="Return home">
 		<!-- <iframe
 			src="../"
 			title="Frame containing teacher user interface"
@@ -246,9 +253,27 @@
 			aria-hidden="true"
 		/> -->
 		<div class="shadow" />
-	</a>
+	</div>
 	<!-- Container for editor -->
-	<Modal body header="View source" backdrop={true} isOpen={codeExportOpen} toggle={hideCode}>
+	<Modal body backdrop={true} isOpen={codeExportOpen} toggle={hideCode}>
+		<ModalHeader toggle={hideCode}>
+			View source
+			<Button
+				id="btn-download"
+				outline
+				size="sm"
+				color="success"
+				aria-label="Download"
+				on:click={async (_) => {
+					const link = document.createElement('a');
+					link.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(codeExportContents);
+					link.setAttribute('download', `${codeExportFilename}.json`);
+					link.click();
+				}}>⭳</Button
+			>
+			<Tooltip target="btn-download" placement="bottom">Download</Tooltip>
+		</ModalHeader>
+
 		<Highlight style="user-select: all" language={json} code={codeExportContents} />
 	</Modal>
 	<Modal
@@ -342,7 +367,10 @@
 									<option value={cat}>{cat.name}</option>
 								{/each}
 							</Input>
-							<Button outline color="primary" on:click={exportCode(currentCategory)}
+							<Button
+								outline
+								color="primary"
+								on:click={exportCode(currentCategory, true, currentCategory.name)}
 								>Export Category</Button
 							>
 						</InputGroup>
@@ -388,14 +416,6 @@
 										<ButtonGroup class="float-end">
 											<Button size="sm" color="primary" on:click={exportCode(editingIcon)}
 												>View Code</Button
-											>
-											<Button size="sm" color="warning" on:click={cloneEditToAdd}
-												>Clone to new icon</Button
-											>
-											<Button
-												size="sm"
-												color="danger"
-												on:click={(_) => removeIcon(false, editingIcon.id)}>Delete Icon</Button
 											>
 										</ButtonGroup>
 									{:else}
