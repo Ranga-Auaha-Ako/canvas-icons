@@ -1,18 +1,5 @@
-import * as teaching from './icon15.json';
-import * as general from './icon1.json';
-import * as aotearoa from './icon2.json';
-import * as architecture from './icon3.json';
-import * as arts from './icon4.json';
-import * as business from './icon5.json';
-import * as engineering from './icon6.json';
-import * as food from './icon7.json';
-import * as law from './icon8.json';
-import * as medical from './icon9.json';
-import * as people from './icon10.json';
-import * as places from './icon11.json';
-import * as science from './icon12.json';
-import * as sports from './icon13.json';
-import * as time from './icon1.json';
+import type { Icon } from 'sveltestrap';
+const found_categories = import.meta.globEager('./icon-data/*.json');
 
 interface Icon {
 	id: string;
@@ -24,36 +11,41 @@ interface Icon {
 	tags?: string[];
 	term?: string;
 	collections?: string[];
-  }
-  
-  interface Category {
+}
+
+interface Category {
 	name: string;
 	icons: Icon[];
-  }
-  
-  
-  
+}
 
-const categories : Category[] = [
-	{ name: 'Teaching', icons: teaching.icons },
-	{ name: 'General', icons: general.icons },
-	{ name: 'Aotearoa', icons: aotearoa.icons },
-	{ name: 'Architecture', icons: architecture.icons },
-	{ name: 'Arts', icons: arts.icons },
-	{ name: 'Business', icons: business.icons },
-	{ name: 'Engineering', icons: engineering.icons },
-	{ name: 'Food', icons: food.icons },
-	{ name: 'Law', icons: law.icons },
-	{ name: 'Medical', icons: medical.icons },
-	{ name: 'People', icons: people.icons },
-	{ name: 'Places', icons: places.icons },
-	{ name: 'Science', icons: science.icons },
-	{ name: 'Sports', icons: sports.icons },
-	{ name: 'Time', icons: time.icons }
-]
+const categoryOrder = [
+	'./Teaching.json',
+	'./General.json',
+	'./Aotearoa.json',
+	'./Architecture.json',
+	'./Arts.json',
+	'./Business.json',
+	'./Engineering.json',
+	'./Food.json',
+	'./Law.json',
+	'./Medical.json',
+	'./People.json',
+	'./Places.json',
+	'./Science.json',
+	'./Sports.json'
+];
 
-export default categories
-export const getIconClass = (url: string) : string => {
+const categories: Category[] = categoryOrder.map((filename) => {
+	const data = found_categories[filename];
+	const name = filename
+		.split(/(\\|\/)/g)
+		.pop()
+		.replace('.json', '');
+	return { name, icons: data.icons };
+});
+
+export default categories;
+export const getIconClass = (url: string): string => {
 	// eg : svg-Aotearoa--noun_Beehive_147848
 	// Strip svg from end
 	url = url.replace(/\.svg$/, '');
@@ -62,4 +54,4 @@ export const getIconClass = (url: string) : string => {
 	const parts = url.split('/');
 	return `${parts.join('--')}`;
 };
-export type {Icon, Category}
+export type { Icon, Category };
