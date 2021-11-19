@@ -5,10 +5,9 @@
 
 #toolbar {
 	position: sticky;
-	z-index: 20;
 	top: 0;
 	background: white;
-	z-index: 10;
+	z-index: 20;
 	padding: 1.5em 1em;
 	display: grid;
 	grid-template-areas: 'filter filter' 'shortcuts colour';
