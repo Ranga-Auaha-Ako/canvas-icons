@@ -52,9 +52,7 @@
 		.slice(0, 15)
 		.map((i) => ({
 			...i.item,
-			term: `${i.item.term ? i.item.term : i.item.title} - ${Math.round(
-				(1 - i.score) * 100
-			)}% match`
+			term: i.item.title || i.item.term
 		}));
 
 	// Scrollspy, so that the active category is highlighted
@@ -221,7 +219,9 @@
 	<footer>
 		<p>
 			Canvas Icons <strong>v{$session.version}</strong>.
-			<a target="_blank" href="https://github.com/Ranga-Auaha-Ako/canvas-icons/"> Source & Contribute</a>
+			<a target="_blank" href="https://github.com/Ranga-Auaha-Ako/canvas-icons/">
+				Source & Contribute</a
+			>
 		</p>
 	</footer>
 </div>
