@@ -64,6 +64,7 @@
 		"sveltestrap": "^5.6.3",
 		"svg-sprite": "^1.5.2",
 		"title-case": "^3.0.3",
+		"uoa-canvas-icons": "link:./../uoa-canvas-icons/",
 		"vinyl": "^2.2.1"
 	}
 }

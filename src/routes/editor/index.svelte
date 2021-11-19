@@ -52,9 +52,9 @@
 	import { nounProjectAuth } from './store';
 
 	// Load Icons
-	import categories from '$lib/icons';
-	import type { Category, Icon } from '$lib/icons';
-	import { getIconClass } from '$lib/icons';
+	import categories from 'uoa-canvas-icons';
+	import type { Category, Icon } from 'uoa-canvas-icons';
+	import { getIconClass } from 'uoa-canvas-icons';
 	import InputSuggest from '$lib/components/inputSuggest.svelte';
 	import IconEditor from '$lib/components/editor/iconEditor.svelte';
 

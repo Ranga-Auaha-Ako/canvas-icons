@@ -9,8 +9,8 @@
 
 	// Load Icons
 
-	import categories from '$lib/icons';
-	import type { Category, Icon } from '$lib/icons';
+	import categories from 'uoa-canvas-icons';
+	import type { Category, Icon } from 'uoa-canvas-icons';
 	import IconList from '$lib/components/iconList.svelte';
 
 	// Load colour picker
@@ -221,7 +221,9 @@
 	<footer>
 		<p>
 			Canvas Icons <strong>v{$session.version}</strong>.
-			<a target="_blank" href="https://github.com/Ranga-Auaha-Ako/canvas-icons/"> Source & Contribute</a>
+			<a target="_blank" href="https://github.com/Ranga-Auaha-Ako/canvas-icons/">
+				Source & Contribute</a
+			>
 		</p>
 	</footer>
 </div>

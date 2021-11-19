@@ -10,7 +10,7 @@
 	export let show: Number[] | false = false;
 
 	// The icon CSS class name is generated based on the path. Find that out here:
-	import { getIconClass } from '$lib/icons';
+	import { getIconClass } from 'uoa-canvas-icons';
 
 	const dispatch = createEventDispatcher();
 </script>
