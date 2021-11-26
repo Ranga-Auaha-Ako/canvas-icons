@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.0] - 2021-11-19
 
+### Changed
+
+- Switched to Tag Assistant, collecting page speed metrics
+
+## [2.3.0] - 2021-11-19
+
 ### Added
 
 - Basic Google Analytics implementation
