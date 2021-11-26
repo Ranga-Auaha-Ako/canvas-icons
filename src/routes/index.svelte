@@ -17,6 +17,10 @@
 	import ColourPicker from '$lib/components/colourPicker.svelte';
 	let colour = '#000000';
 
+	// Load Margin picker
+	import MarginPicker from '$lib/components/MarginPicker.svelte';
+	let margin = '0.5';
+
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
 	let allIcons: Icon[] = categories.reduce((acc, cv) => acc.concat(cv.icons), []);
@@ -165,9 +169,10 @@
 				</button>
 			{/each}
 		</div>
-		<div id="colour-picker">
+		<div>
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={colour} />
+			<MarginPicker bind:value={margin} />
 		</div>
 	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->
@@ -203,7 +208,7 @@
 						</h3>
 					{/if}
 				</div>
-				<div class="icons">
+				<div class="icons" style="--icon-margin: {margin}rem">
 					<IconList
 						on:selectIcon={selectIcon}
 						icons={allIcons}

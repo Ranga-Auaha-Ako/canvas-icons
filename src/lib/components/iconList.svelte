@@ -63,6 +63,7 @@
 			background: white;
 			display: inline-block;
 			margin: 0.5em;
+			margin: var(--icon-margin);
 			padding: 0.5em;
 			cursor: pointer;
 			transition: 0.2s ease-out transform, 0.2s ease-out box-shadow, 0.2s ease-out border-color,

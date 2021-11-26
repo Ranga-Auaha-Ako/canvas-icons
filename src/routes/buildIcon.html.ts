@@ -7,7 +7,7 @@ import { escape } from 'html-escaper';
 export async function get(req) {
 	const data = req.query.get('data');
 	const iconUrl = req.query.get('icon-url');
-	const iconAlt = req.query.get('icon-alt');
+	const iconMargin = req.query.get('icon-margin');
 	const callback = req.query.get('callback');
 
 	if (!data || !iconUrl || !callback) {
@@ -21,7 +21,7 @@ export async function get(req) {
 		};
 	}
 
-	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt="" width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' style="${iconMargin}" alt="" width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',
