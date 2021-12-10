@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.4.0] - 2021-12-10
+
+### Added
+
+- Collecting icon download statistics
+- New "emojis" category, starting with three icons
+- 2x new icons in general category
+
+### Changed
+
+- Switched to Universal Analytics within Tag Assistant
+
 ## [2.3.3] - 2021-11-19
 
 ### Changed
