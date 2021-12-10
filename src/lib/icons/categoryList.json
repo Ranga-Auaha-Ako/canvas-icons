@@ -13,5 +13,6 @@
     {"name": "Places", "url": "icon11.json"},
     {"name": "Science", "url": "icon12.json"},
     {"name": "Sports", "url": "icon13.json"},
-    {"name": "Time", "url": "icon1.json"}
+    {"name": "Time", "url": "icon14.json"},
+    {"name": "Emojis", "url": "icon16.json"}
 ]
