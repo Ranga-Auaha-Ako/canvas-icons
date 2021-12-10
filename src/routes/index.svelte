@@ -121,7 +121,10 @@
 					a.click();
 					window.URL.revokeObjectURL(url);
 				});
+			// Send to Google Analytics
 		}
+		// @ts-expect-error
+		dataLayer.push({ event: 'iconSelect', colour: colour, selectedIcon: e.detail.url });
 	};
 </script>
 
