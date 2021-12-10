@@ -10,8 +10,8 @@
 		"icons": "node buildSprites.js",
 		"preview": "svelte-kit preview",
 		"preview:host": "svelte-kit preview --host",
-		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"check": "svelte-check --tsconfig ./tsconfig.json --threshold warning",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch --threshold warning",
 		"lint": "prettier --ignore-path .gitignore  --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
