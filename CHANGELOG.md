@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.4.1] - 2021-12-11
+
+### Fixed
+
+- Added fill colours to new icons
+- Disabled transition on icon colour, preventing some visual artifacts on some systems
+
 ## [2.4.0] - 2021-12-10
 
 ### Added

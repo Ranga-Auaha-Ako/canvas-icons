@@ -93,7 +93,8 @@
 				-webkit-mask-size: contain;
 				-webkit-mask-repeat: no-repeat;
 				-webkit-mask-position: center;
-				transition: background-color 0.5s ease;
+				// Disabled to prevent visual glitch on some systems (icons become blocks during transition)
+				// transition: background-color 0.5s ease;
 			}
 		}
 	}
