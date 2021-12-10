@@ -170,7 +170,7 @@
 		}
 		addIconContents = {
 			id: nanoid(),
-			url: `/[relevant folder]/noun_${iconData.icon.term_slug}_${iconData.icon.id}`,
+			url: `[relevant folder]/noun_${iconData.icon.term_slug}_${iconData.icon.id}`,
 			title: iconData.icon.term,
 			width: 48,
 			height: 48,
