@@ -12,7 +12,8 @@ import * as people from './icon10.json';
 import * as places from './icon11.json';
 import * as science from './icon12.json';
 import * as sports from './icon13.json';
-import * as time from './icon1.json';
+import * as time from './icon14.json';
+import * as emojis from './icon16.json';
 
 interface Icon {
 	id: string;
@@ -24,17 +25,14 @@ interface Icon {
 	tags?: string[];
 	term?: string;
 	collections?: string[];
-  }
-  
-  interface Category {
+}
+
+interface Category {
 	name: string;
 	icons: Icon[];
-  }
-  
-  
-  
+}
 
-const categories : Category[] = [
+const categories: Category[] = [
 	{ name: 'Teaching', icons: teaching.icons },
 	{ name: 'General', icons: general.icons },
 	{ name: 'Aotearoa', icons: aotearoa.icons },
@@ -49,11 +47,12 @@ const categories : Category[] = [
 	{ name: 'Places', icons: places.icons },
 	{ name: 'Science', icons: science.icons },
 	{ name: 'Sports', icons: sports.icons },
-	{ name: 'Time', icons: time.icons }
-]
+	{ name: 'Time', icons: time.icons },
+	{ name: 'Emojis', icons: emojis.icons }
+];
 
-export default categories
-export const getIconClass = (url: string) : string => {
+export default categories;
+export const getIconClass = (url: string): string => {
 	// eg : svg-Aotearoa--noun_Beehive_147848
 	// Strip svg from end
 	url = url.replace(/\.svg$/, '');
@@ -62,4 +61,4 @@ export const getIconClass = (url: string) : string => {
 	const parts = url.split('/');
 	return `${parts.join('--')}`;
 };
-export type {Icon, Category}
+export type { Icon, Category };
