@@ -9,22 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.3.3] - 2021-11-19
+
+### Changed
+
+- Switched to Tag Assistant, collecting page speed metrics
+
+## [2.3.0] - 2021-11-19
+
+### Added
+
+- Basic Google Analytics implementation
+
+### Fixed
+
+- Tags sent to canvas no longer have alt attribute
+- Fix issue with colour picker not working when searching
+
 ## [2.2.2] - 2021-11-12
 
 ### Added
- - Icon editor now supports adding, deleting, and importing of icons within each category.
+
+- Icon editor now supports adding, deleting, and importing of icons within each category.
 
 ## [2.1.3] - 2021-11-03
 
 ### Added
- - Documented through GitHub Pages, available at https://ranga-auaha-ako.github.io/canvas-icons/
+
+- Documented through GitHub Pages, available at https://ranga-auaha-ako.github.io/canvas-icons/
 
 ### Changed
- - Moved to UoA infrastructure: https://canvasicons.auckland.ac.nz/
+
+- Moved to UoA infrastructure: https://canvasicons.auckland.ac.nz/
 
 ### Security
 
- - Updated package dependencies to latest versions
+- Updated package dependencies to latest versions
 
 ## [0.4.8] - 2021-09-12
 
