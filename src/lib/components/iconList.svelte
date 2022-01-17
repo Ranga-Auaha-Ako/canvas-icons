@@ -8,6 +8,7 @@
 	export let colour: String;
 	export let highlight: Number[] | false = false;
 	export let show: Number[] | false = false;
+	export let showPadding: Boolean = false;
 
 	// The icon CSS class name is generated based on the path. Find that out here:
 	import { getIconClass } from '$lib/icons';
@@ -19,6 +20,7 @@
 	role="list"
 	class="iconList"
 	class:filtered={highlight !== false}
+	class:showPadding
 	style="--iconColor: {colour}"
 >
 	<!-- Recent icons -->
@@ -60,13 +62,13 @@
 		.icon {
 			appearance: none;
 			-webkit-appearance: none;
-			background: white;
+			background-color: transparent;
 			display: inline-block;
-			margin: 0.5em;
-			padding: 0.5em;
+			margin: 0;
+			padding: var(--iconPadding);
 			cursor: pointer;
 			transition: 0.2s ease-out transform, 0.2s ease-out box-shadow, 0.2s ease-out border-color,
-				0.5s ease-out opacity;
+				0.5s ease-out opacity, 0.1s ease background-color;
 			will-change: transform, box-shadow, border-color;
 			transform: scale(1);
 			border-radius: 6px;
@@ -75,6 +77,7 @@
 			&:hover {
 				transform: scale(1.1);
 				box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+				background-color: white;
 				opacity: 1;
 			}
 

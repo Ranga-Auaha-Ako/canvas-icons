@@ -10,14 +10,14 @@
 	z-index: 20;
 	padding: 1.5em 1em;
 	display: grid;
-	grid-template-areas: 'filter filter' 'shortcuts colour';
+	grid-template-areas: 'filter filter' 'shortcuts settings';
 	grid-template-columns: minmax(1em, max-content) minmax(min-content, auto);
 	row-gap: 0.5em;
 	column-gap: 1.5em;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 
 	@media only screen and (max-width: 550px) {
-		grid-template-areas: 'filter filter' 'shortcuts shortcuts' 'colour colour';
+		grid-template-areas: 'filter filter' 'shortcuts shortcuts' 'settings settings';
 	}
 
 	#filter {
@@ -100,8 +100,160 @@
 		}
 	}
 
-	#colour-picker {
-		grid-area: colour;
+	#settings {
+		grid-area: settings;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		column-gap: 1rem;
+		button {
+			background: gray;
+			color: white;
+			appearance: none;
+			border: 0;
+			border-radius: 3px;
+			padding: 0.2rem 0.6rem;
+			cursor: pointer;
+		}
+	}
+}
+
+.modal-container {
+	.modal-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.2);
+		z-index: 1000;
+	}
+
+	.modal {
+		// Modal for icon settings (#settings)
+		position: fixed;
+		z-index: 1001;
+		max-width: 900px;
+		width: 100%;
+		left: 0;
+		right: 0;
+		top: 0;
+		margin: auto;
+		background-color: white;
+		padding: 1rem 2rem;
+		border-bottom-left-radius: 0.4rem;
+		border-bottom-right-radius: 0.4rem;
+		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+		.close {
+			display: block;
+			position: absolute;
+			right: 0;
+			top: 0;
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			font-size: 1.5rem;
+		}
+
+		&.settings {
+			padding: 0;
+			display: grid;
+			grid-template-columns: 4fr 5fr;
+			column-gap: 1em;
+
+			.config {
+				padding: 1rem 1rem;
+			}
+
+			.preview {
+				background-color: #e7e7e7;
+				padding: 2rem 1rem;
+				border-bottom-right-radius: 0.4rem;
+				h1 {
+					margin-top: 0;
+				}
+				.header-preview {
+					background-color: white;
+					padding: 1em;
+					border-radius: 4px;
+				}
+				.canvas-styles {
+					color: #2d3b45;
+					-webkit-font-smoothing: antialiased;
+					font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial,
+						sans-serif;
+
+					h1,
+					h2,
+					.h1,
+					.h2 {
+						font-size: 1.8em;
+						line-height: 1.5;
+					}
+
+					h3,
+					.h3 {
+						font-size: 1.5em;
+					}
+					h1,
+					h2,
+					h3,
+					h4,
+					h5,
+					h6 {
+						margin: 6px 0;
+						font-family: 'Lato Extended', 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+						font-weight: normal;
+						line-height: 1.5;
+						text-rendering: optimizelegibility;
+					}
+				}
+				.icon-wrap {
+					&.showPadding {
+						// &:nth-child(1) {
+						// 	display: block;
+						// }
+						// display: none;
+						position: relative;
+						&::before {
+							content: ' ';
+							display: block;
+							position: absolute;
+							z-index: 1;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							background-color: rgb(170, 207, 255);
+							border: 1px dashed rgb(16, 119, 255);
+						}
+						&::after {
+							content: ' ';
+							display: block;
+							position: absolute;
+							z-index: 2;
+							top: var(--iconPadding);
+							left: var(--iconPadding);
+							width: calc(100% - var(--iconPadding) * 2);
+							height: calc(100% - var(--iconPadding) * 2);
+							background-color: rgba(255, 255, 255, 1);
+							border: 1px solid rgb(16, 119, 255);
+						}
+						& > * {
+							z-index: 3;
+							position: relative;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.form-control {
+	label {
+		display: block;
+		font-weight: bold;
 	}
 }
 

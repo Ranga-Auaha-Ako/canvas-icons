@@ -3,6 +3,9 @@
 	import Fuse from 'fuse.js';
 	import scrollSpy from 'simple-scrollspy';
 	import { page, session } from '$app/stores';
+	import Portal from 'svelte-portal/src/Portal.svelte';
+	import Slider from '@bulatdashiev/svelte-slider';
+	import { focusTrap } from 'svelte-focus-trap';
 
 	// Stylesheet
 	import './index.scss';
@@ -16,6 +19,13 @@
 	// Load colour picker
 	import ColourPicker from '$lib/components/colourPicker.svelte';
 	let colour = '#000000';
+	// More settings
+	let iconPadding = 1;
+	let iconSize = 48;
+	let iconOffset = 0;
+	let iconInBox = false;
+	let showPadding = false;
+	let showSettings = true;
 
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
@@ -87,7 +97,7 @@
 		const iconAlt = e.detail.alt;
 		const iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${e.detail.url.replace(
 			'.svg',
-			`.${colour.replace('#', '')}.svg`
+			`.${iconInBox ? 'ffffff' : colour.replace('#', '')}.svg`
 		)}`;
 		const callback = $session.callback;
 		const data = $session.data;
@@ -96,6 +106,11 @@
 			window.location.href = `buildIcon.html?${new URLSearchParams({
 				'icon-url': iconUrl,
 				'icon-alt': iconAlt,
+				colour: colour,
+				padding: iconPadding.toString(),
+				size: iconSize.toString(),
+				offset: iconOffset.toString(),
+				inBox: iconInBox.toString(),
 				callback: callback,
 				data
 			}).toString()}`;
@@ -128,7 +143,7 @@
 	};
 </script>
 
-<div style="--iconColor: {colour}">
+<div style="--iconColor: {colour}; --iconPadding: 1rem">
 	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
@@ -168,9 +183,146 @@
 				</button>
 			{/each}
 		</div>
-		<div id="colour-picker">
+		<div id="settings">
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={colour} />
+			<button
+				on:click={() => {
+					showSettings = true;
+				}}>Icon Settings</button
+			>
+			<Portal target="body">
+				{#if showSettings}
+					<div
+						class="modal-container"
+						aria-labelledby="settings-title"
+						style="--iconColor: {colour}; --iconPadding: {iconPadding}rem"
+						aria-label="Close Settings"
+					>
+						<div
+							class="modal-backdrop"
+							on:click={() => {
+								showSettings = false;
+							}}
+						/>
+						<div
+							class="modal settings"
+							on:click={(e) => e.stopPropagation()}
+							role="document"
+							use:focusTrap
+						>
+							<button
+								type="button"
+								class="close"
+								aria-label="Close dialog"
+								on:click={() => {
+									showSettings = false;
+								}}>&times;</button
+							>
+							<div class="config">
+								<h1 id="settings-title">Advanced Settings</h1>
+								<div
+									class="sizing"
+									on:mousedown={() => {
+										showPadding = true;
+										window.addEventListener(
+											'mouseup',
+											() => {
+												showPadding = false;
+											},
+											{ once: true }
+										);
+									}}
+									on:focusin={() => {
+										showPadding = true;
+									}}
+									on:focusout={() => {
+										showPadding = false;
+									}}
+								>
+									<div class="form-control">
+										<label for="iconPadding">Icon Padding - {iconPadding}rem</label>
+										<input type="range" min="0" max="2" step="0.2" bind:value={iconPadding} />
+									</div>
+									<div class="form-control">
+										<label for="iconSize">Icon Size (adjustable from Canvas) - {iconSize}px</label>
+										<input type="range" min="5" max="100" step="2" bind:value={iconSize} />
+									</div>
+									<div class="form-control">
+										<label for="iconOffset">Icon Line offset - {Math.abs(iconOffset)}px</label>
+										<input type="range" min="-40" max="40" step="1" bind:value={iconOffset} />
+									</div>
+									<div class="form-control">
+										<label for="iconInBox">Put icon in box?</label>
+										<input type="checkbox" bind:checked={iconInBox} />
+									</div>
+								</div>
+								<div>
+									<ColourPicker bind:value={colour} />
+								</div>
+							</div>
+							<div class="preview">
+								<h1>Preview</h1>
+								<!-- Some different preview boxes to simulate placement and look -->
+								<div class="header-preview canvas-styles">
+									<h3>
+										<div
+											class="icon-wrap"
+											class:showPadding={showPadding && !iconInBox}
+											style="padding: {iconPadding}rem; display: inline-block; position: relative; border-radius: 3px; {iconInBox
+												? `background: ${colour}; bottom: ${iconOffset}px`
+												: ''}"
+										>
+											<img
+												class="icon"
+												role="presentation"
+												alt=""
+												width={iconSize}
+												height={iconSize}
+												style="-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#General--noun_Box_221801'); display: block; position: relative; {iconInBox
+													? 'background-color: white;'
+													: `background-color: ${colour}; bottom: ${iconOffset}px`}"
+												data-decorative="true"
+											/>
+										</div>
+										This is an example header
+									</h3>
+									<p>
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+										incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+										nostrud exercitation ullamco.
+									</p>
+									<br />
+									<div>
+										<div
+											class="icon-wrap"
+											class:showPadding={showPadding && !iconInBox}
+											style="padding: {iconPadding}rem; display: inline-block; position: relative; border-radius: 3px; {iconInBox
+												? `background: ${colour}; bottom: ${iconOffset}px`
+												: ''}"
+										>
+											<img
+												class="icon"
+												role="presentation"
+												alt=""
+												width={iconSize}
+												height={iconSize}
+												style="-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#General--noun_Box_221801'); display: block; position: relative; {iconInBox
+													? 'background-color: white;'
+													: `background-color: ${colour}; bottom: ${iconOffset}px`}"
+												data-decorative="true"
+											/>
+										</div>
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+										ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+										ullamco.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{/if}
+			</Portal>
 		</div>
 	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->

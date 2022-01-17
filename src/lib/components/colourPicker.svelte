@@ -60,6 +60,7 @@
 		align-items: center;
 		position: relative;
 		justify-content: flex-end;
+		width: fit-content;
 
 		label {
 			padding-right: 0.5em;

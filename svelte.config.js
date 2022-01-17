@@ -26,11 +26,11 @@ const config = {
 		vite: {
 			build: {
 				commonjsOptions: {
-				  transformMixedEsModules: true,
-				},
+					//   transformMixedEsModules: true,
+				}
 			},
 			optimizeDeps: {
-				  include: ["highlight.js/lib/core"],
+				include: ['highlight.js/lib/core']
 			}
 		}
 	}
