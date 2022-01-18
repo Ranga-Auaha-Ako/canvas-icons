@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { fly, fade } from 'svelte/transition';
 	import Fuse from 'fuse.js';
 	import scrollSpy from 'simple-scrollspy';
 	import { page, session } from '$app/stores';
@@ -15,17 +16,20 @@
 	import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
+	import IconPreview from '$lib/components/IconPreview.svelte';
 
 	// Load colour picker
 	import ColourPicker from '$lib/components/colourPicker.svelte';
 	let colour = '#000000';
 	// More settings
-	let iconPadding = 1;
-	let iconSize = 48;
+	let iconPadding = 0;
+	let iconSize = -1;
+	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
 	let iconInBox = false;
 	let showPadding = false;
 	let showSettings = true;
+	let iconPreviewPosition: 'h1' | 'h3' | 'p' = 'h1';
 
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
@@ -196,16 +200,18 @@
 					<div
 						class="modal-container"
 						aria-labelledby="settings-title"
-						style="--iconColor: {colour}; --iconPadding: {iconPadding}rem"
+						style="--iconColor: {colour}; --iconPadding: {iconPadding}px"
 						aria-label="Close Settings"
 					>
 						<div
+							transition:fade={{ duration: 150 }}
 							class="modal-backdrop"
 							on:click={() => {
 								showSettings = false;
 							}}
 						/>
 						<div
+							transition:fly={{ y: -200, duration: 150 }}
 							class="modal settings"
 							on:click={(e) => e.stopPropagation()}
 							role="document"
@@ -221,6 +227,33 @@
 							>
 							<div class="config">
 								<h1 id="settings-title">Advanced Settings</h1>
+								<div class="form-control">
+									<label for="preview-loc" class="inline">Preview in:</label>
+									<span class="btn-row" id="preview-loc">
+										<button
+											class:active={iconPreviewPosition == 'h1'}
+											on:click={() => {
+												iconPreviewPosition = 'h1';
+											}}><span>H1</span> Title</button
+										>
+										<button
+											class:active={iconPreviewPosition == 'h3'}
+											on:click={() => {
+												iconPreviewPosition = 'h3';
+											}}><span>H3</span> Header</button
+										>
+										<button
+											class:active={iconPreviewPosition == 'p'}
+											on:click={() => {
+												iconPreviewPosition = 'p';
+											}}><span>P</span> Paragraph</button
+										>
+									</span>
+								</div>
+								<h2>Spacing &amp; sizing</h2>
+								<p class="description">
+									Use these controls to set the position and spacing of the icon on the page.
+								</p>
 								<div
 									class="sizing"
 									on:mousedown={() => {
@@ -241,16 +274,24 @@
 									}}
 								>
 									<div class="form-control">
-										<label for="iconPadding">Icon Padding - {iconPadding}rem</label>
-										<input type="range" min="0" max="2" step="0.2" bind:value={iconPadding} />
+										<label for="iconPadding">Icon Padding - {iconPadding}px</label>
+										<input type="range" min="0" max="30" step="1" bind:value={iconPadding} />
 									</div>
 									<div class="form-control">
-										<label for="iconSize">Icon Size (adjustable from Canvas) - {iconSize}px</label>
+										<label for="iconSize"
+											>Icon Size (adjustable from Canvas) - {iconSizeFormatted}</label
+										>
+										<button
+											class:active={iconSize == -1}
+											on:click={(e) => {
+												iconSize = iconSize == -1 ? 0 : -1;
+											}}>Auto</button
+										>
 										<input type="range" min="5" max="100" step="2" bind:value={iconSize} />
 									</div>
 									<div class="form-control">
-										<label for="iconOffset">Icon Line offset - {Math.abs(iconOffset)}px</label>
-										<input type="range" min="-40" max="40" step="1" bind:value={iconOffset} />
+										<label for="iconOffset">Icon Line offset - {Math.abs(iconOffset)}em</label>
+										<input type="range" min="-2" max="2" step="0.1" bind:value={iconOffset} />
 									</div>
 									<div class="form-control">
 										<label for="iconInBox">Put icon in box?</label>
@@ -264,59 +305,56 @@
 							<div class="preview">
 								<h1>Preview</h1>
 								<!-- Some different preview boxes to simulate placement and look -->
-								<div class="header-preview canvas-styles">
-									<h3>
-										<div
-											class="icon-wrap"
-											class:showPadding={showPadding && !iconInBox}
-											style="padding: {iconPadding}rem; display: inline-block; position: relative; border-radius: 3px; {iconInBox
-												? `background: ${colour}; bottom: ${iconOffset}px`
-												: ''}"
-										>
-											<img
-												class="icon"
-												role="presentation"
-												alt=""
-												width={iconSize}
-												height={iconSize}
-												style="-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#General--noun_Box_221801'); display: block; position: relative; {iconInBox
-													? 'background-color: white;'
-													: `background-color: ${colour}; bottom: ${iconOffset}px`}"
-												data-decorative="true"
+								<div class="header-preview canvas-styles" aria-hidden="true">
+									<h1>
+										{#if iconPreviewPosition == 'h1'}
+											<IconPreview
+												{showPadding}
+												{iconInBox}
+												{iconPadding}
+												{iconSize}
+												{colour}
+												{iconOffset}
 											/>
-										</div>
-										This is an example header
+										{/if}
+										Title goes here (H1)
+									</h1>
+									<p>
+										<img src="/img/lorempicture.jpeg" class="example" alt="Example" />
+										{#if iconPreviewPosition == 'p'}
+											<IconPreview
+												{showPadding}
+												{iconInBox}
+												{iconPadding}
+												{iconSize}
+												{colour}
+												{iconOffset}
+											/>
+										{/if}
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+										ut labore et dolore magna aliqua. Pretium viverra suspendisse potenti nullam ac tortor
+										vitae purus. Non consectetur a erat nam at lectus urna duis. Erat imperdiet.
+									</p>
+									<h3>
+										{#if iconPreviewPosition == 'h3'}
+											<IconPreview
+												{showPadding}
+												{iconInBox}
+												{iconPadding}
+												{iconSize}
+												{colour}
+												{iconOffset}
+											/>
+										{/if}
+										This is a subheader (H3)
 									</h3>
 									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-										incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-										nostrud exercitation ullamco.
+										Sit amet dictum sit amet. Sed euismod nisi porta lorem mollis aliquam ut
+										porttitor. Ac turpis egestas integer eget aliquet nibh praesent tristique.
+										Auctor urna nunc id cursus metus aliquam eleifend. Velit egestas dui id ornare
+										arcu odio ut. Adipiscing enim eu turpis egestas pretium aenean pharetra.
+										Ultrices sagittis orci a scelerisque purus semper eget duis.
 									</p>
-									<br />
-									<div>
-										<div
-											class="icon-wrap"
-											class:showPadding={showPadding && !iconInBox}
-											style="padding: {iconPadding}rem; display: inline-block; position: relative; border-radius: 3px; {iconInBox
-												? `background: ${colour}; bottom: ${iconOffset}px`
-												: ''}"
-										>
-											<img
-												class="icon"
-												role="presentation"
-												alt=""
-												width={iconSize}
-												height={iconSize}
-												style="-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#General--noun_Box_221801'); display: block; position: relative; {iconInBox
-													? 'background-color: white;'
-													: `background-color: ${colour}; bottom: ${iconOffset}px`}"
-												data-decorative="true"
-											/>
-										</div>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-										ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-										ullamco.
-									</div>
 								</div>
 							</div>
 						</div>
