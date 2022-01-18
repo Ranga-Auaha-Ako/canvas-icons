@@ -319,22 +319,14 @@
 										{/if}
 										Title goes here (H1)
 									</h1>
-									<p>
-										<img src="/img/lorempicture.jpeg" class="example" alt="Example" />
-										{#if iconPreviewPosition == 'p'}
-											<IconPreview
-												{showPadding}
-												{iconInBox}
-												{iconPadding}
-												{iconSize}
-												{colour}
-												{iconOffset}
-											/>
-										{/if}
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-										ut labore et dolore magna aliqua. Pretium viverra suspendisse potenti nullam ac tortor
-										vitae purus. Non consectetur a erat nam at lectus urna duis. Erat imperdiet.
-									</p>
+									<div class="example-grid">
+										<p>
+											Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
+											laboriosam. Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+											quae ab illo.
+										</p>
+										<div class="example" />
+									</div>
 									<h3>
 										{#if iconPreviewPosition == 'h3'}
 											<IconPreview
@@ -349,11 +341,21 @@
 										This is a subheader (H3)
 									</h3>
 									<p>
-										Sit amet dictum sit amet. Sed euismod nisi porta lorem mollis aliquam ut
-										porttitor. Ac turpis egestas integer eget aliquet nibh praesent tristique.
-										Auctor urna nunc id cursus metus aliquam eleifend. Velit egestas dui id ornare
-										arcu odio ut. Adipiscing enim eu turpis egestas pretium aenean pharetra.
-										Ultrices sagittis orci a scelerisque purus semper eget duis.
+										{#if iconPreviewPosition == 'p'}
+											<IconPreview
+												{showPadding}
+												{iconInBox}
+												{iconPadding}
+												{iconSize}
+												{colour}
+												{iconOffset}
+											/>
+										{/if}
+										Sit amet dictum sit amet. Sed euismod nisi porta lorem mollis aliquam ut porttitor.
+										Ac turpis egestas integer eget aliquet nibh praesent tristique. Auctor urna nunc
+										id cursus metus aliquam eleifend. Velit egestas dui id ornare arcu odio ut. Adipiscing
+										enim eu turpis egestas pretium aenean pharetra. Ultrices sagittis orci a scelerisque
+										purus semper eget duis.
 									</p>
 								</div>
 							</div>

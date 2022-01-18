@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	export let showPadding: Boolean;
 	export let iconInBox: Boolean;
 	export let colour: String;
@@ -14,6 +15,7 @@
 </script>
 
 <div
+	transition:slide
 	class="icon-wrap"
 	class:showPadding={showPadding && !iconInBox}
 	style="padding: {iconPadding}px; display: inline-block; position: relative; border-radius: 3px; {iconInBox
