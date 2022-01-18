@@ -16,7 +16,7 @@
 	import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
-	import IconPreview from '$lib/components/IconPreview.svelte';
+	import IconPreview from '$lib/components/iconPreview.svelte';
 
 	// Load colour picker
 	import ColourPicker from '$lib/components/colourPicker.svelte';
