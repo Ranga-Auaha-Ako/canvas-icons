@@ -3,9 +3,9 @@
 	export let showPadding: Boolean;
 	export let iconInBox: Boolean;
 	export let colour: String;
-	export let iconMargin: Number;
-	export let iconSize: Number;
-	export let iconOffset: Number;
+	export let iconMargin: number;
+	export let iconSize: number;
+	export let iconOffset: number;
 	$: iconSizeFormatted = iconSize == -1 ? '1em' : `${iconSize}px`;
 	export let icon = { url: 'General/noun_Box_221801.svg' };
 	$: iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${icon.url.replace(
