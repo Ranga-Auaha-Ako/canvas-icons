@@ -31,10 +31,10 @@ export async function get(req) {
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconMargin}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"
 	<span style='line-height: 0; margin: ${iconMargin}px; display: inline-block; position: relative; border-radius: 3px;${
-		iconInBox ? ` background: ${colour}; bottom: ${iconOffset}em;` : ''
+		iconInBox ? ` background: ${colour}; bottom: ${iconOffset + 0.1}em;` : ''
 	} vertical-align: middle'>
 	<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' style='display: inline-block; position: relative; ${
-		iconInBox ? '' : `bottom: ${iconOffset}em`
+		iconInBox ? '' : `bottom: ${iconOffset + 0.1}em`
 	} width: ${iconSizeFormatted}; height: ${iconSizeFormatted};'/></span>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({

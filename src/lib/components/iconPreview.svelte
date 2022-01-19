@@ -27,7 +27,7 @@
 		role="presentation"
 		alt=""
 		src={iconUrl}
-		style="display: block; position: relative; {iconInBox ? '' : `bottom: ${iconOffset}em;`}
+		style="display: block; position: relative; {iconInBox ? '' : `bottom: ${iconOffset + 0.1}em;`}
         width: calc({iconSizeFormatted}); height: calc({iconSizeFormatted});"
 		data-decorative="true"
 	/>

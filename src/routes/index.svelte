@@ -119,7 +119,7 @@
 				colour: colour,
 				margin: iconMargin.toString(),
 				size: iconSize.toString(),
-				offset: iconOffset.toString(),
+				offset: (iconOffset + 0.1).toString(), // additional offset to better align with actual text position
 				inBox: iconInBox.toString(),
 				callback: callback,
 				data
