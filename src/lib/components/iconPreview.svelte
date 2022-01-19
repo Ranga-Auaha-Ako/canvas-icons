@@ -19,7 +19,7 @@
 	class="icon-wrap"
 	class:showPadding={showPadding && !iconInBox}
 	style="margin: {iconMargin}px; display: inline-block; position: relative; border-radius: 3px; {iconInBox
-		? `background: ${colour}; bottom: ${iconOffset}em;`
+		? `background: ${colour}; bottom: ${iconOffset + 0.1}em;`
 		: ''} vertical-align: middle;"
 >
 	<img
