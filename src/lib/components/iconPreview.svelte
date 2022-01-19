@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	export let showPadding: Boolean;
-	export let iconInBox: Boolean;
-	export let colour: String;
+	export let showPadding: boolean;
+	export let iconInBox: boolean;
+	export let colour: string;
 	export let iconMargin: number;
 	export let iconSize: number;
 	export let iconOffset: number;
