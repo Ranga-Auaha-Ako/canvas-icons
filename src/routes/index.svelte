@@ -35,7 +35,7 @@
 	let iconInBox = false;
 	let showPadding = false;
 	let showSettings = true;
-	let iconPreviewPosition: 'h1' | 'h3' | 'p' = 'h1';
+	let iconPreviewPosition: 'h2' | 'h3' | 'p' = 'h2';
 
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
@@ -237,9 +237,9 @@
 									<label for="preview-loc" class="inline">Preview in:</label>
 									<span class="btn-row" id="preview-loc">
 										<button
-											class:active={iconPreviewPosition == 'h1'}
+											class:active={iconPreviewPosition == 'h2'}
 											on:click={() => {
-												iconPreviewPosition = 'h1';
+												iconPreviewPosition = 'h2';
 											}}><span>H1</span> Title</button
 										>
 										<button
@@ -369,8 +369,8 @@
 								<h1>Preview</h1>
 								<!-- Some different preview boxes to simulate placement and look -->
 								<div class="preview-contents canvas-styles" aria-hidden="true">
-									<h1>
-										{#if iconPreviewPosition == 'h1'}
+									<h2>
+										{#if iconPreviewPosition == 'h2'}
 											<IconPreview
 												{showPadding}
 												{iconInBox}
@@ -380,8 +380,8 @@
 												{iconOffset}
 											/>
 										{/if}
-										Title goes here (H1)
-									</h1>
+										Header goes here (H2)
+									</h2>
 									<div class="example-grid">
 										<p>
 											Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
