@@ -284,7 +284,7 @@
 										<button
 											class:active={iconSize == -1}
 											on:click={(e) => {
-												iconSize = iconSize == -1 ? 0 : -1;
+												iconSize = iconSize == -1 ? 20 : -1;
 											}}>Auto</button
 										>
 										<input type="range" min="5" max="100" step="2" bind:value={iconSize} />
