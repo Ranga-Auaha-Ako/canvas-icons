@@ -11,8 +11,14 @@
 	// Stylesheet
 	import './index.scss';
 
-	// Load Icons
+	// Load Material Design Icons (for UI)
+	import Resize from 'svelte-material-icons/Resize.svelte';
+	import FlipToBack from 'svelte-material-icons/FlipToBack.svelte';
+	import ArrowExpandVertical from 'svelte-material-icons/ArrowExpandVertical.svelte';
+	import Account from 'svelte-material-icons/Account.svelte';
+	import AccountBox from 'svelte-material-icons/AccountBox.svelte';
 
+	// Load Icons
 	import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
@@ -274,29 +280,85 @@
 									}}
 								>
 									<div class="form-control">
-										<label for="iconPadding">Icon Padding - {iconPadding}px</label>
+										<label for="iconSize">
+											<span class="icon"><Resize /></span>
+											Icon Size (adjustable from Canvas) - {iconSizeFormatted}
+											<div class="manualEdit">
+												<input
+													type="number"
+													step="1"
+													min="10"
+													bind:value={iconSize}
+													size={iconSize.toString().length}
+													disabled={iconSize == -1}
+												/>
+												<span class="units">px</span>
+											</div>
+										</label>
+										<div class="input-prefix">
+											<button
+												class:active={iconSize == -1}
+												on:click={(e) => {
+													iconSize = iconSize == -1 ? 20 : -1;
+												}}>Auto</button
+											>
+											<input type="range" min="10" max="100" step="1" bind:value={iconSize} />
+										</div>
+									</div>
+									<div class="form-control">
+										<label for="iconPadding">
+											<span class="icon"><ArrowExpandVertical /></span>
+											Icon Padding - {iconPadding}px
+											<div class="manualEdit">
+												<input
+													type="number"
+													step="1"
+													min="0"
+													bind:value={iconPadding}
+													size={iconPadding.toString().length}
+												/>
+												<span class="units">px</span>
+											</div>
+										</label>
 										<input type="range" min="0" max="30" step="1" bind:value={iconPadding} />
 									</div>
 									<div class="form-control">
-										<label for="iconSize"
-											>Icon Size (adjustable from Canvas) - {iconSizeFormatted}</label
-										>
-										<button
-											class:active={iconSize == -1}
-											on:click={(e) => {
-												iconSize = iconSize == -1 ? 20 : -1;
-											}}>Auto</button
-										>
-										<input type="range" min="5" max="100" step="2" bind:value={iconSize} />
-									</div>
-									<div class="form-control">
-										<label for="iconOffset">Icon Line offset - {Math.abs(iconOffset)}em</label>
+										<label for="iconOffset">
+											<span class="icon"><FlipToBack /></span>
+											Icon Line offset - {Math.abs(iconOffset)}em
+											<div class="manualEdit">
+												<input
+													type="number"
+													step="0.1"
+													bind:value={iconOffset}
+													size={iconOffset.toString().length}
+												/>
+												<span class="units">em</span>
+											</div>
+										</label>
 										<input type="range" min="-2" max="2" step="0.1" bind:value={iconOffset} />
 									</div>
-									<div class="form-control">
-										<label for="iconInBox">Put icon in box?</label>
-										<input type="checkbox" bind:checked={iconInBox} />
-									</div>
+								</div>
+								<h2>Style</h2>
+								<p class="description">
+									Change the appearance of the style to better fit your page.
+								</p>
+								<div class="form-control">
+									<label for="preview-loc" class="inline">Icon Style:</label>
+									<span class="btn-row" id="preview-loc">
+										<button
+											class:active={iconInBox == false}
+											on:click={() => {
+												iconInBox = false;
+											}}><span>X</span> Icon</button
+										>
+										<button
+											class:active={iconInBox == true}
+											on:click={() => {
+												iconInBox = true;
+											}}><span>B</span> Icon Box</button
+										>
+									</span>
 								</div>
 								<div>
 									<ColourPicker bind:value={colour} />
@@ -305,7 +367,7 @@
 							<div class="preview">
 								<h1>Preview</h1>
 								<!-- Some different preview boxes to simulate placement and look -->
-								<div class="header-preview canvas-styles" aria-hidden="true">
+								<div class="preview-contents canvas-styles" aria-hidden="true">
 									<h1>
 										{#if iconPreviewPosition == 'h1'}
 											<IconPreview

@@ -63,6 +63,7 @@
 		"slash": "^4.0.0",
 		"svelte-focus-trap": "^1.2.0",
 		"svelte-local-storage-store": "^0.2.6",
+		"svelte-material-icons": "^1.0.3",
 		"svelte-portal": "^2.1.2",
 		"svelte-tags-input": "^2.8.1",
 		"sveltestrap": "^5.6.3",
