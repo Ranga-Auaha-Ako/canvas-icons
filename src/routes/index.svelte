@@ -15,6 +15,7 @@
 	import Resize from 'svelte-material-icons/Resize.svelte';
 	import FlipToBack from 'svelte-material-icons/FlipToBack.svelte';
 	import ArrowExpandVertical from 'svelte-material-icons/ArrowExpandVertical.svelte';
+	import ArrowSplitHorizontal from 'svelte-material-icons/ArrowSplitHorizontal.svelte';
 	import Account from 'svelte-material-icons/Account.svelte';
 	import AccountBox from 'svelte-material-icons/AccountBox.svelte';
 
@@ -29,6 +30,7 @@
 	let colour = '#000000';
 	// More settings
 	let iconMargin = 0;
+	let iconPadding = 0;
 	let iconSize = -1;
 	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
@@ -292,7 +294,7 @@
 									<div class="form-control">
 										<label for="iconSize">
 											<span class="icon"><Resize /></span>
-											Icon Size (adjustable from Canvas) - {iconSizeFormatted}
+											Icon Size (adjustable from Canvas)
 											<div class="manualEdit">
 												<input
 													type="number"
@@ -317,8 +319,8 @@
 									</div>
 									<div class="form-control">
 										<label for="iconMargin">
-											<span class="icon"><ArrowExpandVertical /></span>
-											Icon Margin - {iconMargin}px
+											<span class="icon"><ArrowSplitHorizontal /></span>
+											Icon Margin
 											<div class="manualEdit">
 												<input
 													type="number"
@@ -335,7 +337,7 @@
 									<div class="form-control">
 										<label for="iconOffset">
 											<span class="icon"><FlipToBack /></span>
-											Icon Line offset - {Math.abs(iconOffset)}em
+											Icon Line offset
 											<div class="manualEdit">
 												<input
 													type="number"
@@ -370,6 +372,25 @@
 										>
 									</span>
 								</div>
+								{#if iconInBox}
+									<div class="form-control" transition:fly={{ y: -20, duration: 150 }}>
+										<label for="iconPadding">
+											<span class="icon"><ArrowExpandVertical /></span>
+											Icon Padding
+											<div class="manualEdit">
+												<input
+													type="number"
+													step="1"
+													min="0"
+													bind:value={iconPadding}
+													size={iconPadding.toString().length}
+												/>
+												<span class="units">%</span>
+											</div>
+										</label>
+										<input type="range" min="0" max="40" step="1" bind:value={iconPadding} />
+									</div>
+								{/if}
 								<div>
 									<ColourPicker bind:value={colour} />
 									<input bind:value={colour} />
@@ -385,6 +406,7 @@
 												{showMargin}
 												{iconInBox}
 												{iconMargin}
+												{iconPadding}
 												{iconSize}
 												{colour}
 												{iconOffset}
