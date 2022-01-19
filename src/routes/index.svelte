@@ -33,7 +33,7 @@
 	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
 	let iconInBox = false;
-	let showPadding = false;
+	let showMargin = false;
 	let showSettings = true;
 	let iconPreviewPosition: 'h2' | 'h3' | 'p' = 'h2';
 
@@ -117,7 +117,7 @@
 				'icon-url': iconUrl,
 				'icon-alt': iconAlt,
 				colour: colour,
-				padding: iconMargin.toString(),
+				margin: iconMargin.toString(),
 				size: iconSize.toString(),
 				offset: iconOffset.toString(),
 				inBox: iconInBox.toString(),
@@ -273,20 +273,20 @@
 								<div
 									class="sizing"
 									on:mousedown={() => {
-										showPadding = true;
+										showMargin = true;
 										window.addEventListener(
 											'mouseup',
 											() => {
-												showPadding = false;
+												showMargin = false;
 											},
 											{ once: true }
 										);
 									}}
 									on:focusin={() => {
-										showPadding = true;
+										showMargin = true;
 									}}
 									on:focusout={() => {
-										showPadding = false;
+										showMargin = false;
 									}}
 								>
 									<div class="form-control">
@@ -382,7 +382,7 @@
 									<h2>
 										{#if iconPreviewPosition == 'h2'}
 											<IconPreview
-												{showPadding}
+												{showMargin}
 												{iconInBox}
 												{iconMargin}
 												{iconSize}
@@ -403,7 +403,7 @@
 									<h3>
 										{#if iconPreviewPosition == 'h3'}
 											<IconPreview
-												{showPadding}
+												{showMargin}
 												{iconInBox}
 												{iconMargin}
 												{iconSize}
@@ -416,7 +416,7 @@
 									<p>
 										{#if iconPreviewPosition == 'p'}
 											<IconPreview
-												{showPadding}
+												{showMargin}
 												{iconInBox}
 												{iconMargin}
 												{iconSize}

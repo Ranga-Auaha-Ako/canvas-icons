@@ -8,7 +8,7 @@ export async function get(req) {
 	const data = req.query.get('data');
 	const iconUrl = req.query.get('icon-url');
 	const colour = req.query.get('colour');
-	const iconMargin = req.query.get('padding');
+	const iconMargin = req.query.get('margin');
 	const iconSize = req.query.get('size');
 	const iconOffset = req.query.get('offset');
 	const iconInBox = req.query.get('inBox') == 'true';
