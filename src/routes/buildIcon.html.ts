@@ -14,6 +14,8 @@ export async function get(req) {
 	const iconInBox = req.query.get('inBox') == 'true';
 	const callback = req.query.get('callback');
 
+	const iconSizeFormatted = iconSize == -1 ? '1em' : `${iconSize}px`;
+
 	if (!data || !iconUrl || !callback) {
 		// Missing critical data
 		return {
@@ -27,11 +29,13 @@ export async function get(req) {
 
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconMargin}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
-	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<span style='line-height: 0; padding: ${iconMargin}rem; display: inline-block; position: relative; border-radius: 3px;${
-		iconInBox ? ` background: ${colour}; bottom: ${iconOffset}px` : ''
-	}'><img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='display: inline-block; position: relative; ${
-		iconInBox ? '' : `bottom: ${iconOffset}px`
-	}'/></span>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"
+	<span style='line-height: 0; margin: ${iconMargin}px; display: inline-block; position: relative; border-radius: 3px;${
+		iconInBox ? ` background: ${colour}; bottom: ${iconOffset}em;` : ''
+	} vertical-align: middle'>
+	<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' style='display: inline-block; position: relative; ${
+		iconInBox ? '' : `bottom: ${iconOffset}em`
+	} width: ${iconSizeFormatted}; height: ${iconSizeFormatted};'/></span>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',
