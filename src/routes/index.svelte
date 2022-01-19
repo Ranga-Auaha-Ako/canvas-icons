@@ -250,13 +250,13 @@
 											class:active={iconPreviewPosition == 'h2'}
 											on:click={() => {
 												iconPreviewPosition = 'h2';
-											}}><span>H1</span> Title</button
+											}}><span>H2</span> Header</button
 										>
 										<button
 											class:active={iconPreviewPosition == 'h3'}
 											on:click={() => {
 												iconPreviewPosition = 'h3';
-											}}><span>H3</span> Header</button
+											}}><span>H3</span> Subheader</button
 										>
 										<button
 											class:active={iconPreviewPosition == 'p'}
