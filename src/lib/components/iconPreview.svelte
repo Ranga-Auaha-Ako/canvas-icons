@@ -3,7 +3,7 @@
 	export let showPadding: Boolean;
 	export let iconInBox: Boolean;
 	export let colour: String;
-	export let iconPadding: Number;
+	export let iconMargin: Number;
 	export let iconSize: Number;
 	export let iconOffset: Number;
 	$: iconSizeFormatted = iconSize == -1 ? '1em' : `${iconSize}px`;
@@ -18,7 +18,7 @@
 	transition:slide
 	class="icon-wrap"
 	class:showPadding={showPadding && !iconInBox}
-	style="padding: {iconPadding}px; display: inline-block; position: relative; border-radius: 3px; {iconInBox
+	style="margin: {iconMargin}px; display: inline-block; position: relative; border-radius: 3px; {iconInBox
 		? `background: ${colour}; bottom: ${iconOffset}em;`
 		: ''} vertical-align: middle;"
 >
@@ -28,7 +28,7 @@
 		alt=""
 		src={iconUrl}
 		style="display: block; position: relative; {iconInBox ? '' : `bottom: ${iconOffset}em;`}
-        width: calc({iconSizeFormatted} - {iconPadding}px * 2); height: calc({iconSizeFormatted} - {iconPadding}px * 2);"
+        width: calc({iconSizeFormatted}); height: calc({iconSizeFormatted});"
 		data-decorative="true"
 	/>
 </div>

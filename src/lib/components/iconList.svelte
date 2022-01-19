@@ -65,7 +65,7 @@
 			background-color: transparent;
 			display: inline-block;
 			margin: 0;
-			padding: var(--iconPadding);
+			padding: var(--iconMargin);
 			cursor: pointer;
 			transition: 0.2s ease-out transform, 0.2s ease-out box-shadow, 0.2s ease-out border-color,
 				0.5s ease-out opacity, 0.1s ease background-color;

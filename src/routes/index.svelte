@@ -28,7 +28,7 @@
 	import ColourPicker from '$lib/components/colourPicker.svelte';
 	let colour = '#000000';
 	// More settings
-	let iconPadding = 0;
+	let iconMargin = 0;
 	let iconSize = -1;
 	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
@@ -117,7 +117,7 @@
 				'icon-url': iconUrl,
 				'icon-alt': iconAlt,
 				colour: colour,
-				padding: iconPadding.toString(),
+				padding: iconMargin.toString(),
 				size: iconSize.toString(),
 				offset: iconOffset.toString(),
 				inBox: iconInBox.toString(),
@@ -153,7 +153,7 @@
 	};
 </script>
 
-<div style="--iconColor: {colour}; --iconPadding: 1rem">
+<div style="--iconColor: {colour}; --iconMargin: 1rem">
 	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
@@ -206,7 +206,7 @@
 					<div
 						class="modal-container"
 						aria-labelledby="settings-title"
-						style="--iconColor: {colour}; --iconPadding: {iconPadding}px"
+						style="--iconColor: {colour}; --iconMargin: {iconMargin}px"
 						aria-label="Close Settings"
 					>
 						<div
@@ -306,21 +306,21 @@
 										</div>
 									</div>
 									<div class="form-control">
-										<label for="iconPadding">
+										<label for="iconMargin">
 											<span class="icon"><ArrowExpandVertical /></span>
-											Icon Padding - {iconPadding}px
+											Icon Margin - {iconMargin}px
 											<div class="manualEdit">
 												<input
 													type="number"
 													step="1"
 													min="0"
-													bind:value={iconPadding}
-													size={iconPadding.toString().length}
+													bind:value={iconMargin}
+													size={iconMargin.toString().length}
 												/>
 												<span class="units">px</span>
 											</div>
 										</label>
-										<input type="range" min="0" max="30" step="1" bind:value={iconPadding} />
+										<input type="range" min="0" max="30" step="1" bind:value={iconMargin} />
 									</div>
 									<div class="form-control">
 										<label for="iconOffset">
@@ -362,6 +362,7 @@
 								</div>
 								<div>
 									<ColourPicker bind:value={colour} />
+									<input bind:value={colour} />
 								</div>
 							</div>
 							<div class="preview">
@@ -373,7 +374,7 @@
 											<IconPreview
 												{showPadding}
 												{iconInBox}
-												{iconPadding}
+												{iconMargin}
 												{iconSize}
 												{colour}
 												{iconOffset}
@@ -394,7 +395,7 @@
 											<IconPreview
 												{showPadding}
 												{iconInBox}
-												{iconPadding}
+												{iconMargin}
 												{iconSize}
 												{colour}
 												{iconOffset}
@@ -407,7 +408,7 @@
 											<IconPreview
 												{showPadding}
 												{iconInBox}
-												{iconPadding}
+												{iconMargin}
 												{iconSize}
 												{colour}
 												{iconOffset}

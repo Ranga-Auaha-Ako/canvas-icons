@@ -8,7 +8,7 @@ export async function get(req) {
 	const data = req.query.get('data');
 	const iconUrl = req.query.get('icon-url');
 	const colour = req.query.get('colour');
-	const iconPadding = req.query.get('padding');
+	const iconMargin = req.query.get('padding');
 	const iconSize = req.query.get('size');
 	const iconOffset = req.query.get('offset');
 	const iconInBox = req.query.get('inBox') == 'true';
@@ -26,8 +26,8 @@ export async function get(req) {
 	}
 
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
-	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconPadding}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
-	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<span style='line-height: 0; padding: ${iconPadding}rem; display: inline-block; position: relative; border-radius: 3px;${
+	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconMargin}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<span style='line-height: 0; padding: ${iconMargin}rem; display: inline-block; position: relative; border-radius: 3px;${
 		iconInBox ? ` background: ${colour}; bottom: ${iconOffset}px` : ''
 	}'><img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='display: inline-block; position: relative; ${
 		iconInBox ? '' : `bottom: ${iconOffset}px`

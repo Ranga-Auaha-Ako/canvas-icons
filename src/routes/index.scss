@@ -275,10 +275,10 @@
 							display: block;
 							position: absolute;
 							z-index: 1;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
+							top: calc(var(--iconMargin) * -1);
+							left: calc(var(--iconMargin) * -1);
+							width: calc(var(--iconMargin) * 2 + 100%);
+							height: calc(var(--iconMargin) * 2 + 100%);
 							background-color: rgb(170, 207, 255);
 							border: 1px dashed rgb(16, 119, 255);
 						}
@@ -287,10 +287,10 @@
 							display: block;
 							position: absolute;
 							z-index: 2;
-							top: var(--iconPadding);
-							left: var(--iconPadding);
-							width: calc(100% - var(--iconPadding) * 2);
-							height: calc(100% - var(--iconPadding) * 2);
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
 							background-color: rgba(255, 255, 255, 1);
 							border: 1px solid rgb(16, 119, 255);
 						}
