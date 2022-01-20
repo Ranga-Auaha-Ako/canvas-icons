@@ -35,8 +35,8 @@
 	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
 	let iconInBox = false;
-	let showMargin = false;
-	let showSettings = true;
+	let showMargin = true;
+	let showSettings = false;
 	let iconPreviewPosition: 'h2' | 'h3' | 'p' = 'h2';
 
 	// Convert to list of icons and list of categories with icon indices
@@ -120,6 +120,7 @@
 				'icon-alt': iconAlt,
 				colour: colour,
 				margin: iconMargin.toString(),
+				padding: iconPadding.toString(),
 				size: iconSize.toString(),
 				offset: (iconOffset + 0.1).toString(), // additional offset to better align with actual text position
 				inBox: iconInBox.toString(),
@@ -270,7 +271,9 @@
 								</div>
 								<h2>Spacing &amp; sizing</h2>
 								<p class="description">
-									Use these controls to set the position and spacing of the icon on the page.
+									Use these controls to set the position and spacing of the icon on the page. <b
+										>Hot tip: You can resize the icon in the Canvas editor too.</b
+									>
 								</p>
 								<div
 									class="sizing"
@@ -294,7 +297,7 @@
 									<div class="form-control">
 										<label for="iconSize">
 											<span class="icon"><Resize /></span>
-											Icon Size (adjustable from Canvas)
+											Icon Size
 											<div class="manualEdit">
 												<input
 													type="number"
@@ -391,10 +394,10 @@
 										<input type="range" min="0" max="40" step="1" bind:value={iconPadding} />
 									</div>
 								{/if}
-								<div>
+								<!-- <div>
 									<ColourPicker bind:value={colour} />
 									<input bind:value={colour} />
-								</div>
+								</div> -->
 							</div>
 							<div class="preview">
 								<h1>Preview</h1>

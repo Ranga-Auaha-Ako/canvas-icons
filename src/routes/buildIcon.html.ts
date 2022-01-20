@@ -9,6 +9,7 @@ export async function get(req) {
 	const iconUrl = req.query.get('icon-url');
 	const colour = req.query.get('colour');
 	const iconMargin = req.query.get('margin');
+	const iconPadding = req.query.get('padding');
 	const iconSize = req.query.get('size');
 	const iconOffset = req.query.get('offset');
 	const iconInBox = req.query.get('inBox') == 'true';
@@ -30,12 +31,25 @@ export async function get(req) {
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconMargin}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"
-	<picture style='line-height: 0; margin: ${iconMargin}px; display: inline-block; position: relative; border-radius: 3px;${
-		iconInBox ? ` background: ${colour}; bottom: ${iconOffset}em;` : ''
-	} vertical-align: middle'>
-	<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' style='display: inline-block; position: relative; ${
-		iconInBox ? '' : `bottom: ${iconOffset}em`
-	} width: ${iconSizeFormatted}; height: ${iconSizeFormatted};'/></picture>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	<picture style='
+	line-height: 0;
+	margin: ${iconMargin}px;
+	display: inline-block;
+	position:relative;
+	border-radius: 3px;
+	${iconInBox ? ` background: ${colour};` : ''}
+	top: ${iconOffset * -1}em;
+	width: ${iconSizeFormatted};
+	height: ${iconSizeFormatted};
+	box-sizing: border-box;
+	vertical-align: middle' role='presentation' alt='' data-decorative='true'>
+		<img src='${iconUrl}' style='
+		display: block;
+		width: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
+		height: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
+		margin: ${iconInBox ? iconPadding : 0}%;
+		' role='presentation' alt='' data-decorative='true'/>
+	</picture>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',
@@ -54,7 +68,9 @@ export async function get(req) {
 		<form action="${callback}" class="hide" id="return_form" method="post" encType="application/x-www-form-urlencoded">
 			<input type="hidden" name="lti_message_type" value="ContentItemSelection" />
 			<input type="hidden" name="lti_version" value="LTI-1p0" />
-			<input type="hidden" id="content_items" name="content_items" value="${escape(content_items)}" />
+			<input type="hidden" id="content_items" name="content_items" value="${escape(
+				content_items.replace(/((\r\n|\n|\r)\t*)/gm, '')
+			)}" />
 			<input type="hidden" name="data" value="${escape(data)}" />
 			<input type="hidden" name="oauth_version" value="1.0" />
 			<input type="hidden" name="oauth_nonce" value="${escape(signature.params['oauth_nonce'])}" />
