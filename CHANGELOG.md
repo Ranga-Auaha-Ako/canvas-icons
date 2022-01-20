@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.5.0] - 2022-01-20
+
+### Added
+
+- New "Advanced Properties" tab available to users
+- Controls for icon padding and margin
+- Controls for icon size
+- New inverted variant of the icon (displays white icon in a box with the colour of choosing)
+
 ## [2.4.2] - 2021-12-11
 
 ### Fixed
