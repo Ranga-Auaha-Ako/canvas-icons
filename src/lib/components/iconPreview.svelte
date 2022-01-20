@@ -19,6 +19,7 @@
 	transition:slide
 	class="icon-wrap"
 	class:showMargin
+	class:iconInBox
 	style="
 	line-height: 0;
 	margin: {iconMargin}px;

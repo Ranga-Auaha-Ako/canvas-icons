@@ -35,7 +35,7 @@
 	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
 	let iconOffset = 0;
 	let iconInBox = false;
-	let showMargin = true;
+	let showMargin = false;
 	let showSettings = false;
 	let iconPreviewPosition: 'h2' | 'h3' | 'p' = 'h2';
 
@@ -212,7 +212,7 @@
 			<button
 				on:click={() => {
 					showSettings = true;
-				}}>Icon Settings</button
+				}}>Advanced Settings</button
 			>
 			<Portal target="body">
 				{#if showSettings}
