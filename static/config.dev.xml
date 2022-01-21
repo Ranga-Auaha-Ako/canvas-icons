@@ -18,8 +18,6 @@
 	<lticm:property name="message_type">ContentItemSelectionRequest</lticm:property>
         <lticm:property name="url">http://localhost:3000/</lticm:property>
         <lticm:property name="text">UoA Canvas Icons</lticm:property>
-        <lticm:property name="selection_width">1100</lticm:property>
-        <lticm:property name="selection_height">650</lticm:property>
         <lticm:property name="enabled">true</lticm:property>
       </lticm:options>
     </blti:extensions>

@@ -33,5 +33,15 @@
 		></noscript>
 		<!-- End Google Tag Manager (noscript) -->
 		<div id="svelte">%svelte.body%</div>
+		<!-- Resize iframe if needed -->
+		<script>
+			window.parent.postMessage(
+				{
+					subject: 'lti.frameResize',
+					height: window.outerHeight - 300
+				},
+				'*'
+			);
+		</script>
 	</body>
 </html>

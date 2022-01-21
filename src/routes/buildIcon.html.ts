@@ -49,7 +49,7 @@ export async function get(req) {
 		height: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
 		margin: ${iconInBox ? iconPadding : 0}%;
 		' role='presentation' alt='' data-decorative='true'/>
-	</picture>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	</picture>&ZeroWidthSpace;","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',
