@@ -17,6 +17,8 @@
 	import ArrowSplitHorizontal from 'svelte-material-icons/ArrowSplitHorizontal.svelte';
 	import Account from 'svelte-material-icons/Account.svelte';
 	import AccountBox from 'svelte-material-icons/AccountBox.svelte';
+	import Floppy from 'svelte-material-icons/Floppy.svelte';
+	import Restore from 'svelte-material-icons/Restore.svelte';
 
 	// Load Icons
 	import categories from '$lib/icons';
@@ -225,6 +227,7 @@
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={$colour} />
 			<button
+				class="btn"
 				on:click={() => {
 					$showSettings = true;
 				}}>Advanced Settings</button
@@ -261,34 +264,9 @@
 							>
 							<div class="config">
 								<h1 id="settings-title">Advanced Settings</h1>
-								<div class="form-control">
-									<label for="preview-loc" class="inline">Preview in:</label>
-									<span class="btn-row" id="preview-loc">
-										<button
-											class:active={$iconPreviewPosition == 'h2'}
-											on:click={() => {
-												$iconPreviewPosition = 'h2';
-											}}><span>H2</span> Header</button
-										>
-										<button
-											class:active={$iconPreviewPosition == 'h3'}
-											on:click={() => {
-												$iconPreviewPosition = 'h3';
-											}}><span>H3</span> Subheader</button
-										>
-										<button
-											class:active={$iconPreviewPosition == 'p'}
-											on:click={() => {
-												$iconPreviewPosition = 'p';
-											}}><span>P</span> Paragraph</button
-										>
-									</span>
-								</div>
-								<h2>Spacing &amp; sizing</h2>
 								<p class="description">
-									Use these controls to set the position and spacing of the icon on the page. <b
-										>Hot tip: You can resize the icon in the Canvas editor too.</b
-									>
+									Use these controls to set the position, spacing, and style of the icon on your
+									Canvas page.
 								</p>
 								<div
 									class="sizing"
@@ -369,12 +347,8 @@
 										<input type="range" min="-2" max="2" step="0.1" bind:value={$iconOffset} />
 									</div>
 								</div>
-								<h2>Style</h2>
-								<p class="description">
-									Change the appearance of the style to better fit your page.
-								</p>
 								<div class="form-control">
-									<label for="preview-loc" class="inline">Icon Style:</label>
+									<label for="preview-loc" class="inline">Icon Style:</label><br />
 									<span class="btn-row" id="preview-loc">
 										<button
 											class:active={$iconInBox == false}
@@ -413,9 +387,62 @@
 									<ColourPicker bind:value={colour} />
 									<input bind:value={colour} />
 								</div> -->
+								<!-- Actions -->
+								<div class="footer">
+									<button
+										class="btn btn-lg btn-outline"
+										on:click={() => {
+											if (!confirm('Are you sure you want to reset all settings?')) return;
+											$colour = '#000000';
+											$iconMargin = 0;
+											$iconPadding = 0;
+											$iconSize = -1;
+											$iconOffset = 0;
+											$iconInBox = false;
+											$showMargin = false;
+											$iconPreviewPosition = 'h2';
+										}}
+									>
+										<span><Restore /></span>
+										Reset
+									</button>
+									<button
+										class="btn btn-lg btn-success"
+										on:click={() => {
+											$showSettings = false;
+										}}
+									>
+										<span><Floppy /></span>
+										Save
+									</button>
+								</div>
 							</div>
 							<div class="preview">
 								<h1>Preview</h1>
+								<div class="form-control">
+									<label for="preview-loc" class="inline">Preview in:</label>
+									<span class="btn-row" id="preview-loc">
+										<button
+											class:active={$iconPreviewPosition == 'h2'}
+											on:click={() => {
+												$iconPreviewPosition = 'h2';
+											}}><span>H2</span> Header</button
+										>
+										<button
+											class:active={$iconPreviewPosition == 'h3'}
+											on:click={() => {
+												$iconPreviewPosition = 'h3';
+											}}><span>H3</span> Subheader</button
+										>
+										<button
+											class:active={$iconPreviewPosition == 'p'}
+											on:click={() => {
+												$iconPreviewPosition = 'p';
+											}}><span>P</span> Paragraph</button
+										>
+									</span>
+								</div>
+
 								<!-- Some different preview boxes to simulate placement and look -->
 								<div class="preview-contents canvas-styles" aria-hidden="true">
 									<h2>

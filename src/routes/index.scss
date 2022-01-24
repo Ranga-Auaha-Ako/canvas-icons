@@ -107,15 +107,36 @@
 		flex-direction: row;
 		justify-content: flex-end;
 		column-gap: 1rem;
-		button {
-			background: gray;
-			color: white;
-			appearance: none;
-			border: 0;
-			border-radius: 3px;
-			padding: 0.2rem 0.6rem;
-			cursor: pointer;
-		}
+	}
+}
+.btn {
+	background: gray;
+	color: white;
+	appearance: none;
+	border: 0;
+	border-radius: 3px;
+	padding: 0.2rem 0.6rem;
+	cursor: pointer;
+	border: 1px solid black;
+	&.btn-success {
+		background: rgb(85, 165, 28);
+		border: 1px solid rgb(85, 165, 28);
+	}
+	&.btn-danger {
+		background: rgb(210, 73, 42);
+		border: 1px solid rgb(210, 73, 42);
+	}
+	&.btn-outline {
+		transition: 0.2s ease background, 0.3s ease color;
+		background: rgba(255, 255, 255, 0.5);
+		color: black;
+	}
+	&.btn-lg {
+		font-size: 1em;
+		padding: 0.4em 1em;
+	}
+	span {
+		vertical-align: middle;
 	}
 }
 
@@ -315,6 +336,10 @@
 				}
 			}
 		}
+
+		.footer {
+			float: right;
+		}
 	}
 }
 
@@ -379,7 +404,7 @@
 	}
 	button {
 		transition: 0.2s ease background, 0.3s ease color;
-		background: white;
+		background: rgba(255, 255, 255, 0.5);
 		border: 1px solid black;
 		appearance: none;
 		padding: 0.2rem 0.3rem;
