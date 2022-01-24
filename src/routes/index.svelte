@@ -120,8 +120,12 @@
 			'.svg',
 			`.${$iconInBox ? 'ffffff' : $colour.replace('#', '')}.svg`
 		)}`;
-		// Push selected icon to top of recent icons, with max length 10 and duplicates removed
-		recentIcons.update((r) => [...new Set([e.detail.id, ...r])].slice(0, 20));
+		// Filter recent icons to only valid ones (removing any dead icon IDs)
+		let filteredRecents = allIcons.filter((icon) => $recentIcons.includes(icon.id));
+		// Add this icon to the top of the listlist
+		filteredRecents.unshift(e.detail.id);
+		// Update with max length 10 and duplicates removed
+		recentIcons.update((_) => [...new Set(filteredRecents)].slice(0, 20));
 
 		const callback = $session.callback;
 		const data = $session.data;
