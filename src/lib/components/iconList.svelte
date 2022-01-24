@@ -35,7 +35,8 @@
 				on:click={() =>
 					dispatch('selectIcon', {
 						url: icon.url,
-						alt: titleCase(icon.term ? icon.term : icon.title)
+						alt: titleCase(icon.term ? icon.term : icon.title),
+						id: icon.id
 					})}
 			>
 				<div

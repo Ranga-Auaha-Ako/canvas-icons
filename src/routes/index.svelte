@@ -5,7 +5,6 @@
 	import scrollSpy from 'simple-scrollspy';
 	import { page, session } from '$app/stores';
 	import Portal from 'svelte-portal/src/Portal.svelte';
-	import Slider from '@bulatdashiev/svelte-slider';
 	import { focusTrap } from 'svelte-focus-trap';
 
 	// Stylesheet
@@ -27,21 +26,31 @@
 
 	// Load colour picker
 	import ColourPicker from '$lib/components/colourPicker.svelte';
-	let colour = '#000000';
-	// More settings
-	let iconMargin = 0;
-	let iconPadding = 0;
-	let iconSize = -1;
-	$: iconSizeFormatted = iconSize == -1 ? 'Auto' : `${iconSize}px`;
-	let iconOffset = 0;
-	let iconInBox = false;
-	let showMargin = false;
-	let showSettings = false;
-	let iconPreviewPosition: 'h2' | 'h3' | 'p' = 'h2';
+
+	// Config
+	import {
+		colour,
+		iconMargin,
+		iconPadding,
+		iconSize,
+		iconOffset,
+		iconInBox,
+		showMargin,
+		showSettings,
+		iconPreviewPosition,
+		recentIcons
+	} from './store';
+	$: iconSizeFormatted = $iconSize == -1 ? 'Auto' : `${$iconSize}px`;
 
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
 	let allIcons: Icon[] = categories.reduce((acc, cv) => acc.concat(cv.icons), []);
+	// Get the recent icons that we can find
+	$: recentIconsList = $recentIcons.reduce((iconList, id) => {
+		const matchedIcons = allIcons.filter((i) => i.id == id);
+		if (matchedIcons.length === 1) iconList.push(matchedIcons[0]);
+		return iconList;
+	}, []);
 
 	let numIcons = 0;
 	let catIconIndex = [];
@@ -109,8 +118,11 @@
 		const iconAlt = e.detail.alt;
 		const iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${e.detail.url.replace(
 			'.svg',
-			`.${iconInBox ? 'ffffff' : colour.replace('#', '')}.svg`
+			`.${$iconInBox ? 'ffffff' : $colour.replace('#', '')}.svg`
 		)}`;
+		// Push selected icon to top of recent icons, with max length 10 and duplicates removed
+		recentIcons.update((r) => [...new Set([e.detail.id, ...r])].slice(0, 20));
+
 		const callback = $session.callback;
 		const data = $session.data;
 		if (iconUrl && data && callback) {
@@ -118,12 +130,12 @@
 			window.location.href = `buildIcon.html?${new URLSearchParams({
 				'icon-url': iconUrl,
 				'icon-alt': iconAlt,
-				colour: colour,
-				margin: iconMargin.toString(),
-				padding: iconPadding.toString(),
-				size: iconSize.toString(),
-				offset: (iconOffset + 0.1).toString(), // additional offset to better align with actual text position
-				inBox: iconInBox.toString(),
+				colour: $colour,
+				margin: $iconMargin.toString(),
+				padding: $iconPadding.toString(),
+				size: $iconSize.toString(),
+				offset: ($iconOffset + 0.1).toString(), // additional offset to better align with actual text position
+				inBox: $iconInBox.toString(),
 				callback: callback,
 				data
 			}).toString()}`;
@@ -135,7 +147,6 @@
 			console.log(
 				"This can happen because you loaded the app in the web browser rather than through canvas. Let's make it work!"
 			);
-			debugger;
 			fetch(iconUrl)
 				.then((resp) => resp.blob())
 				.then((blob) => {
@@ -152,7 +163,7 @@
 			// Send to Google Analytics
 		}
 		// @ts-expect-error
-		dataLayer.push({ event: 'iconSelect', colour: colour, selectedIcon: e.detail.url });
+		dataLayer.push({ event: 'iconSelect', colour: $colour, selectedIcon: e.detail.url });
 	};
 </script>
 
@@ -166,7 +177,7 @@
 	/>
 </svelte:head>
 
-<div style="--iconColor: {colour}; --iconMargin: 1rem">
+<div style="--iconColor: {$colour}; --iconMargin: 1rem">
 	<nav id="toolbar">
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
@@ -182,7 +193,7 @@
 			<div class="more" class:searching>
 				{#if searchResults.length > 0}
 					<!--  - Top matching icons -->
-					<IconList on:selectIcon={selectIcon} icons={searchResults} {colour} />
+					<IconList on:selectIcon={selectIcon} icons={searchResults} colour={$colour} />
 				{:else if search}
 					<p class="no-results">[No icons found! Try another search]</p>
 				{:else}
@@ -208,25 +219,25 @@
 		</div>
 		<div id="settings">
 			<!--  - Colour Selector -->
-			<ColourPicker bind:value={colour} />
+			<ColourPicker bind:value={$colour} />
 			<button
 				on:click={() => {
-					showSettings = true;
+					$showSettings = true;
 				}}>Advanced Settings</button
 			>
 			<Portal target="body">
-				{#if showSettings}
+				{#if $showSettings}
 					<div
 						class="modal-container"
 						aria-labelledby="settings-title"
-						style="--iconColor: {colour}; --iconMargin: {iconMargin}px"
+						style="--iconColor: {$colour}; --iconMargin: {$iconMargin}px"
 						aria-label="Close Settings"
 					>
 						<div
 							transition:fade={{ duration: 150 }}
 							class="modal-backdrop"
 							on:click={() => {
-								showSettings = false;
+								$showSettings = false;
 							}}
 						/>
 						<div
@@ -241,7 +252,7 @@
 								class="close"
 								aria-label="Close dialog"
 								on:click={() => {
-									showSettings = false;
+									$showSettings = false;
 								}}>&times;</button
 							>
 							<div class="config">
@@ -250,21 +261,21 @@
 									<label for="preview-loc" class="inline">Preview in:</label>
 									<span class="btn-row" id="preview-loc">
 										<button
-											class:active={iconPreviewPosition == 'h2'}
+											class:active={$iconPreviewPosition == 'h2'}
 											on:click={() => {
-												iconPreviewPosition = 'h2';
+												$iconPreviewPosition = 'h2';
 											}}><span>H2</span> Header</button
 										>
 										<button
-											class:active={iconPreviewPosition == 'h3'}
+											class:active={$iconPreviewPosition == 'h3'}
 											on:click={() => {
-												iconPreviewPosition = 'h3';
+												$iconPreviewPosition = 'h3';
 											}}><span>H3</span> Subheader</button
 										>
 										<button
-											class:active={iconPreviewPosition == 'p'}
+											class:active={$iconPreviewPosition == 'p'}
 											on:click={() => {
-												iconPreviewPosition = 'p';
+												$iconPreviewPosition = 'p';
 											}}><span>P</span> Paragraph</button
 										>
 									</span>
@@ -278,20 +289,20 @@
 								<div
 									class="sizing"
 									on:mousedown={() => {
-										showMargin = true;
+										$showMargin = true;
 										window.addEventListener(
 											'mouseup',
 											() => {
-												showMargin = false;
+												$showMargin = false;
 											},
 											{ once: true }
 										);
 									}}
 									on:focusin={() => {
-										showMargin = true;
+										$showMargin = true;
 									}}
 									on:focusout={() => {
-										showMargin = false;
+										$showMargin = false;
 									}}
 								>
 									<div class="form-control">
@@ -303,21 +314,21 @@
 													type="number"
 													step="1"
 													min="10"
-													bind:value={iconSize}
-													size={iconSize.toString().length}
-													disabled={iconSize == -1}
+													bind:value={$iconSize}
+													size={$iconSize.toString().length}
+													disabled={$iconSize == -1}
 												/>
 												<span class="units">px</span>
 											</div>
 										</label>
 										<div class="input-prefix">
 											<button
-												class:active={iconSize == -1}
+												class:active={$iconSize == -1}
 												on:click={(e) => {
-													iconSize = iconSize == -1 ? 20 : -1;
+													$iconSize = $iconSize == -1 ? 20 : -1;
 												}}>Auto</button
 											>
-											<input type="range" min="10" max="100" step="1" bind:value={iconSize} />
+											<input type="range" min="10" max="100" step="1" bind:value={$iconSize} />
 										</div>
 									</div>
 									<div class="form-control">
@@ -329,13 +340,13 @@
 													type="number"
 													step="1"
 													min="0"
-													bind:value={iconMargin}
-													size={iconMargin.toString().length}
+													bind:value={$iconMargin}
+													size={$iconMargin.toString().length}
 												/>
 												<span class="units">px</span>
 											</div>
 										</label>
-										<input type="range" min="0" max="30" step="1" bind:value={iconMargin} />
+										<input type="range" min="0" max="30" step="1" bind:value={$iconMargin} />
 									</div>
 									<div class="form-control">
 										<label for="iconOffset">
@@ -345,13 +356,13 @@
 												<input
 													type="number"
 													step="0.1"
-													bind:value={iconOffset}
-													size={iconOffset.toString().length}
+													bind:value={$iconOffset}
+													size={$iconOffset.toString().length}
 												/>
 												<span class="units">em</span>
 											</div>
 										</label>
-										<input type="range" min="-2" max="2" step="0.1" bind:value={iconOffset} />
+										<input type="range" min="-2" max="2" step="0.1" bind:value={$iconOffset} />
 									</div>
 								</div>
 								<h2>Style</h2>
@@ -362,20 +373,20 @@
 									<label for="preview-loc" class="inline">Icon Style:</label>
 									<span class="btn-row" id="preview-loc">
 										<button
-											class:active={iconInBox == false}
+											class:active={$iconInBox == false}
 											on:click={() => {
-												iconInBox = false;
+												$iconInBox = false;
 											}}><span>X</span> Icon</button
 										>
 										<button
-											class:active={iconInBox == true}
+											class:active={$iconInBox == true}
 											on:click={() => {
-												iconInBox = true;
+												$iconInBox = true;
 											}}><span>B</span> Icon Box</button
 										>
 									</span>
 								</div>
-								{#if iconInBox}
+								{#if $iconInBox}
 									<div class="form-control" transition:fly={{ y: -20, duration: 150 }}>
 										<label for="iconPadding">
 											<span class="icon"><ArrowExpandVertical /></span>
@@ -385,13 +396,13 @@
 													type="number"
 													step="1"
 													min="0"
-													bind:value={iconPadding}
-													size={iconPadding.toString().length}
+													bind:value={$iconPadding}
+													size={$iconPadding.toString().length}
 												/>
 												<span class="units">%</span>
 											</div>
 										</label>
-										<input type="range" min="0" max="40" step="1" bind:value={iconPadding} />
+										<input type="range" min="0" max="40" step="1" bind:value={$iconPadding} />
 									</div>
 								{/if}
 								<!-- <div>
@@ -404,15 +415,15 @@
 								<!-- Some different preview boxes to simulate placement and look -->
 								<div class="preview-contents canvas-styles" aria-hidden="true">
 									<h2>
-										{#if iconPreviewPosition == 'h2'}
+										{#if $iconPreviewPosition == 'h2'}
 											<IconPreview
-												{showMargin}
-												{iconInBox}
-												{iconMargin}
-												{iconPadding}
-												{iconSize}
-												{colour}
-												{iconOffset}
+												showMargin={$showMargin}
+												iconInBox={$iconInBox}
+												iconMargin={$iconMargin}
+												iconPadding={$iconPadding}
+												iconSize={$iconSize}
+												colour={$colour}
+												iconOffset={$iconOffset}
 											/>
 										{/if}
 										Header goes here (H2)
@@ -426,29 +437,29 @@
 										<div class="example" />
 									</div>
 									<h3>
-										{#if iconPreviewPosition == 'h3'}
+										{#if $iconPreviewPosition == 'h3'}
 											<IconPreview
-												{showMargin}
-												{iconInBox}
-												{iconMargin}
-												{iconPadding}
-												{iconSize}
-												{colour}
-												{iconOffset}
+												showMargin={$showMargin}
+												iconInBox={$iconInBox}
+												iconMargin={$iconMargin}
+												iconPadding={$iconPadding}
+												iconSize={$iconSize}
+												colour={$colour}
+												iconOffset={$iconOffset}
 											/>
 										{/if}
 										This is a subheader (H3)
 									</h3>
 									<p>
-										{#if iconPreviewPosition == 'p'}
+										{#if $iconPreviewPosition == 'p'}
 											<IconPreview
-												{showMargin}
-												{iconInBox}
-												{iconMargin}
-												{iconPadding}
-												{iconSize}
-												{colour}
-												{iconOffset}
+												showMargin={$showMargin}
+												iconInBox={$iconInBox}
+												iconMargin={$iconMargin}
+												iconPadding={$iconPadding}
+												iconSize={$iconSize}
+												colour={$colour}
+												iconOffset={$iconOffset}
 											/>
 										{/if}
 										Sit amet dictum sit amet. Sed euismod nisi porta lorem mollis aliquam ut porttitor.
@@ -469,6 +480,35 @@
 	<div class="shadowbox" class:searching on:click={(_) => (searching = false)} />
 	<!-- Full icon list -->
 	<main id="all">
+		<!-- Recent icons category -->
+		{#if $recentIcons.length > 0}
+			<section
+				aria-label="Recent Icons ({recentIconsList.length} icon{recentIconsList.length != 1
+					? 's'
+					: ''})"
+				class="category"
+				id="cat-{i}-recentIcons"
+			>
+				<div class="cat-header">
+					<a class="skip-to-nav-link" href="#toolbar"> Return to navigation </a>
+					<h3
+						class="total"
+						title="{recentIconsList.length} icon{recentIconsList.length != 1 ? 's' : ''}"
+					>
+						{recentIconsList.length}
+					</h3>
+					<h1 class="title">Recent Icons</h1>
+				</div>
+				<div class="icons">
+					<IconList
+						on:selectIcon={selectIcon}
+						icons={recentIconsList}
+						highlight={false}
+						colour={$colour}
+					/>
+				</div>
+			</section>
+		{/if}
 		<!-- Icons by category (filterable) -->
 		{#each catIconIndex as cat, i}
 			<section
@@ -503,7 +543,7 @@
 						on:selectIcon={selectIcon}
 						icons={allIcons}
 						highlight={search ? filteredIndices : false}
-						{colour}
+						colour={$colour}
 						show={cat}
 					/>
 				</div>
