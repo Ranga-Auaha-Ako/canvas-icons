@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - No changes yet.
 
+## [2.6.1] - 2022-01-24
+
+### Fixed
+
+- Fix handling of duplicate icons for recent icons list
+
+### Changed
+
+- Layout update for the advanced settings page based on feedback
+
 ## [2.6.0] - 2022-01-24
 
 ### Added
