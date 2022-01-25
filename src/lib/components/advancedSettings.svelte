@@ -62,126 +62,128 @@
 				>
 				<div class="config">
 					<h1 id="settings-title">Advanced Settings</h1>
-					<p class="description">
-						Use these controls to set the position, spacing, and style of the icon on your Canvas
-						page. Then, click the save button at the bottom of this window to select your preferred
-						icon from the icon library.
-					</p>
-					<div
-						class="sizing"
-						on:mousedown={() => {
-							$showMargin = true;
-							window.addEventListener(
-								'mouseup',
-								() => {
-									$showMargin = false;
-								},
-								{ once: true }
-							);
-						}}
-						on:focusin={() => {
-							$showMargin = true;
-						}}
-						on:focusout={() => {
-							$showMargin = false;
-						}}
-					>
-						<div class="form-control">
-							<label for="iconSize">
-								<span class="icon"><Resize /></span>
-								Icon Size
-								<div class="manualEdit">
-									<input
-										type="number"
-										step="1"
-										min="10"
-										bind:value={$iconSize}
-										size={$iconSize.toString().length}
-										disabled={$iconSize == -1}
-									/>
-									<span class="units">px</span>
+					<div class="config-contents">
+						<p class="description">
+							Use these controls to set the position, spacing, and style of the icon on your Canvas
+							page. Then, click the save button at the bottom of this window to select your
+							preferred icon from the icon library.
+						</p>
+						<div
+							class="sizing"
+							on:mousedown={() => {
+								$showMargin = true;
+								window.addEventListener(
+									'mouseup',
+									() => {
+										$showMargin = false;
+									},
+									{ once: true }
+								);
+							}}
+							on:focusin={() => {
+								$showMargin = true;
+							}}
+							on:focusout={() => {
+								$showMargin = false;
+							}}
+						>
+							<div class="form-control">
+								<label for="iconSize">
+									<span class="icon"><Resize /></span>
+									Icon Size
+									<div class="manualEdit">
+										<input
+											type="number"
+											step="1"
+											min="10"
+											bind:value={$iconSize}
+											size={$iconSize.toString().length}
+											disabled={$iconSize == -1}
+										/>
+										<span class="units">px</span>
+									</div>
+								</label>
+								<div class="input-prefix">
+									<button
+										class:active={$iconSize == -1}
+										on:click={(e) => {
+											$iconSize = $iconSize == -1 ? 20 : -1;
+										}}>Auto</button
+									>
+									<input type="range" min="10" max="100" step="1" bind:value={$iconSize} />
 								</div>
-							</label>
-							<div class="input-prefix">
-								<button
-									class:active={$iconSize == -1}
-									on:click={(e) => {
-										$iconSize = $iconSize == -1 ? 20 : -1;
-									}}>Auto</button
-								>
-								<input type="range" min="10" max="100" step="1" bind:value={$iconSize} />
+							</div>
+							<div class="form-control">
+								<label for="iconMargin">
+									<span class="icon"><ArrowSplitHorizontal /></span>
+									Icon Margin
+									<div class="manualEdit">
+										<input
+											type="number"
+											step="1"
+											min="0"
+											bind:value={$iconMargin}
+											size={$iconMargin.toString().length}
+										/>
+										<span class="units">px</span>
+									</div>
+								</label>
+								<input type="range" min="0" max="30" step="1" bind:value={$iconMargin} />
+							</div>
+							<div class="form-control">
+								<label for="iconOffset">
+									<span class="icon"><FlipToBack /></span>
+									Icon Line offset
+									<div class="manualEdit">
+										<input
+											type="number"
+											step="0.1"
+											bind:value={$iconOffset}
+											size={$iconOffset.toString().length}
+										/>
+										<span class="units">em</span>
+									</div>
+								</label>
+								<input type="range" min="-2" max="2" step="0.1" bind:value={$iconOffset} />
 							</div>
 						</div>
 						<div class="form-control">
-							<label for="iconMargin">
-								<span class="icon"><ArrowSplitHorizontal /></span>
-								Icon Margin
-								<div class="manualEdit">
-									<input
-										type="number"
-										step="1"
-										min="0"
-										bind:value={$iconMargin}
-										size={$iconMargin.toString().length}
-									/>
-									<span class="units">px</span>
-								</div>
-							</label>
-							<input type="range" min="0" max="30" step="1" bind:value={$iconMargin} />
+							<label for="preview-loc" class="inline">Icon Style:</label><br />
+							<span class="btn-row" id="preview-loc">
+								<button
+									class:active={$iconInBox == false}
+									on:click={() => {
+										$iconInBox = false;
+									}}><span>X</span> Icon</button
+								>
+								<button
+									class:active={$iconInBox == true}
+									on:click={() => {
+										$iconInBox = true;
+									}}><span>B</span> Icon Box</button
+								>
+							</span>
 						</div>
-						<div class="form-control">
-							<label for="iconOffset">
-								<span class="icon"><FlipToBack /></span>
-								Icon Line offset
-								<div class="manualEdit">
-									<input
-										type="number"
-										step="0.1"
-										bind:value={$iconOffset}
-										size={$iconOffset.toString().length}
-									/>
-									<span class="units">em</span>
-								</div>
-							</label>
-							<input type="range" min="-2" max="2" step="0.1" bind:value={$iconOffset} />
-						</div>
+						{#if $iconInBox}
+							<div class="form-control" transition:fly={{ y: -20, duration: 150 }}>
+								<label for="iconPadding">
+									<span class="icon"><ArrowExpandVertical /></span>
+									Icon Padding
+									<div class="manualEdit">
+										<input
+											type="number"
+											step="1"
+											min="0"
+											bind:value={$iconPadding}
+											size={$iconPadding.toString().length}
+										/>
+										<span class="units">%</span>
+									</div>
+								</label>
+								<input type="range" min="0" max="40" step="1" bind:value={$iconPadding} />
+							</div>
+						{/if}
 					</div>
-					<div class="form-control">
-						<label for="preview-loc" class="inline">Icon Style:</label><br />
-						<span class="btn-row" id="preview-loc">
-							<button
-								class:active={$iconInBox == false}
-								on:click={() => {
-									$iconInBox = false;
-								}}><span>X</span> Icon</button
-							>
-							<button
-								class:active={$iconInBox == true}
-								on:click={() => {
-									$iconInBox = true;
-								}}><span>B</span> Icon Box</button
-							>
-						</span>
-					</div>
-					{#if $iconInBox}
-						<div class="form-control" transition:fly={{ y: -20, duration: 150 }}>
-							<label for="iconPadding">
-								<span class="icon"><ArrowExpandVertical /></span>
-								Icon Padding
-								<div class="manualEdit">
-									<input
-										type="number"
-										step="1"
-										min="0"
-										bind:value={$iconPadding}
-										size={$iconPadding.toString().length}
-									/>
-									<span class="units">%</span>
-								</div>
-							</label>
-							<input type="range" min="0" max="40" step="1" bind:value={$iconPadding} />
-						</div>
-					{/if}
 					<!-- <div>
 									<ColourPicker bind:value={colour} />
 									<input bind:value={colour} />
@@ -359,6 +361,8 @@
 					height: 100%;
 					padding: 2rem 2rem;
 					padding-right: 2rem;
+					display: grid;
+					grid-template-rows: auto 1fr auto;
 					h1 {
 						margin: 0;
 						margin-bottom: 0.4rem;
@@ -372,6 +376,10 @@
 						font-size: 12px;
 						margin-top: 0;
 						margin-bottom: 1.5rem;
+					}
+
+					.footer {
+						justify-self: end;
 					}
 				}
 
@@ -494,10 +502,6 @@
 						}
 					}
 				}
-			}
-
-			.footer {
-				float: right;
 			}
 		}
 	}
