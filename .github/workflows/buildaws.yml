@@ -41,6 +41,10 @@ jobs:
       - name: Generate deployment package
         run: bash ./deployment/makezip.sh
 
+      - name: Get NPM Version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@main
+
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
@@ -48,6 +52,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: canvas-icons
           environment_name: canvas-icons
-          version_label: ${{ github.event.release.tag_name }}
+          version_label: ${{ steps.package-version.outputs.current-version}}
           region: ap-southeast-2
           deployment_package: ./deployment/build.zip
