@@ -38,6 +38,14 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Use Node.js ${{ matrix.node-version }} to create built version
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+
       - name: Generate deployment package
         run: bash ./deployment/makezip.sh
 
