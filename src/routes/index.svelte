@@ -82,14 +82,12 @@
 		});
 		const urlSearchParams = new URLSearchParams(window.location.search);
 		// Fetch category data from library CDN
-		const iconData = await fetch(`https://assets.canvasicons.auckland.ac.nz/meta.json`).then(
-			(res) => {
-				if (!res.ok) {
-					throw new Error(res.statusText);
-				}
-				return res.json() as Promise<Category[]>;
+		const iconData = await fetch(`${import.meta.env.VITE_ASSET_HOST}/meta.json`).then((res) => {
+			if (!res.ok) {
+				throw new Error(res.statusText);
 			}
-		);
+			return res.json() as Promise<Category[]>;
+		});
 		categories = iconData;
 		for (let i = 0; i < categories.length; i++) {
 			const cat = categories[i];

@@ -42,8 +42,11 @@
 				<div
 					class="img"
 					style="
-				mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');
-				-webkit-mask-image: url('/icon-sprite/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');"
+				mask-image: url('{import.meta.env.VITE_ASSET_HOST}/font/stack/svg/sprite.stack.svg#{getIconClass(
+						icon.url
+					)}');
+				-webkit-mask-image: url('{import.meta.env
+						.VITE_ASSET_HOST}/font/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');"
 				/>
 				<!-- <img  src={icon.url} /> -->
 			</button>
