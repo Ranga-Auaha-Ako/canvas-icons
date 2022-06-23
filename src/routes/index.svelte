@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import Fuse from 'fuse.js';
 	import scrollSpy from 'simple-scrollspy';
 	import { session } from '$app/stores';
@@ -8,8 +9,9 @@
 	import './index.scss';
 
 	// Load Icons
-	import categories from '$lib/icons';
+	// import categories from '$lib/icons';
 	import type { Category, Icon } from '$lib/icons';
+	import { getIconUrl } from '$lib/icons';
 	import IconList from '$lib/components/iconList.svelte';
 
 	// Load colour picker
@@ -30,9 +32,11 @@
 	} from './store';
 	import AdvancedSettings from '$lib/components/advancedSettings.svelte';
 
+	let categories = [] as Category[];
+
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
-	let allIcons: Icon[] = categories.reduce((acc, cv) => acc.concat(cv.icons), []);
+	$: allIcons = <Icon[]>categories.reduce((acc, cv) => acc.concat(cv.icons), []);
 	// Get the recent icons that we can find
 	$: recentIconsList = $recentIcons.reduce((iconList, id) => {
 		const matchedIcons = allIcons.filter((i) => i.id == id);
@@ -42,15 +46,9 @@
 
 	let numIcons = 0;
 	let catIconIndex = [];
-	for (let i = 0; i < categories.length; i++) {
-		const cat = categories[i];
-		const iconIndexes = Array.from({ length: cat.icons.length }, (_, i) => i + numIcons);
-		catIconIndex.push(iconIndexes);
-		numIcons += iconIndexes.length;
-	}
 
 	// Initiate Search
-	const fuse = new Fuse(allIcons, {
+	$: fuse = new Fuse(allIcons, {
 		keys: [
 			{ name: 'title', weight: 0.3 },
 			{ name: 'term', weight: 0.3 },
@@ -83,6 +81,22 @@
 			offset: 200
 		});
 		const urlSearchParams = new URLSearchParams(window.location.search);
+		// Fetch category data from library CDN
+		const iconData = await fetch(`https://assets.canvasicons.auckland.ac.nz/meta.json`).then(
+			(res) => {
+				if (!res.ok) {
+					throw new Error(res.statusText);
+				}
+				return res.json() as Promise<Category[]>;
+			}
+		);
+		categories = iconData;
+		for (let i = 0; i < categories.length; i++) {
+			const cat = categories[i];
+			const iconIndexes = Array.from({ length: cat.icons.length }, (_, i) => i + numIcons);
+			catIconIndex.push(iconIndexes);
+			numIcons += iconIndexes.length;
+		}
 	});
 
 	const goToCategory = (cat, i) => {
@@ -104,10 +118,7 @@
 	// Handle clicking on an icon
 	const selectIcon = (e) => {
 		const iconAlt = e.detail.alt;
-		const iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${e.detail.url.replace(
-			'.svg',
-			`.${$iconInBox ? 'ffffff' : $colour.replace('#', '')}.svg`
-		)}`;
+		const iconUrl = getIconUrl(e.detail.url, $colour, $iconInBox);
 		// Filter recent icons to only valid ones (removing any dead icon IDs)
 		let filteredRecents = allIcons.filter((icon) => $recentIcons.includes(icon.id));
 		// Add this icon to the top of the listlist
