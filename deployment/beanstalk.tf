@@ -5,6 +5,12 @@ resource "aws_elastic_beanstalk_environment" "tfenvtest" {
   wait_for_ready_timeout = "10m"
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "VITE_ASSET_HOST"
+    value     = var.asset_host
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
     value     = "SingleInstance"
