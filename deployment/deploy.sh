@@ -37,7 +37,7 @@ cp $script_dir/Dockerrun.aws.json.tpl $build_dir/Dockerrun.aws.json
 # Replace the <ACCOUNT_ID> with your ID
 sed -i="" "s/<ACCOUNT_ID>/$account_id/" $build_dir/Dockerrun.aws.json
 # Replace the <NAME> with the your name
-sed -i="" "s/<NAME>/$app_name/" $build_dir/Dockerrun.aws.json
+sed -i="" "s/<NAME>/$ecr_name/" $build_dir/Dockerrun.aws.json
 # Replace the <REGION> with the selected region
 sed -i="" "s/<REGION>/$region/" $build_dir/Dockerrun.aws.json
 # Replace the <VERSION> with the your version number
