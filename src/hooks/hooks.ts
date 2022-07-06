@@ -4,14 +4,15 @@ import { version } from '../../package.json'
 
 
 /** @type {import('@sveltejs/kit').GetSession} */
-export function getSession(request) {
+export async function getSession({request}) {
     if(request.body) {
+        const body = await request.json()
         return {
             user: {
-                name: request.body.get("lis_person_name_given"),
+                name: body.get("lis_person_name_given"),
             },
-            data: request.body.get("data"),
-            callback: request.body.get("content_item_return_url"),
+            data: body.get("data"),
+            callback: body.get("content_item_return_url"),
             version,
         }
     } else {
