@@ -419,24 +419,16 @@
 						text-rendering: optimizelegibility;
 						font-size: 1rem;
 
-						h1,
-						h2,
-						.h1,
-						.h2 {
+						h2 {
 							font-size: 1.8em;
 							line-height: 1.5;
 						}
 
-						h3,
-						.h3 {
+						h3 {
 							font-size: 1.5em;
 						}
-						h1,
 						h2,
-						h3,
-						h4,
-						h5,
-						h6 {
+						h3 {
 							margin: 6px 0;
 							line-height: 1.5;
 							text-rendering: optimizelegibility;
@@ -462,55 +454,16 @@
 							}
 						}
 					}
-					.icon-wrap {
-						&.showMargin.iconInBox::after {
-							background-color: var(--iconColor);
-						}
-						&.showMargin {
-							// &:nth-child(1) {
-							// 	display: block;
-							// }
-							// display: none;
-							position: relative;
-							&::before {
-								content: ' ';
-								display: block;
-								position: absolute;
-								z-index: 1;
-								top: calc(var(--iconMargin) * -1);
-								left: calc(var(--iconMargin) * -1);
-								width: calc(var(--iconMargin) * 2 + 100%);
-								height: calc(var(--iconMargin) * 2 + 100%);
-								background-color: rgb(170, 207, 255);
-								border: 1px dashed rgb(16, 119, 255);
-							}
-							&::after {
-								content: ' ';
-								display: block;
-								position: absolute;
-								z-index: 2;
-								top: 0;
-								left: 0;
-								width: calc(100% - 2px);
-								height: calc(100% - 2px);
-								border: 1px solid rgb(16, 119, 255);
-							}
-							& > * {
-								z-index: 3;
-								position: relative;
-							}
-						}
-					}
 				}
 			}
 		}
 	}
 
-	@media screen and (max-width: 900px) {
-		.smallLorem::after {
-			content: 'Duis aute irure dolor in reprehenderit in voluptate velit. Excepteur sint occaecat cupidatat non proident, sunt in culpa. Animi, id est laborum et dolorum  . Lorem ipsum dolor sit amet, consectetur adipisicing elit.';
-		}
-	}
+	// @media screen and (max-width: 900px) {
+	// 	.smallLorem::after {
+	// 		content: 'Duis aute irure dolor in reprehenderit in voluptate velit. Excepteur sint occaecat cupidatat non proident, sunt in culpa. Animi, id est laborum et dolorum  . Lorem ipsum dolor sit amet, consectetur adipisicing elit.';
+	// 	}
+	// }
 	@media screen and (min-width: 900px) {
 		.moreLorem::after {
 			content: 'Duis aute irure dolor in reprehenderit in voluptate velit. Excepteur sint occaecat cupidatat non proident, sunt in culpa. Animi, id est laborum et dolorum  . Lorem ipsum dolor sit amet, consectetur adipisicing elit.';
