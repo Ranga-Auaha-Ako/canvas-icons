@@ -1,7 +1,7 @@
-resource "aws_elastic_beanstalk_environment" "tfenvtest" {
-  name                   = "canvas-icons"
+resource "aws_elastic_beanstalk_environment" "beanstalk_env" {
+  name                   = "${var.app_name}-${terraform.workspace == "default" ? "staging" : terraform.workspace}"
   application            = aws_elastic_beanstalk_application.app.name
-  solution_stack_name    = "64bit Amazon Linux 2 v3.4.16 running Docker"
+  solution_stack_name    = "64bit Amazon Linux 2 v3.4.17 running Docker"
   wait_for_ready_timeout = "10m"
 
   setting {
@@ -31,13 +31,13 @@ resource "aws_elastic_beanstalk_environment" "tfenvtest" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
-    value     = "True"
+    value     = "true"
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t2.small"
+    value     = "t4g.small"
   }
 
   setting {
@@ -49,18 +49,22 @@ resource "aws_elastic_beanstalk_environment" "tfenvtest" {
   #   setting {
   #     namespace = "aws:autoscaling:launchconfiguration"
   #     name      = "IamInstanceProfile"
-  #     value     = "arn:aws:iam::809789462832:instance-profile/aws-elasticbeanstalk-ec2-role"
+  #     value     = "aws-elasticbeanstalk-ec2-role"
   #   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = "aws-elasticbeanstalk-ec2-role"
+    value     = aws_iam_instance_profile.beanstalk_ec2.name
   }
 }
 
+output "beanstalk_env_name" {
+  value = aws_elastic_beanstalk_environment.beanstalk_env.name
+}
+
 resource "aws_elastic_beanstalk_application" "app" {
-  name        = "canvas-icons"
+  name        = "${var.app_name}-${terraform.workspace == "default" ? "staging" : terraform.workspace}"
   description = "Canvas Icons app"
 
   appversion_lifecycle {
@@ -69,4 +73,8 @@ resource "aws_elastic_beanstalk_application" "app" {
     delete_source_from_s3 = true
   }
 
+}
+
+output "beanstalk_app_name" {
+  value = aws_elastic_beanstalk_application.app.name
 }

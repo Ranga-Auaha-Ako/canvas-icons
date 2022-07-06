@@ -9,3 +9,7 @@ declare namespace svelte.JSX {
         onfinalize?: (event: CustomEvent<DndEvent> & {target: EventTarget & T}) => void;
     }
 }
+
+interface ImportMetaEnv {
+    VITE_ASSET_HOST: string
+}

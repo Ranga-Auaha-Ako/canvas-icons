@@ -1,7 +1,7 @@
 import { writable } from 'svelte-local-storage-store';
 
 // Utility function to prefix writable localstorage keys
-const pf = (k) => `iconConfig-v1-${k}`;
+const pf = (k) => `iconConfig-v2-${k}`;
 
 export const colour = writable(pf('colour'), '#000000');
 
