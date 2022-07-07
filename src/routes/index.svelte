@@ -82,7 +82,7 @@
 		});
 		const urlSearchParams = new URLSearchParams(window.location.search);
 		// Fetch category data from library CDN
-		const iconData = await fetch(`${import.meta.env.VITE_ASSET_HOST}/meta.json`).then((res) => {
+		const iconData = await fetch(`${$session.assetHost}/meta.json`).then((res) => {
 			if (!res.ok) {
 				throw new Error(res.statusText);
 			}

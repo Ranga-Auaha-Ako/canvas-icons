@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { titleCase } from 'title-case';
 	import type { Icon } from '../icons';
+	import { session } from '$app/stores';
 	// import '../../../static/icon-sprite/css/sprite.css';
 
 	export let icons: any[];
@@ -42,11 +43,10 @@
 				<div
 					class="img"
 					style="
-				mask-image: url('{import.meta.env.VITE_ASSET_HOST}/font/stack/svg/sprite.stack.svg#{getIconClass(
+				mask-image: url('{$session.assetHost}/font/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');
+				-webkit-mask-image: url('{$session.assetHost}/font/stack/svg/sprite.stack.svg#{getIconClass(
 						icon.url
-					)}');
-				-webkit-mask-image: url('{import.meta.env
-						.VITE_ASSET_HOST}/font/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');"
+					)}');"
 				/>
 				<!-- <img  src={icon.url} /> -->
 			</button>
