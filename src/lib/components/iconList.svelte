@@ -43,10 +43,8 @@
 				<div
 					class="img"
 					style="
-				mask-image: url('{$session.assetHost}/font/stack/svg/sprite.stack.svg#{getIconClass(icon.url)}');
-				-webkit-mask-image: url('{$session.assetHost}/font/stack/svg/sprite.stack.svg#{getIconClass(
-						icon.url
-					)}');"
+					background-image: url('/icons/{colour}/iconStack.svg#{getIconClass(icon.url)}');
+					"
 				/>
 				<!-- <img  src={icon.url} /> -->
 			</button>
@@ -93,13 +91,14 @@
 			.img {
 				width: 100%;
 				height: 100%;
-				background-color: var(--iconColor);
-				mask-size: contain;
-				mask-repeat: no-repeat;
-				mask-position: center;
-				-webkit-mask-size: contain;
-				-webkit-mask-repeat: no-repeat;
-				-webkit-mask-position: center;
+				background-size: contain;
+				// background-color: var(--iconColor);
+				// mask-size: contain;
+				// mask-repeat: no-repeat;
+				// mask-position: center;
+				// -webkit-mask-size: contain;
+				// -webkit-mask-repeat: no-repeat;
+				// -webkit-mask-position: center;
 				// Disabled to prevent visual glitch on some systems (icons become blocks during transition)
 				// transition: background-color 0.5s ease;
 			}
