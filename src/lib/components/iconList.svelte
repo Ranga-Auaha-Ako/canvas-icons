@@ -31,7 +31,7 @@
 				id={`${i}-${getIconClass(icon.url)}`}
 				class="icon"
 				class:match={highlight !== false && highlight.includes(i)}
-				title={titleCase(icon.term ? icon.term : icon.title)}
+				title={titleCase(icon.term || icon.title || 'Icon')}
 				tabindex="0"
 				on:click={() =>
 					dispatch('selectIcon', {
@@ -40,13 +40,19 @@
 						id: icon.id
 					})}
 			>
-				<div
+				<!-- <div
 					class="img"
 					style="
 					background-image: url('/icons/{colour}/iconStack.svg#{getIconClass(icon.url)}');
 					"
-				/>
-				<!-- <img  src={icon.url} /> -->
+				/> -->
+				<svg class="img" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" color="#{colour}">
+					<use xlink:href="/icons/iconDefs.svg#{getIconClass(icon.url)}" />
+					<!-- <use
+						xlink:href="{$session.assetHost}/font/defs/svg/sprite.defs.svg#{getIconClass(icon.url)}"
+					/> -->
+				</svg>
+				<!-- <img alt={icon.title} src="/icons/{colour}/iconStack.svg#{getIconClass(icon.url)}" /> -->
 			</button>
 		{/if}
 	{/each}
@@ -100,7 +106,7 @@
 				// -webkit-mask-repeat: no-repeat;
 				// -webkit-mask-position: center;
 				// Disabled to prevent visual glitch on some systems (icons become blocks during transition)
-				// transition: background-color 0.5s ease;
+				transition: color 0.5s ease;
 			}
 		}
 	}
