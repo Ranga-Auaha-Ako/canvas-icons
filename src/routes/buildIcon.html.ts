@@ -5,15 +5,15 @@ import { escape } from 'html-escaper';
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function get(req) {
-	const data = req.query.get('data');
-	const iconUrl = req.query.get('icon-url');
-	const colour = req.query.get('colour');
-	const iconMargin = req.query.get('margin');
-	const iconPadding = req.query.get('padding');
-	const iconSize = req.query.get('size');
-	const iconOffset = req.query.get('offset');
-	const iconInBox = req.query.get('inBox') == 'true';
-	const callback = req.query.get('callback');
+	const data = req.url.searchParams.get('data');
+	const iconUrl = req.url.searchParams.get('icon-url');
+	const colour = req.url.searchParams.get('colour');
+	const iconMargin = req.url.searchParams.get('margin');
+	const iconPadding = req.url.searchParams.get('padding');
+	const iconSize = req.url.searchParams.get('size');
+	const iconOffset = req.url.searchParams.get('offset');
+	const iconInBox = req.url.searchParams.get('inBox') == 'true';
+	const callback = req.url.searchParams.get('callback');
 
 	const iconSizeFormatted = iconSize == -1 ? '1em' : `${iconSize}px`;
 
@@ -31,36 +31,26 @@ export async function get(req) {
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' alt='' data-decorative='true' src='${iconUrl}' width='${iconSize}' height='${iconSize}' style='padding: ${iconMargin}rem; position: relative;bottom: ${iconOffset}px'/>","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 	const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"
-	<picture style='
-	line-height: 0;
-	margin: ${iconMargin}px;
-	display: inline-block;
-	position:relative;
-	border-radius: 3px;
-	${iconInBox ? ` background: ${colour};` : ''}
-	top: ${iconOffset * -1}em;
-	width: ${iconSizeFormatted};
-	height: ${iconSizeFormatted};
-	box-sizing: border-box;
-	vertical-align: middle' role='presentation' alt='' data-decorative='true'>
-		<img src='${iconUrl}' style='
-		display: block;
+	<img src='${iconUrl}' style='
+		display: inline-block;
+		border-radius: 3px;
+		${iconInBox ? ` background: ${colour};` : ''}
 		width: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
 		height: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
 		margin: ${iconInBox ? iconPadding : 0}%;
 		' role='presentation' alt='' data-decorative='true'/>
-	</picture>&ZeroWidthSpace;","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	&ZeroWidthSpace;","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',
 		consumerSecret: '',
-		url: `http://${req.host}${req.path}`,
+		url: `http://${req.host}${req.url.pathname}`,
 		method: 'POST',
 		queryParams: { data, content_items }
 	});
 
 	return {
-		// body: { ...signature.params, path: `//${req.host}${req.path}` }
+		// body: { ...signature.params, path: `//${req.host}${req.url.pathname}` }
 		headers: {
 			'content-type': 'text/html; charset=utf-8'
 		},
