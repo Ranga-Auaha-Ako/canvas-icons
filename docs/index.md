@@ -1,4 +1,4 @@
-> **NOTE: This project is still in BETA. Deployment is still a manual process, and you will need a [license from The Noun Project](https://thenounproject.com/pricing/) to use icons from our default repository without attribution.**
+> **NOTE: This project is still in BETA. Deployment is automated but requires manual configuring. You will also need to install the sibling repository tool here: **
 
 <!-- # Quick Links
  - [The Noun Project](https://thenounproject.com/)
@@ -34,7 +34,17 @@ You can test out all of the features of the icon selector, but choosing an icon 
 
 ## Building
 
-This project is automatically built when pushed to master, and will appear for public use at [canvasicons.auckland.ac.nz](https://canvasicons.auckland.ac.nz/). To test the build process, use one of the following methods:
+This tool is built into a Docker image for deployment on AWS, and uses Terraform for configuration and deployment. Before starting, you will need to fork the repository or download and edit the `terraform.tf.json` file. Update the state management configuration to match the S3 Bucket you use, or remove it if you're just using local storage of Terraform state. You can also update the `aws_region` and `asset_host` variables to match your AWS region and the domain you are hosting the icon library on.
+
+To build the image, run:
+
+```bash
+cd deployment
+terraform apply # This will create and/or configure the required infrastructure on AWS. Careful! This will add to your bill.
+./deploy.sh # This will build the image and push it to AWS
+```
+
+Canvas Icons runs on an AWS Beanstalk instance, which has lower priced options than a full ECS + load balancing configuration.
 
 ### With Docker
 
