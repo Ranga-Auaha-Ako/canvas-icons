@@ -6,7 +6,7 @@
 	// import '../../../static/icon-sprite/css/sprite.css';
 
 	export let icons: any[];
-	export let colour: String;
+	export let colour: string;
 	export let highlight: Number[] | false = false;
 	export let show: Number[] | false = false;
 	export let showPadding: Boolean = false;
@@ -46,7 +46,7 @@
 					background-image: url('/icons/{colour}/iconStack.svg#{getIconClass(icon.url)}');
 					"
 				/> -->
-				<svg class="img" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" color="#{colour}">
+				<svg class="img" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" color={colour}>
 					<use xlink:href="/icons/iconDefs.svg#{getIconClass(icon.url)}" />
 					<!-- <use
 						xlink:href="{$session.assetHost}/font/defs/svg/sprite.defs.svg#{getIconClass(icon.url)}"

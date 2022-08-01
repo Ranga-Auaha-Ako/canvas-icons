@@ -1,20 +1,20 @@
 <script lang="ts">
 	export let value: string = '';
 	export const options = [
-		{ code: '00467F', name: 'Dark blue' },
-		{ code: '000000', name: 'Black' },
-		{ code: '4A4A4C', name: 'Body Grey' },
-		{ code: '8D9091', name: 'Silver' },
-		{ code: 'A71930', name: 'Arts' },
-		{ code: '7D0063', name: 'Business School' },
-		{ code: 'D2492A', name: 'Creative Arts and Industries' },
-		{ code: '55A51C', name: 'Education and Social Work' },
-		{ code: '4F2D7F', name: 'Engineering' },
-		{ code: '005B82', name: 'Auckland Law School' },
-		{ code: '00877C', name: 'Medical Health Sciences' },
-		{ code: '0039A6', name: 'Science' },
-		{ code: 'BA4482', name: 'Auckland Bioengineering Institute' },
-		{ code: '006990', name: 'Liggins Institute' }
+		{ code: '#00467F', name: 'Dark blue' },
+		{ code: '#000000', name: 'Black' },
+		{ code: '#4A4A4C', name: 'Body Grey' },
+		{ code: '#8D9091', name: 'Silver' },
+		{ code: '#A71930', name: 'Arts' },
+		{ code: '#7D0063', name: 'Business School' },
+		{ code: '#D2492A', name: 'Creative Arts and Industries' },
+		{ code: '#55A51C', name: 'Education and Social Work' },
+		{ code: '#4F2D7F', name: 'Engineering' },
+		{ code: '#005B82', name: 'Auckland Law School' },
+		{ code: '#00877C', name: 'Medical Health Sciences' },
+		{ code: '#0039A6', name: 'Science' },
+		{ code: '#BA4482', name: 'Auckland Bioengineering Institute' },
+		{ code: '#006990', name: 'Liggins Institute' }
 	];
 
 	const select = (c: string) => {
@@ -32,14 +32,14 @@
 		on:click={(e) => (edit = !edit)}
 		class="colour"
 		title="Click to change"
-		style="background-color: #{value};"
+		style="background-color: {value};"
 	/>
 	<div id="colourPicker" class:edit>
 		{#each options as option}
 			<button
 				class="colour colour-option"
 				title={option.name}
-				style="background-color: #{option.code};"
+				style="background-color: {option.code};"
 				class:selected={value == option.code}
 				on:click={(e) => select(option.code)}
 			/>
