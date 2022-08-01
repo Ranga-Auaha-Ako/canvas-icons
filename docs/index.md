@@ -13,9 +13,11 @@ This tool is split into two components for durability. One key advantage of this
 
 The icon selector itself runs on [Svelte](https://svelte.dev/) using [SvelteKit](https://kit.svelte.dev/) with the [NodeJS Adapter](https://github.com/sveltejs/kit/tree/master/packages/adapter-node). This allows for a speedy "compiled" interface with no extra unused bits. As a pre-build step, the [icon repository](https://github.com/Ranga-Auaha-Ako/canvas-icons/tree/master/static/icons) is automatically crunched down into a single SVG sprite file using [svg-sprite](https://www.npmjs.com/package/svg-sprite).
 
-## Icon Host
+## Icon Library
 
 Because the icons are hosted with serverless architecture ([AWS Lambda](https://aws.amazon.com/lambda/) + [AWS API Gateway](https://aws.amazon.com/api-gateway/) + [AWS S3](https://aws.amazon.com/s3/)), there's little risk of massive student demand (e.g. around exam times) causing slowdowns, as this part of the tool can scale nearly instantly to handle additional load. The reason there's any compute happening here at all is because we need to transform the source SVG to allow custom colour choices. For example, `https://assets.canvasicons.auckland.ac.nz/colour/Teaching/noun_Magnifying_Glass_1142952.`**`01ABCD`**`.svg` loads icon `noun_Magnifying_Glass_1142952` from the `Teaching` category, and replaces the default `black` colour with `01ABCD`. It does this using a simple NodeJS Lambda function running through AWS's API Gateway.
+
+Icons are hosted using a separate stack from the repository at [Ranga-Auaha-Ako/canvas-icons-library](https://github.com/Ranga-Auaha-Ako/canvas-icons-library). This repository handles the bundling and generation of icon fonts, optimisation of icon assets, and houses the lambda script for transforming them in production.
 
 # Developing
 
