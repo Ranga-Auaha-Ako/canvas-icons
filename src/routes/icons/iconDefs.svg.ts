@@ -2,7 +2,7 @@
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function get() {
+export async function GET() {
 	// code goes here
 	const assetHost = process.env.VITE_ASSET_HOST;
 	const iconsURL = `${assetHost}/font/defs/svg/sprite.defs.svg`;

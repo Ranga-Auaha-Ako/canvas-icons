@@ -4,7 +4,7 @@ import { escape } from 'html-escaper';
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function get(req) {
+export async function GET(req) {
 	const data = req.url.searchParams.get('data');
 	const iconUrl = req.url.searchParams.get('icon-url');
 	const colour = req.url.searchParams.get('colour');
