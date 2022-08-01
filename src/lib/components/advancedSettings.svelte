@@ -177,7 +177,7 @@
 											bind:value={$iconPadding}
 											size={$iconPadding.toString().length}
 										/>
-										<span class="units">%</span>
+										<span class="units">px</span>
 									</div>
 								</label>
 								<input type="range" min="0" max="40" step="1" bind:value={$iconPadding} />

@@ -35,9 +35,9 @@ export async function get(req) {
 		display: inline-block;
 		border-radius: 3px;
 		${iconInBox ? ` background: ${colour};` : ''}
-		width: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
-		height: calc(${iconSizeFormatted} - ${iconInBox ? iconPadding * 2 : 0}%);
-		margin: ${iconInBox ? iconPadding : 0}%;
+		width: ${iconSizeFormatted};
+		height: ${iconSizeFormatted};
+		padding: ${iconInBox ? iconPadding : 0}px;
 		' role='presentation' alt='' data-decorative='true'/>
 	&ZeroWidthSpace;","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
