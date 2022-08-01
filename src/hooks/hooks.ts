@@ -5,9 +5,10 @@ import 'dotenv/config'
 
 /** @type {import('@sveltejs/kit').GetSession} */
 export async function getSession({request}) {
-    const assetHost = process.env.VITE_ASSET_HOST
+    const assetHost = process.env.VITE_ASSET_HOST;
+    const testEnv = process.env.VITE_TEST_ENV === "true";
     if(request.body) {
-        const body = await request.json()
+        const body = await request.formData()
         return {
             user: {
                 name: body.get("lis_person_name_given"),
@@ -16,9 +17,10 @@ export async function getSession({request}) {
             callback: body.get("content_item_return_url"),
             version,
             // Asset host goes here to allow environment to be updated post-build
-            assetHost
+            assetHost,
+            testEnv
         }
     } else {
-        return {version,assetHost}
+        return {version,assetHost, testEnv}
     }
 }

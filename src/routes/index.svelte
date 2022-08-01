@@ -179,7 +179,7 @@
 </svelte:head>
 
 <div style="--iconColor: {$colour}; --iconMargin: 1rem">
-	<nav id="toolbar">
+	<nav id="toolbar" class:testing={$session.testEnv}>
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
 			<!--  - Search -->

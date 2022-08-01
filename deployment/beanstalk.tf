@@ -11,6 +11,12 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_env" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "VITE_TEST_ENV"
+    value     = terraform.workspace == "prod" ? "false" : "true"
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
     value     = "SingleInstance"

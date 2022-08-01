@@ -10,14 +10,14 @@
     http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">
     <blti:title>Icon selector</blti:title>
     <blti:description>Insert accessible icons directly into pages in your Course</blti:description>
-    <blti:icon>http://localhost:3000/favicon.png</blti:icon>
+    <blti:icon>http://localhost:3000/favicon.dev.png</blti:icon>
     <blti:extensions platform="canvas.instructure.com">
       <lticm:property name="tool_id">icon_selector</lticm:property>
       <lticm:property name="privacy_level">public</lticm:property>
       <lticm:options name="editor_button">
 	<lticm:property name="message_type">ContentItemSelectionRequest</lticm:property>
         <lticm:property name="url">http://localhost:3000/</lticm:property>
-        <lticm:property name="text">UoA Canvas Icons</lticm:property>
+        <lticm:property name="text">(Dev) Canvas Icons</lticm:property>
         <lticm:property name="enabled">true</lticm:property>
       </lticm:options>
     </blti:extensions>
