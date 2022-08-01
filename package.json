@@ -1,6 +1,6 @@
 {
 	"name": "canvas-icon",
-	"version": "2.7.9",
+	"version": "2.7.10",
 	"license": "UNLICENSED",
 	"scripts": {
 		"dev": "vite dev",
