@@ -1,3 +1,7 @@
+---
+youtube_video: lWnGr_oPOoU
+---
+
 > **NOTE: This project is still in BETA. Deployment is automated but requires manual configuring. You will also need to install the sibling repository tool here: **
 
 <!-- # Quick Links
