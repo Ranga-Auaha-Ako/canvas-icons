@@ -5,9 +5,9 @@
     
     <meta charset="UTF-8">
 
-<!-- Begin Jekyll SEO tag v2.7.1 -->
+<!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Canvas Icons | An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.</title>
-<meta name="generator" content="Jekyll v3.9.0" />
+<meta name="generator" content="Jekyll v3.9.2" />
 <meta property="og:title" content="Canvas Icons" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages." />
@@ -15,22 +15,23 @@
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Canvas Icons" />
+<meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Canvas Icons" />
 <script type="application/ld+json">
-{"@type":"WebSite","headline":"Canvas Icons","description":"An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.","url":"http://localhost:4000/","name":"Canvas Icons","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"WebSite","description":"An open-source LTI designed for Canvas, allowing insertion of free high-quality icons into pages.","headline":"Canvas Icons","name":"Canvas Icons","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#221910">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta property="og:image" content="receipt.jpg"/>
-    <link rel="stylesheet" href="/assets/css/style.css?v=288caa17369506ccfc3a013478a8054ae740f61a">
+    <link rel="stylesheet" href="/assets/css/style.css?v=adce4ebf69c5901265d1535db412755de4b4e58f">
     <!-- Inline custom CSS -->
     <style>
 .page-header {
     background-color: transparent;
-    background-image: linear-gradient(to bottom, #ffffffbf, #ffffffbf, transparent);
+    background-image: linear-gradient(to bottom, #ffffffd3 0%, transparent 20vw);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -82,6 +83,47 @@ body {
     padding-bottom: 5rem;
 }
 
+.video-container {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  box-shadow:
+  0px 0.6px 1.4px rgba(0, 0, 0, 0.017),
+  0px 1.8px 3.9px rgba(0, 0, 0, 0.025),
+  0px 4.2px 9.3px rgba(0, 0, 0, 0.033),
+  0px 14px 31px rgba(0, 0, 0, 0.05)
+;
+  margin-bottom: 3rem;
+}
+
+.video-container.shift {
+  margin-top: -8rem;
+}
+
+.video-frame {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 42em) {
+  .main-content {
+    padding-top: 1rem;
+  }
+  .video-container.shift {
+    margin-bottom: 3rem;
+    margin-top: 0;
+  }
+
+  .page-header {
+    background-image: linear-gradient(to bottom, #ffffffd3 0%, transparent 30vh);
+  }
+}
+
     </style>
   </head>
   <body>
@@ -97,8 +139,15 @@ body {
     </header>
 
     <main id="content" class="main-content" role="main">
+      
+        <div class="video-container shift">
+          <div class="video-frame">
+              <iframe src='https://www.youtube.com/embed/lWnGr_oPOoU' style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      
       <blockquote>
-  <p><strong>NOTE: This project is still in BETA. Deployment is still a manual process, and you will need a <a href="https://thenounproject.com/pricing/">license from The Noun Project</a> to use icons from our default repository without attribution.</strong></p>
+  <p>**NOTE: This project is still in BETA. Deployment is automated but requires manual configuring. You will also need to install the sibling repository tool here: **</p>
 </blockquote>
 
 <!-- # Quick Links
@@ -114,9 +163,11 @@ body {
 
 <p>The icon selector itself runs on <a href="https://svelte.dev/">Svelte</a> using <a href="https://kit.svelte.dev/">SvelteKit</a> with the <a href="https://github.com/sveltejs/kit/tree/master/packages/adapter-node">NodeJS Adapter</a>. This allows for a speedy “compiled” interface with no extra unused bits. As a pre-build step, the <a href="https://github.com/Ranga-Auaha-Ako/canvas-icons/tree/master/static/icons">icon repository</a> is automatically crunched down into a single SVG sprite file using <a href="https://www.npmjs.com/package/svg-sprite">svg-sprite</a>.</p>
 
-<h2 id="icon-host">Icon Host</h2>
+<h2 id="icon-library">Icon Library</h2>
 
 <p>Because the icons are hosted with serverless architecture (<a href="https://aws.amazon.com/lambda/">AWS Lambda</a> + <a href="https://aws.amazon.com/api-gateway/">AWS API Gateway</a> + <a href="https://aws.amazon.com/s3/">AWS S3</a>), there’s little risk of massive student demand (e.g. around exam times) causing slowdowns, as this part of the tool can scale nearly instantly to handle additional load. The reason there’s any compute happening here at all is because we need to transform the source SVG to allow custom colour choices. For example, <code class="language-plaintext highlighter-rouge">https://assets.canvasicons.auckland.ac.nz/colour/Teaching/noun_Magnifying_Glass_1142952.</code><strong><code class="language-plaintext highlighter-rouge">01ABCD</code></strong><code class="language-plaintext highlighter-rouge">.svg</code> loads icon <code class="language-plaintext highlighter-rouge">noun_Magnifying_Glass_1142952</code> from the <code class="language-plaintext highlighter-rouge">Teaching</code> category, and replaces the default <code class="language-plaintext highlighter-rouge">black</code> colour with <code class="language-plaintext highlighter-rouge">01ABCD</code>. It does this using a simple NodeJS Lambda function running through AWS’s API Gateway.</p>
+
+<p>Icons are hosted using a separate stack from the repository at <a href="https://github.com/Ranga-Auaha-Ako/canvas-icons-library">Ranga-Auaha-Ako/canvas-icons-library</a>. This repository handles the bundling and generation of icon fonts, optimisation of icon assets, and houses the lambda script for transforming them in production.</p>
 
 <h1 id="developing">Developing</h1>
 
@@ -134,7 +185,16 @@ yarn run dev <span class="nt">--</span> <span class="nt">--open</span>
 
 <h2 id="building">Building</h2>
 
-<p>This project is automatically built when pushed to master, and will appear for public use at <a href="https://canvasicons.auckland.ac.nz/">canvasicons.auckland.ac.nz</a>. To test the build process, use one of the following methods:</p>
+<p>This tool is built into a Docker image for deployment on AWS, and uses Terraform for configuration and deployment. Before starting, you will need to fork the repository or download and edit the <code class="language-plaintext highlighter-rouge">terraform.tf.json</code> file. Update the state management configuration to match the S3 Bucket you use, or remove it if you’re just using local storage of Terraform state. You can also update the <code class="language-plaintext highlighter-rouge">aws_region</code> and <code class="language-plaintext highlighter-rouge">asset_host</code> variables to match your AWS region and the domain you are hosting the icon library on.</p>
+
+<p>To build the image, run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>deployment
+terraform apply <span class="c"># This will create and/or configure the required infrastructure on AWS. Careful! This will add to your bill.</span>
+./deploy.sh <span class="c"># This will build the image and push it to AWS</span>
+</code></pre></div></div>
+
+<p>Canvas Icons runs on an AWS Beanstalk instance, which has lower priced options than a full ECS + load balancing configuration.</p>
 
 <h3 id="with-docker">With Docker</h3>
 
