@@ -34,12 +34,15 @@ export async function GET(req) {
 	<img src='${iconUrl}' style='
 		display: inline-block;
 		border-radius: 3px;
-		${iconInBox ? ` background: ${colour};` : ''}
+		position: relative;
+		top: ${iconOffset * -1}em;
+		background: ${iconInBox ? colour : '#fff'};
 		width: ${iconSizeFormatted};
 		height: ${iconSizeFormatted};
+		margin: ${iconMargin}px;
 		padding: ${iconInBox ? iconPadding : 0}px;
 		' role='presentation' alt='' data-decorative='true'/>
-	&ZeroWidthSpace;","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
+	","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
 
 	const signature = OAuth1Signature({
 		consumerKey: '',

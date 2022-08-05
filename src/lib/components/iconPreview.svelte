@@ -7,7 +7,8 @@
 	export let iconPadding: number;
 	export let iconSize: number;
 	export let iconOffset: number;
-	$: iconSizeFormatted = iconSize == -1 ? '1em' : `${iconSize}px`;
+	$: iconSizeFormatted =
+		iconSize == -1 ? `calc(1em + ${iconPadding * 2}px)` : `${iconSize + iconPadding * 2}px`;
 	export let icon = { url: 'General/noun_Box_221801.svg' };
 	$: iconUrl = `https://assets.canvasicons.auckland.ac.nz/colour/${icon.url.replace(
 		'.svg',
@@ -15,35 +16,33 @@
 	)}`;
 </script>
 
-<picture
-	transition:slide
-	class="icon-wrap"
-	class:showMargin
-	class:iconInBox
+&ZeroWidthSpace;
+<img
+	src={iconUrl}
 	style="
-	line-height: 0;
-	margin: {iconMargin}px;
 	display: inline-block;
-	position:relative;
 	border-radius: 3px;
-	{iconInBox ? ` background: ${colour};` : ''}
+	position: relative;
 	top: {iconOffset * -1}em;
+	background: {iconInBox ? colour : '#fff'};
 	width: {iconSizeFormatted};
 	height: {iconSizeFormatted};
-	box-sizing: border-box;
-	vertical-align: middle"
+	margin: {iconMargin}px;
+	padding: {iconInBox ? iconPadding : 0}px;
+	"
+	class:showMargin
 	role="presentation"
 	alt=""
 	data-decorative="true"
->
-	<img
-		src={iconUrl}
-		style="
-		display: block;
-		width: calc({iconSizeFormatted} - {iconInBox ? iconPadding * 2 : 0}%);
-		height: calc({iconSizeFormatted} - {iconInBox ? iconPadding * 2 : 0}%);
-		margin: {iconInBox ? iconPadding : 0}%;
-		"
-		alt=""
-	/>
-</picture>
+/>
+&ZeroWidthSpace;
+
+<style>
+	img {
+		max-width: 100%;
+		height: auto;
+		vertical-align: middle;
+		border: 0;
+		-ms-interpolation-mode: bicubic;
+	}
+</style>
