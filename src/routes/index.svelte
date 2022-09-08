@@ -221,13 +221,15 @@
 		<div id="settings">
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={$colour} />
-			<button
-				class="btn"
-				on:click={() => {
-					$showSettings = true;
-				}}>Advanced Settings</button
-			>
-			<AdvancedSettings />
+			{#if $session.data}
+				<button
+					class="btn"
+					on:click={() => {
+						$showSettings = true;
+					}}>Advanced Settings</button
+				>
+				<AdvancedSettings />
+			{/if}
 		</div>
 	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->
