@@ -6,13 +6,13 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "VITE_ASSET_HOST"
-    value     = var.asset_host
+    name      = "PUBLIC_ASSET_HOST"
+    value     = terraform.workspace == "prod" ? var.asset_host : var.asset_host_staging
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "VITE_TEST_ENV"
+    name      = "PUBLIC_TEST_ENV"
     value     = terraform.workspace == "prod" ? "false" : "true"
   }
 

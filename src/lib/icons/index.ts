@@ -1,31 +1,33 @@
+import { env } from '$env/dynamic/public';
+
 export interface Icon {
-    id: string;
-    url: string;
-    title?: string;
-    width: number;
-    height: number;
-    tnp_id: string;
-    tags?: string[];
-    term?: string;
-    collections?: string[];
+	id: string;
+	url: string;
+	title?: string;
+	width: number;
+	height: number;
+	tnp_id: string;
+	tags?: string[];
+	term?: string;
+	collections?: string[];
 }
 
 export interface Category {
-    name: string;
-    icons: Icon[];
+	name: string;
+	icons: Icon[];
 }
 
 export interface foundCategory {
-    category: string;
-    icons: string[];
+	category: string;
+	icons: string[];
 }
 
-export const getIconUrl = (url: string, colour = "#000000", iconInBox = false) : string => {
-    return `https://assets.canvasicons.auckland.ac.nz/colour/${url.replace(
+export const getIconUrl = (url: string, colour = '#000000', iconInBox = false): string => {
+	return `${env.PUBLIC_ASSET_HOST}/colour/${url.replace(
 		'.svg',
 		`.${iconInBox ? 'ffffff' : colour.replace('#', '')}.svg`
 	)}`;
-}
+};
 
 export const getIconClass = (url: string): string => {
 	// eg : svg-Aotearoa--noun_Beehive_147848

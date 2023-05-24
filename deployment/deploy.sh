@@ -25,8 +25,7 @@ script_dir="$(dirname "$0")"
 
 aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $account_id.dkr.ecr.$region.amazonaws.com
 # docker build -t $ecr_name ../ --platform linux/amd64
-docker build -t $ecr_name ../ --platform linux/arm64
-docker tag $ecr_name $account_id.dkr.ecr.$region.amazonaws.com/$ecr_name:$version
+docker build -t $ecr_name -t $account_id.dkr.ecr.$region.amazonaws.com/$ecr_name:$version ../ --platform linux/arm64
 docker push $account_id.dkr.ecr.$region.amazonaws.com/$ecr_name:$version
 
 # Process Dockerrun json:

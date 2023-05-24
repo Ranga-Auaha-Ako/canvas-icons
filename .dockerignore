@@ -6,4 +6,5 @@ Dockerfile
 README.md
 **/.git
 build
+deployment
 node_modules

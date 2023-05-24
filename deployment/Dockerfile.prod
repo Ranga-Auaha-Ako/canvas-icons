@@ -7,7 +7,7 @@ COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "yarn.lock",
 RUN yarn
 COPY . .
 
-ENV VITE_ASSET_HOST=$VITE_ASSET_HOST
+ENV PUBLIC_ASSET_HOST=$PUBLIC_ASSET_HOST
 
 EXPOSE 3000
 CMD ["node", "build"]

@@ -3,6 +3,11 @@ variable "asset_host" {
   default = "https://assets.canvasicons.auckland.ac.nz"
 }
 
+variable "asset_host_staging" {
+  type    = string
+  default = "https://assets.canvasicons.auckland.ac.nz"
+}
+
 variable "aws_region" {
   description = "What AWS region to build to?"
   type        = string
