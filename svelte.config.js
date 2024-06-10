@@ -13,7 +13,10 @@ const config = {
 			hooks: {
 				server: 'src/hooks/hooks.ts'
 			}
-		}
+		},
+		csrf: {
+      checkOrigin: false,
+    }
 	}
 };
 

@@ -36,16 +36,16 @@
 
 	// Convert to list of icons and list of categories with icon indices
 	let i = 0;
-	$: allIcons = <Icon[]>categories.reduce((acc, cv) => acc.concat(cv.icons), []);
+	$: allIcons = categories.reduce<Icon[]>((acc, cv) => acc.concat(cv.icons), []);
 	// Get the recent icons that we can find
-	$: recentIconsList = $recentIcons.reduce((iconList, id) => {
+	$: recentIconsList = $recentIcons.reduce<Icon[]>((iconList, id) => {
 		const matchedIcons = allIcons.filter((i) => i.id == id);
 		if (matchedIcons.length === 1) iconList.push(matchedIcons[0]);
 		return iconList;
 	}, []);
 
 	let numIcons = 0;
-	let catIconIndex = [];
+	let catIconIndex: number[][] = [];
 
 	// Initiate Search
 	$: fuse = new Fuse(allIcons, {
@@ -65,7 +65,7 @@
 	$: filteredIcons = fuse.search(search);
 	$: filteredIndices = filteredIcons.map((i) => i.refIndex);
 	$: searchResults = filteredIcons
-		.filter((i) => i.score < 0.25)
+		.filter((i) => i.score && i.score < 0.25)
 		.slice(0, 15)
 		.map((i) => ({
 			...i.item,
@@ -74,12 +74,14 @@
 
 	// Scrollspy, so that the active category is highlighted
 	onMount(async () => {
-		scrollSpy(document.getElementById('shortcuts'), {
-			sectionClass: '.category',
-			menuActiveTarget: '.cat-shortcut',
-			hrefAttribute: 'data-href',
-			offset: 200
-		});
+		const shortcutEl = document.getElementById('shortcuts');
+		if (shortcutEl)
+			scrollSpy(shortcutEl, {
+				sectionClass: '.category',
+				menuActiveTarget: '.cat-shortcut',
+				hrefAttribute: 'data-href',
+				offset: 200
+			});
 		const urlSearchParams = new URLSearchParams(window.location.search);
 		// Fetch category data from library CDN
 		const iconData = await fetch(`${$page.data.assetHost}/meta.json`).then((res) => {
@@ -114,18 +116,20 @@
 	};
 
 	// Handle clicking on an icon
-	const selectIcon = (e) => {
+	const selectIcon = (e: CustomEvent) => {
 		const iconAlt = e.detail.alt;
 		const iconUrl = getIconUrl(e.detail.url, $colour, $iconInBox);
 		// Filter recent icons to only valid ones (removing any dead icon IDs)
-		let filteredRecents = allIcons.filter((icon) => $recentIcons.includes(icon.id));
+		let filteredRecents = allIcons
+			.filter((icon) => $recentIcons.includes(icon.id))
+			.map((i) => i.id);
 		// Add this icon to the top of the listlist
 		filteredRecents.unshift(e.detail.id);
 		// Update with max length 10 and duplicates removed
 		recentIcons.update((_) => [...new Set(filteredRecents)].slice(0, 20));
 
-		const callback = $page.data.callback;
-		const data = $page.data.data;
+		const callback = $page.form.callback;
+		const data = $page.form.data;
 		if (iconUrl && data && callback) {
 			// Make a request to buildIcon to get the form which will send us back
 			window.location.href = `buildIcon.html?${new URLSearchParams({
@@ -187,8 +191,8 @@
 				type="search"
 				bind:value={search}
 				on:focus={(_) => (searching = true)}
-				placeholder="Kia ora{$page.data.user && $page.data.user.name
-					? ` ${$page.data.user.name}`
+				placeholder="Kia ora{$page.form.user && $page.form.user.name
+					? ` ${$page.form.user.name}`
 					: ''}, type to start searching..."
 			/>
 			<div class="more" class:searching>
@@ -221,7 +225,7 @@
 		<div id="settings">
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={$colour} />
-			{#if $page.data.data}
+			{#if $page.form.data}
 				<button
 					class="btn"
 					on:click={() => {

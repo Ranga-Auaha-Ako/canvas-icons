@@ -1,7 +1,7 @@
 import { persisted } from 'svelte-local-storage-store';
 
 // Utility function to prefix persisted localstorage keys
-const pf = (k) => `iconConfig-v2-${k}`;
+const pf = (k: string) => `iconConfig-v2-${k}`;
 
 export const colour = persisted(pf('colour'), '#000000');
 
@@ -14,4 +14,4 @@ export const showMargin = persisted(pf('showMargin'), false);
 export const showSettings = persisted(pf('showSettings'), false);
 export const iconPreviewPosition = persisted(pf('iconPreviewPosition'), <'h2' | 'h3' | 'p'>'h2');
 
-export const recentIcons = persisted(pf('recentIcons'), []);
+export const recentIcons = persisted<string[]>(pf('recentIcons'), []);

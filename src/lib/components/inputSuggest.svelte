@@ -23,7 +23,7 @@
 	// };
 
 	let editing = false;
-	let searchElem;
+	let searchElem: HTMLInputElement;
 	const myFunction = () => console.log('this will be displayed if I click outside the button');
 </script>
 
@@ -32,8 +32,8 @@
 	on:focusin={(_) => {
 		editing = true;
 	}}
-	on:focusout={(e) => {
-		setTimeout((e) => {
+	on:focusout={() => {
+		setTimeout(() => {
 			// debugger;
 			editing = false;
 		}, 300);
@@ -45,12 +45,12 @@
 		{id}
 		{placeholder}
 		bind:inner={searchElem}
-		on:input={(_) => {
+		on:input={() => {
 			editing = true;
 		}}
 		invalid={required !== false && value == ''}
 	/>
-	<div class="searchResults" for={id}>
+	<output class="searchResults" for={id}>
 		{#if editing && !(matches.length == 1 && matches[0].item !== value)}
 			<ListGroup class="searchResults">
 				{#each matches as m}
@@ -58,7 +58,7 @@
 						tabindex="0"
 						tag="button"
 						active={m.item == value}
-						on:click={(e) => {
+						on:click={() => {
 							value = m.item;
 							searchElem.focus();
 							// editing = false;
@@ -68,7 +68,7 @@
 				{/each}
 			</ListGroup>
 		{/if}
-	</div>
+	</output>
 </div>
 
 <style lang="scss">

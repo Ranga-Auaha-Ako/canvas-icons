@@ -10,7 +10,7 @@ export async function GET(req) {
 	const colour = req.url.searchParams.get('colour');
 	const iconMargin = req.url.searchParams.get('margin');
 	const iconPadding = req.url.searchParams.get('padding');
-	const iconSize = req.url.searchParams.get('size');
+	const iconSize = parseInt(req.url.searchParams.get('size') || '0');
 	const iconOffset = req.url.searchParams.get('offset');
 	const iconInBox = req.url.searchParams.get('inBox') == 'true';
 	const callback = req.url.searchParams.get('callback');
@@ -34,7 +34,7 @@ export async function GET(req) {
 		display: inline-block;
 		border-radius: 3px;
 		position: relative;
-		top: ${iconOffset * -1}em;
+		top: ${iconOffset ? parseInt(iconOffset) * -1 : 0}em;
 		background: ${iconInBox ? colour : '#fff'};
 		width: ${iconSizeFormatted};
 		height: ${iconSizeFormatted};
@@ -46,7 +46,7 @@ export async function GET(req) {
 	const signature = OAuth1Signature({
 		consumerKey: '',
 		consumerSecret: '',
-		url: `http://${req.host}${req.url.pathname}`,
+		url: `http://${req.url.host}${req.url.pathname}`,
 		method: 'POST',
 		queryParams: { data, content_items }
 	});
