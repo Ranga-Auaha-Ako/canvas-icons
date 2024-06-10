@@ -128,8 +128,8 @@
 		// Update with max length 10 and duplicates removed
 		recentIcons.update((_) => [...new Set(filteredRecents)].slice(0, 20));
 
-		const callback = $page.form.callback;
-		const data = $page.form.data;
+		const callback = $page.form?.callback;
+		const data = $page.form?.data;
 		if (iconUrl && data && callback) {
 			// Make a request to buildIcon to get the form which will send us back
 			window.location.href = `buildIcon.html?${new URLSearchParams({
