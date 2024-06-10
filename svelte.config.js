@@ -10,7 +10,9 @@ const config = {
 	kit: {
 		adapter: node(),
 		files: {
-			hooks: 'src/hooks/hooks.ts'
+			hooks: {
+				server: 'src/hooks/hooks.ts'
+			}
 		}
 	}
 };

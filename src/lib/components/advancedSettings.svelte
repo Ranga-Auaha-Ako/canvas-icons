@@ -39,14 +39,14 @@
 			aria-label="Close Settings"
 		>
 			<div
-				transition:fade={{ duration: 150 }}
+				transition:fade|global={{ duration: 150 }}
 				class="modal-backdrop"
 				on:click={() => {
 					$showSettings = false;
 				}}
 			/>
 			<div
-				transition:fly={{ y: -200, duration: 150 }}
+				transition:fly|global={{ y: -200, duration: 150 }}
 				class="modal settings"
 				on:click={(e) => e.stopPropagation()}
 				role="document"
@@ -165,7 +165,7 @@
 							</span>
 						</div>
 						{#if $iconInBox}
-							<div class="form-control" transition:fly={{ y: -20, duration: 150 }}>
+							<div class="form-control" transition:fly|global={{ y: -20, duration: 150 }}>
 								<label for="iconPadding">
 									<span class="icon"><ArrowExpandVertical /></span>
 									Icon Padding
