@@ -9,7 +9,7 @@ export async function GET() {
 	const iconsURL = `${assetHost}/font/defs/svg/sprite.defs.svg`;
 	try {
 		const icons = await fetch(iconsURL).then((res) => res.text());
-		return json(icons, {
+		return new Response(icons, {
 			headers: {
 				'Content-Type': 'image/svg+xml'
 			}

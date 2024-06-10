@@ -3,7 +3,7 @@
 	import { base } from '$app/paths';
 	import Fuse from 'fuse.js';
 	import scrollSpy from 'simple-scrollspy';
-	import { session } from '$app/stores';
+	import { page } from '$app/stores';
 
 	// Stylesheet
 	import './index.scss';
@@ -82,7 +82,7 @@
 		});
 		const urlSearchParams = new URLSearchParams(window.location.search);
 		// Fetch category data from library CDN
-		const iconData = await fetch(`${$session.assetHost}/meta.json`).then((res) => {
+		const iconData = await fetch(`${$page.data.assetHost}/meta.json`).then((res) => {
 			if (!res.ok) {
 				throw new Error(res.statusText);
 			}
@@ -97,7 +97,7 @@
 		}
 	});
 
-	const goToCategory = (cat, i) => {
+	const goToCategory = (cat: Category, i: number) => {
 		searching = false;
 		// Get first child and focus!
 		(document.querySelector(`#cat-${i}-${cat.name.toLowerCase()} .icon`) as HTMLElement)?.focus({
@@ -124,8 +124,8 @@
 		// Update with max length 10 and duplicates removed
 		recentIcons.update((_) => [...new Set(filteredRecents)].slice(0, 20));
 
-		const callback = $session.callback;
-		const data = $session.data;
+		const callback = $page.data.callback;
+		const data = $page.data.data;
 		if (iconUrl && data && callback) {
 			// Make a request to buildIcon to get the form which will send us back
 			window.location.href = `buildIcon.html?${new URLSearchParams({
@@ -179,7 +179,7 @@
 </svelte:head>
 
 <div style="--iconColor: {$colour}; --iconMargin: 1rem">
-	<nav id="toolbar" class:testing={$session.testEnv}>
+	<nav id="toolbar" class:testing={$page.data.testEnv}>
 		<div id="filter">
 			<!-- Toolbar with search and colour selector -->
 			<!--  - Search -->
@@ -187,8 +187,8 @@
 				type="search"
 				bind:value={search}
 				on:focus={(_) => (searching = true)}
-				placeholder="Kia ora{$session.user && $session.user.name
-					? ` ${$session.user.name}`
+				placeholder="Kia ora{$page.data.user && $page.data.user.name
+					? ` ${$page.data.user.name}`
 					: ''}, type to start searching..."
 			/>
 			<div class="more" class:searching>
@@ -221,7 +221,7 @@
 		<div id="settings">
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={$colour} />
-			{#if $session.data}
+			{#if $page.data.data}
 				<button
 					class="btn"
 					on:click={() => {
@@ -233,6 +233,8 @@
 		</div>
 	</nav>
 	<!-- We don't want to accidentally select an icon when escaping search -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="shadowbox" class:searching on:click={(_) => (searching = false)} />
 	<!-- Full icon list -->
 	<main id="all">
@@ -309,7 +311,7 @@
 	<!-- Footer -->
 	<footer>
 		<p>
-			Canvas Icons <strong>v{$session.version}</strong>.
+			Canvas Icons <strong>v{$page.data.version}</strong>.
 			<a target="_blank" href="https://github.com/Ranga-Auaha-Ako/canvas-icons/">
 				Source & Contribute</a
 			>

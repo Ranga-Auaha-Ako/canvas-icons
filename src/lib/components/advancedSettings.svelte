@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition';
-	import Portal from 'svelte-portal/src/Portal.svelte';
+	import Portal from 'svelte-portal';
 	import { focusTrap } from 'svelte-focus-trap';
 
 	// Load Material Design Icons (for UI)
@@ -38,6 +38,8 @@
 			style="--iconColor: {$colour}; --iconMargin: {$iconMargin}px"
 			aria-label="Close Settings"
 		>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
 				transition:fade|global={{ duration: 150 }}
 				class="modal-backdrop"
@@ -45,6 +47,8 @@
 					$showSettings = false;
 				}}
 			/>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<div
 				transition:fly|global={{ y: -200, duration: 150 }}
 				class="modal settings"
@@ -68,6 +72,7 @@
 							page. Then, click the save button at the bottom of this window to select your
 							preferred icon from the icon library.
 						</p>
+						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<div
 							class="sizing"
 							on:mousedown={() => {
@@ -396,7 +401,9 @@
 						background-color: white;
 						padding: 1em;
 						border-radius: 4px;
-						box-shadow: 0px 1.9px 2.4px rgba(0, 0, 0, 0.028), 0px 6.5px 8px rgba(0, 0, 0, 0.042),
+						box-shadow:
+							0px 1.9px 2.4px rgba(0, 0, 0, 0.028),
+							0px 6.5px 8px rgba(0, 0, 0, 0.042),
 							0px 29px 36px rgba(0, 0, 0, 0.07);
 						user-select: none;
 						// position: relative;

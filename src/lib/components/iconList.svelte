@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { titleCase } from 'title-case';
 	import type { Icon } from '../icons';
-	import { session } from '$app/stores';
+	import { page } from '$app/stores';
 	// import '../../../static/icon-sprite/css/sprite.css';
 
 	export let icons: any[];
@@ -49,7 +49,7 @@
 				<svg class="img" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" color={colour}>
 					<use xlink:href="/icons/iconDefs.svg#{getIconClass(icon.url)}" />
 					<!-- <use
-						xlink:href="{$session.assetHost}/font/defs/svg/sprite.defs.svg#{getIconClass(icon.url)}"
+						xlink:href="{$page.data.assetHost}/font/defs/svg/sprite.defs.svg#{getIconClass(icon.url)}"
 					/> -->
 				</svg>
 				<!-- <img alt={icon.title} src="/icons/{colour}/iconStack.svg#{getIconClass(icon.url)}" /> -->
@@ -75,8 +75,12 @@
 			margin: 0;
 			padding: var(--iconMargin);
 			cursor: pointer;
-			transition: 0.2s ease-out transform, 0.2s ease-out box-shadow, 0.2s ease-out border-color,
-				0.5s ease-out opacity, 0.1s ease background-color;
+			transition:
+				0.2s ease-out transform,
+				0.2s ease-out box-shadow,
+				0.2s ease-out border-color,
+				0.5s ease-out opacity,
+				0.1s ease background-color;
 			will-change: transform, box-shadow, border-color;
 			transform: scale(1);
 			border-radius: 6px;

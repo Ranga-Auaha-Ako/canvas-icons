@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { session } from '$app/stores';
+	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
 	export let showMargin: boolean;
 	export let iconInBox: boolean;
@@ -11,7 +11,7 @@
 	$: iconSizeFormatted =
 		iconSize == -1 ? `calc(1em + ${iconPadding * 2}px)` : `${iconSize + iconPadding * 2}px`;
 	export let icon = { url: 'General/noun_Box_221801.svg' };
-	$: iconUrl = `${$session.assetHost}/colour/${icon.url.replace(
+	$: iconUrl = `${$page.data.assetHost}/colour/${icon.url.replace(
 		'.svg',
 		`.${iconInBox ? 'ffffff' : colour.replace('#', '')}.svg`
 	)}`;
