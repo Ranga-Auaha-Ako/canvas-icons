@@ -1,6 +1,6 @@
 
 # Dockerfile
-FROM --platform=linux/amd64 node:14.16.1 AS dev
+FROM --platform=linux/amd64 node:20 AS dev
 
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "yarn.lock", "./"]

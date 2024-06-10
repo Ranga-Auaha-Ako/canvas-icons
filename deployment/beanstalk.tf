@@ -1,7 +1,7 @@
 resource "aws_elastic_beanstalk_environment" "beanstalk_env" {
   name                   = "${var.app_name}-${terraform.workspace == "default" ? "staging" : terraform.workspace}"
   application            = aws_elastic_beanstalk_application.app.name
-  solution_stack_name    = "64bit Amazon Linux 2 v3.4.17 running Docker"
+  solution_stack_name    = "64bit Amazon Linux 2023 v4.3.2 running Docker"
   wait_for_ready_timeout = "10m"
 
   setting {

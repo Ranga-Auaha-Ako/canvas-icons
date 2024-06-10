@@ -191,7 +191,7 @@
 				type="search"
 				bind:value={search}
 				on:focus={(_) => (searching = true)}
-				placeholder="Kia ora{$page.form.user && $page.form.user.name
+				placeholder="Kia ora{$page.form && $page.form.user && $page.form.user.name
 					? ` ${$page.form.user.name}`
 					: ''}, type to start searching..."
 			/>
@@ -225,7 +225,7 @@
 		<div id="settings">
 			<!--  - Colour Selector -->
 			<ColourPicker bind:value={$colour} />
-			{#if $page.form.data}
+			{#if $page.form?.data}
 				<button
 					class="btn"
 					on:click={() => {
