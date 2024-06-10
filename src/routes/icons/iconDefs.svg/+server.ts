@@ -1,3 +1,4 @@
+import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
@@ -8,16 +9,12 @@ export async function GET() {
 	const iconsURL = `${assetHost}/font/defs/svg/sprite.defs.svg`;
 	try {
 		const icons = await fetch(iconsURL).then((res) => res.text());
-		return {
-			status: 200,
-			body: icons,
+		return json(icons, {
 			headers: {
 				'Content-Type': 'image/svg+xml'
 			}
-		};
+		});
 	} catch (error) {
-		return {
-			status: 500
-		};
+		return new Response(undefined, { status: 500 });
 	}
 }

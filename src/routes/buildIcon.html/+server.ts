@@ -19,13 +19,12 @@ export async function GET(req) {
 
 	if (!data || !iconUrl || !callback) {
 		// Missing critical data
-		return {
+		return new Response('<h1>Missing critical data! Please contact an administrator.</h1>', {
 			status: 400,
 			headers: {
 				'content-type': 'text/html; charset=utf-8'
-			},
-			body: '<h1>Missing critical data! Please contact an administrator.</h1>'
-		};
+			}
+		});
 	}
 
 	// const content_items = `{"@context":"http://purl.imsglobal.org/ctx/lti/v1/ContentItem","@graph":[{"@type":"ContentItem","mediaType":"text/html","text":"<img role='presentation' src='${iconUrl}' alt='' width='48' height='48' data-decorative='true' />","placementAdvice":{"presentationDocumentTarget":"embed"}}]}`;
@@ -52,12 +51,7 @@ export async function GET(req) {
 		queryParams: { data, content_items }
 	});
 
-	return {
-		// body: { ...signature.params, path: `//${req.host}${req.url.pathname}` }
-		headers: {
-			'content-type': 'text/html; charset=utf-8'
-		},
-		body: `
+	return new Response(`
 		<form action="${callback}" class="hide" id="return_form" method="post" encType="application/x-www-form-urlencoded">
 			<input type="hidden" name="lti_message_type" value="ContentItemSelection" />
 			<input type="hidden" name="lti_version" value="LTI-1p0" />
@@ -82,6 +76,9 @@ export async function GET(req) {
 		<script>
 			document.forms[0].submit();
 		</script>
-		`
-	};
+		`, {
+		headers: {
+			'content-type': 'text/html; charset=utf-8'
+		}
+	});
 }

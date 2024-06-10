@@ -2,11 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 
 export const GET: RequestHandler = async () => {
-	return {
-		headers: {
-			'content-type': 'text/xml; charset=utf-8'
-		},
-		body: `<?xml version="1.0" encoding="UTF-8"?>
+	return new Response(`<?xml version="1.0" encoding="UTF-8"?>
 		<cartridge_basiclti_link xmlns="http://www.imsglobal.org/xsd/imslticc_v1p0"
 			xmlns:blti = "http://www.imsglobal.org/xsd/imsbasiclti_v1p0"
 			xmlns:lticm ="http://www.imsglobal.org/xsd/imslticm_v1p0"
@@ -35,6 +31,9 @@ export const GET: RequestHandler = async () => {
 		  </blti:extensions>
 		  <cartridge_bundle identifierref="BLTI001_Bundle"/>
 		  <cartridge_icon identifierref="BLTI001_Icon"/>
-		</cartridge_basiclti_link>`
-	};
+		</cartridge_basiclti_link>`, {
+		headers: {
+			'content-type': 'text/xml; charset=utf-8'
+		}
+	});
 };
